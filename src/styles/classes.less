@@ -1,0 +1,83 @@
+/*
+ * Copyright(c) Oflane Software 2017. All Rights Reserved.
+ */
+
+@import "variables"; //border-radius
+.border-radius(@radius:5px) {
+  -webkit-border-radius: @radius;
+  /* Safari and Chrome */
+  -moz-border-radius: @radius;
+  /* Firefox */
+  -o-border-radius: @radius;
+  /* Opera */
+  border-radius: @radius;
+}
+
+// transition-property : css property
+// transition-duration : time
+// transition-timing-function :transition-timing-function: linear|ease|ease-in|ease-out|ease-in-out|cubic-bezier(n,n,n,n);
+// transition-delay : delay time
+.transition(@property:all; @duration:.7s; @timing:linear; @delay:0s) {
+  -moz-transition: @arguments;
+  /* Firefox */
+  -webkit-transition: @arguments;
+  /* Safari and Chrome */
+  -o-transition: @arguments;
+  /* Opera */
+  transition: @arguments;
+}
+
+// text-overflow : clip | ellipsis | string
+.text-overflow(@prop:ellipsis) {
+  -o-text-overflow: @prop;
+  /* Opera */
+  -webkit-text-overflow: @prop;
+  /* Safari and Chrome */
+  -moz-text-overflow: @prop;
+  /* Firefox */
+  text-overflow: @prop;
+}
+
+// box-shadow: h-shadow v-shadow blur spread color inset;
+//-moz-box-shadow:2px 2px 5px #333333, 2px 2px 5px #333333;
+//-webkit-box-shadow:2px 2px 5px #333333, 2px 2px 5px #333333;
+//box-shadow:2px 2px 5px #333333, 2px 2px 5px #333333;
+.box-shadow(@h:0;@v:0;@blur:5px;@spread:0;@color:@pure_ccc;) {
+  -moz-box-shadow: @arguments;
+  /* Firefox */
+  -webkit-box-shadow: @arguments;
+  /* Safari and Chrome */
+  -o-box-shadow: @arguments;
+  /* Opera */
+  box-shadow: @arguments;
+}
+
+//opacity 默认。5
+//opacity: 0.5; w3C标准
+//filter: alpha(opacity=50);ms滤镜
+.opacity (@opacity:.5) {
+  @opacityForIE: @opacity * 100;
+  opacity: @opacity;
+  /* w3c */
+  -ms-filter: ~  "progid:DXImageTransform.Microsoft.Alpha(opacity=@{opacityForIE})";
+  /* ms ie 8 */
+  filter: ~  "alpha(opacity = @{opacityForIE})";
+  /* ms ie 7 let */
+}
+
+//appearance 非兼容属性
+.appearance(@app:none) {
+  appearance: @app;
+  -moz-appearance: @app;
+  -webkit-appearance: @app;
+}
+
+//transforms
+//scale
+.scale(@x:1.2, @y :1.2) {
+  transform: scale(@x, @y);
+  -webkit-transform: scale(@x, @y);
+  -moz-transform: scale(@x, @y);
+  -o-transform: scale(@x, @y);
+  -ms-transform: scale(@x, @y);
+}
