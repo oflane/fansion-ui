@@ -46,7 +46,7 @@
    * @version 1.0 2018-1-22
    */
   export default {
-    name: 'tags',
+    name: 'FacTags',
     components: {FacForm},
     props: {
       single: {

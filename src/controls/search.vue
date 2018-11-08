@@ -22,7 +22,7 @@
    * 引入数据加载类
    * @type {DataLoader}
    */
-  const DataLoader = fase.comps.DataLoader
+  const DataLoader = fase.DataLoader
   /**
    * 引入工具方法
    */
@@ -33,7 +33,7 @@
    * @version 1.0 2018-1-22
    */
   export default {
-    name: 'Search',
+    name: 'FacSearch',
     props: {
       conf: Object,
       loader: DataLoader,

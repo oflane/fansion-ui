@@ -73,7 +73,7 @@ const getContainer = (path) => path ? containers[path] || containers[DAFAULT_CON
  * @param data 容器数据
  * @return {any}
  */
-const addContainer = fase.util.register(containers, 'path')
+const addContainer = fase.builder.register(containers, 'path')
 
 /**
  * 设置默认的参照容器

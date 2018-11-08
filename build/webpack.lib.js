@@ -1,21 +1,19 @@
 /*
  * Copyright(c) Oflane Software 2017. All Rights Reserved.
  */
-var path = require('path');
-var webpack = require('webpack');
-var ProgressBarPlugin = require('progress-bar-webpack-plugin');
-var nodeExternals = require('webpack-node-externals');
+var path = require('path')
+var webpack = require('webpack')
+var ProgressBarPlugin = require('progress-bar-webpack-plugin')
+var nodeExternals = require('webpack-node-externals')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 module.exports = {
-  entry: {
-    app: ['./src/index.js']
-  },
+  entry: {app: './src/index.js'},
   output: {
     path: path.resolve(process.cwd(), './lib'),
-    publicPath: '/lib/',
+    publicPath: '/fansion-ui/lib/',
     filename: 'fansion-ui.js',
     chunkFilename: '[id].js',
     libraryTarget: 'umd',
@@ -24,7 +22,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
-      alias: {
+    alias: {
       '~': resolve('src'),
       '@': resolve('src'),
       '@static': resolve('static')
@@ -34,8 +32,9 @@ module.exports = {
   externals: [
     {
       vue: 'vue',
+      'element-ui': 'ELEMENT',
       'fansion-base': 'fansion-base',
-      'fansion-fac': 'fansion-fac'
+      'fansion-fac': 'fansion-fac',
     }, nodeExternals()
   ],
   module: {
@@ -103,9 +102,6 @@ module.exports = {
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
     })
   ]
 }

@@ -28,6 +28,7 @@
    * @version 1.0 2018-1-22
    */
   export default {
+    name: 'FacCombo',
     props: {
       options: Array,
       opCode: String,

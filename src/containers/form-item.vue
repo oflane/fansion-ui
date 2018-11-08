@@ -11,10 +11,11 @@
    * 获取工具方法
    */
   const {toRender, callHook} = fase.render
-  const component = fac.comps.component
+  const compile = fac.comps.compile
 
   export default {
     template: '<div></div>',
+    name: 'FacFormItem',
     props: {
       conf: Object,
       page: Object,
@@ -44,7 +45,7 @@
         return v
       }))
       this.validation = validation
-      let {components, template} = component(conf)
+      let {components, template} = compile(conf)
       console.log(template)
       toRender(this, `<el-form-item :prop="conf.field" :label="conf.label" :rules="validation">${template}</el-form-item>`, components)
     }

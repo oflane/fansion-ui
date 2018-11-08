@@ -58,7 +58,7 @@ export default {
     }
   },
   'combo': {
-    component: combo,
+    tagName: 'fac-combo',
     props: ['ref', 'vModel', 'options', 'opCode', 'opUrl', 'placeholder', 'multiple', 'multipleLimit', 'size', 'clearable', 'itemValue', 'itemLabel', '@change']
   },
   date: {
@@ -82,21 +82,20 @@ export default {
     }
   },
   reference: {
-    component: reference,
+    tagName: 'fac-reference',
     props: ['ref', 'popperClass', 'placeholder', 'readonly', 'name', 'size', 'vModel', 'showLabel.sync', 'value', 'showLabel',
       'suggest', 'filter', 'refTo', 'readFields', 'writeFields']
   },
   search: {
-    component: search,
+    tagName: 'fac-search',
     props: ['ref', 'conf', 'page', 'loader']
   },
   xquery: {
-    component: xquery,
+    component: 'fac-xquery',
     props: ['ref', 'conf', 'page', 'loader']
   },
   'pagination': {
-    tagName: 'pagination',
-    component: pagination,
+    tagName: 'fac-pagination',
     props: ['ref', 'conf', 'page', 'loader', 'model', '@sizeChange', '@current-change']
   },
   tree: {
@@ -106,7 +105,7 @@ export default {
       '@current-change', '@node-expand', '@node-collapse']
   },
   tags: {
-    component: tags,
+    tagName: 'fac-tags',
     props: ['ref', 'single', 'valueField', 'labelField', 'vModel', 'disabled', 'value']
   }
 }

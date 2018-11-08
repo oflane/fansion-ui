@@ -32,24 +32,21 @@
   const {confs2Comps} = fac.comps
 
   export default {
-    name: 'CardList',
+    name: 'FacCardList',
     props: {
       page: Object,
       model: Array,
-      card: [String, Object],
+      conf: [String, Object],
       comps: [Array, Object],
       before: String,
       end: String,
       css: String
     },
-    mounted () {
-      console.log(this.model)
-    },
     created () {
       let cardTemplate
-      if (typeof this.card !== 'string') {
+      if (typeof this.conf !== 'string') {
         let cardClass = this.css ? this.css : 'card'
-        let card = this.card
+        let card = this.conf
         let image = card.img ? `<img :src="item.${card.img}" class="image"/>` : ''
         let title = card.titleHtml || `{{item.${card.title || 'title'}}}`
         let time = card.time ? `<time class="time">{{new Date(item.${card.time}).format('yyyy-MM-dd hh:mm')}}</time>` : ''
@@ -61,7 +58,7 @@
             </div>
           </el-card>`
       } else {
-        cardTemplate = this.card
+        cardTemplate = this.conf
       }
       let components = {}
       confs2Comps(this.comps, components)

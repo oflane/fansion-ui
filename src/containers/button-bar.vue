@@ -21,6 +21,7 @@
 </template>
 <script>
   export default {
+    name: 'FacButtonBar',
     props: {
       conf: [Object, Array],
       page: Object

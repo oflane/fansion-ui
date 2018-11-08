@@ -8,13 +8,14 @@
    * 引入数据加载类
    * @type {DataLoader}
    */
-  const DataLoader = fase.comps.DataLoader
+  const DataLoader = fase.DataLoader
   /**
    * table排序
    * @author Paul.Yang E-mail:yaboocn@qq.com
    * @version 1.0 2017-8-25
    */
   export default {
+    name: 'FacTableSort',
     props: {
       loader: DataLoader,
       defaultSort: Object

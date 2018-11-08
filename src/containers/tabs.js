@@ -8,7 +8,7 @@ import fase from 'fansion-base'
  * 获取工具方法
  */
 const toProps = fase.render.toProps
-const getPageMeta = fase.comps.page.getPageMeta
+const getPageMeta = fase.pages.getPageMeta
 const confs2Comps = fac.comps.confs2Comps
 /**
  * 每个tab子标签构建

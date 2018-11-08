@@ -7,40 +7,48 @@ import dialogOpener from './dialog/dialog-opener'
 import refs from './refs'
 import fase from 'fansion-base'
 import fac from 'fansion-fac'
+import generator from './generator'
+import handler from './handler'
 
-/**
- * 组件集合
- * @type {*[]}
- */
-const components = [
-  ...containers.components,
-  ...controls.components
-]
+
 /**
  * 安装方法
  * @param Vue vue对象
  * @param opts 选项
  */
 const install = function (Vue, opts = {}) {
-  components.forEach(component => {
+  [
+    ...Object.values(containers.components),
+    ...Object.values(controls.components)
+  ].forEach(component => {
     Vue.component(component.name, component)
   })
-  let baseOpts = Object.assign({dialogs: {default: dialogOpener}}, opts.base)
-  fase.init(baseOpts)
-  let facOpts = Object.assign({components: {...containers.cometa, ...controls.cometa}}, opts.fac)
-  fac.init(facOpts)
-  refs.init(opts.reference)
+  init(opts)
+  fase.init({dialogs: {default: dialogOpener}})
+  Vue.use(fac)
+  fac.init({cometas: {...containers.cometa, ...controls.cometa}})
 }
-
 /**
- * fac组件模块
+ * 初始化方法
+ * @param opts 选项
+ */
+const init = function (opts = {}) {
+  opts.references && refs.init(opts.references)
+}
+/**
+ * fac组件
  * @author Paul.Yang E-mail:yaboocn@qq.com
  * @version 1.0 2017-8-15
  */
 export default {
   refs,
   install,
+  init,
   containers,
   controls,
-  dialogOpener
+  dialogOpener,
+  ...containers.components,
+  ...controls.components,
+  generator,
+  handler
 }

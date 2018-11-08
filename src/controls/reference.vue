@@ -72,7 +72,7 @@
    * @version 1.0 2018-1-22
    */
   export default {
-    name: 'Reference',
+    name: 'FacReference',
     componentName: 'Reference',
     components: {
       ReferenceSuggestions

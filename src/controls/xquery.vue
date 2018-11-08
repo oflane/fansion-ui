@@ -16,7 +16,7 @@
    * 引入数据加载类
    * @type {DataLoader}
    */
-  const DataLoader = fase.comps.DataLoader
+  const DataLoader = fase.DataLoader
 
   /**
    * 高级查询组件
@@ -24,7 +24,7 @@
    * @version 1.0 2018-1-22
    */
   export default {
-    name: 'XQuery',
+    name: 'FacXquery',
     props: {
       conf: Object,
       loader: DataLoader,
