@@ -48,7 +48,7 @@ const ref = code => this.refs[code]
  * @param cb 回调方法
  * @return {*}
  */
-const load = fase.builder.loader(this.refs, 'code')
+const load = fase.builder.loader(refs, 'code')
 /**
  * 根据参照编码获取参数信息
  * @param code 参照编码
