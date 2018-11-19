@@ -6,13 +6,23 @@
  * 生成按钮列
  * @param buttons 按钮列表
  */
-const cardListButton = buttons => '<span class="buttons">' + buttons.map(v => `<el-button type="text" class="button" @click="page.${v.click}">${v.text}</el-button>`).join() + '</span>'
+const cardListButton = buttons => '<span class="buttons">' + buttons.map(v => `<el-button type="text" class="button" @click="page.${v.click}">${v.icon ? '<i class="' + v.icon + '"/>' : ''}${v.text}</el-button>`).join() + '</span>'
 /**
  * 生成列表列按钮
  * @param buttons
  * @returns {*}
  */
-const columnButton = buttons => buttons.map(v => `<el-button type="text" class="button" size="small" @click="page.${v.click}">${v.text}</el-button>`).join()
+const columnButton = buttons => buttons.map(v => `<el-button type="text" class="button" size="small" @click="page.${v.click}">${v.icon ? '<i class="' + v.icon + '"/>' : ''}${v.text}</el-button>`).join()
+/**
+ * 生成按钮列表列
+ * @param buttons
+ * @returns {*}
+ */
+const buttonsColumn = buttons => ({
+  label: '操作: ',
+  width: '150px',
+  template: columnButton(buttons)
+})
 
 /**
  * 代码生成工具
@@ -30,5 +40,11 @@ export default {
    * @param buttons
    * @returns {*}
    */
-  columnButton
+  columnButton,
+  /**
+   * 生成按钮列表列
+   * @param buttons
+   * @returns {*}
+   */
+  buttonsColumn
 }
