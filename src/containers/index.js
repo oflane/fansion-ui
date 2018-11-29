@@ -22,7 +22,6 @@ export default {
     facTable,
     buttonBar,
     facForm,
-    simpleTable,
     tabs,
     cardList
   },

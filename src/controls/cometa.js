@@ -91,7 +91,7 @@ export default {
     props: ['ref', 'conf', 'page', 'loader']
   },
   xquery: {
-    component: 'fac-xquery',
+    tagName: 'fac-xquery',
     props: ['ref', 'conf', 'page', 'loader']
   },
   'pagination': {

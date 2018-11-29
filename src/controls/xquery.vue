@@ -80,6 +80,7 @@
             let op = item.op
             return {field, op, val}
           }
+          return false
         })
         if (citems.length > 0) {
           condition['__xquery'] = JSON.stringify(citems)

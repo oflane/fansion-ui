@@ -145,7 +145,7 @@
       },
       changeState () {
         let {page, conf, css} = this
-        let pageState = page && 'pageState' in page ? page.pageState : 'init'
+        let pageState = page && page['pageState'] ? page.pageState : 'init'
         let groups = conf.groups || []
         if (groups.length === 0) {
           let group = buildFormGroup(conf, pageState, css)

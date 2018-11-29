@@ -92,7 +92,7 @@
       },
       getParameters () {
         let condition = {}
-        let qitems = this.conf.quickItems
+        let qitems = this.conf.items
         let qvalue = this.quickValue
         if (this.quickValue && qitems) {
           if (this.isFree) {

@@ -21,6 +21,7 @@ const columnButton = buttons => buttons.map(v => `<el-button type="text" class="
 const buttonsColumn = buttons => ({
   label: '操作: ',
   width: '150px',
+  align: 'center',
   template: columnButton(buttons)
 })
 
