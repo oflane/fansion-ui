@@ -3,7 +3,8 @@
  */
 import containers from './containers'
 import controls from './controls'
-import dialogOpener from './dialog/dialog-opener'
+import dialogOpener from './common/dialog-opener'
+import './common/message'
 import refs from './refs'
 import fase from 'fansion-base'
 import fac from 'fansion-fac'

@@ -8,7 +8,10 @@
     <el-input
       v-bind="props"
       v-model="quickValue"
+      :disabled.sync="disabled"
+      clearable
       @keydown.enter.stop.native="handleSearch"
+      @clear="handleSearch"
     >
       <i class="el-input__icon el-icon-search" @click="handleSearch" slot="suffix"/>
     </el-input>
@@ -39,11 +42,12 @@
       loader: DataLoader,
       page: Object,
       advance: String,
+      disabled: Boolean,
       free: Boolean
     },
     data () {
       let c = this.conf || {}
-      let props = filterProps(c, ['conf', 'items', 'pos', 'xclass'])
+      let props = filterProps(c, ['conf', 'items', 'pos', 'xclass', '@search', 'type'])
       if (this.loader) {
         this.loader.addPlugin(this)
       }
@@ -78,10 +82,13 @@
     },
     methods: {
       handleSearch () {
+        if (this.disabled) {
+          return
+        }
         if (this.loader) {
           this.loader.load(true)
         }
-        this.$emit('search', this)
+        this.$emit('search', this.quickValue, this)
       },
       changeMode () {
         this.advanceMode = !this.advanceMode
@@ -89,6 +96,9 @@
           this.advanceQuery.setVisible(this.advanceMode)
         }
         this.advanceText = this.advanceMode ? '收起<i class="fa fa-chevron-down"></i>' : '高级<i class="fa fa-chevron-down"></i>'
+      },
+      getValue () {
+        return this.quickValue
       },
       getParameters () {
         let condition = {}

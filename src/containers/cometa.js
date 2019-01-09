@@ -16,7 +16,7 @@ export default {
   },
   'fac-form': {
     tagName: 'fac-form',
-    props: ['ref', 'page', 'conf', 'model']
+    props: ['ref', 'page', 'conf', 'model', 'ignore']
   },
   'fac-table': {
     tagName: 'fac-table',

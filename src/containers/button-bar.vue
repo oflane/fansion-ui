@@ -20,6 +20,8 @@
   </div>
 </template>
 <script>
+  /* eslint-disable no-new-func */
+
   export default {
     name: 'FacButtonBar',
     props: {
@@ -49,7 +51,7 @@
     },
     methods: {
       handleCommand (cmd) {
-        let f = this.page[cmd]
+        let f = this.page[cmd] || new Function(cmd)
         if (f) {
           f.call(this.page)
         } else {

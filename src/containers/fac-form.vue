@@ -4,8 +4,8 @@
  --version 1.0 2017-8-2
  -->
 <template>
-  <div class="fac-form-group">
-    <el-form ref="elForm" v-for="group in groups" :status-icon="statusIcon" :model="model" :key="key" class="fac-form" :class="group.css" :label-width="labelW" label-position="right">
+  <div class="fac-form-group" >
+    <el-form ref="elForm" v-for="group in groups" :status-icon="statusIcon" :model="model" :key="key" class="fac-form" :class="groupCss(group)" :label-width="labelW" label-position="right">
       <div class="title" v-if="group.title">{{group.title}}</div>
       <el-row class="form-body" :gutter="gutterProp">
         <template v-for="item in group.items">
@@ -78,6 +78,10 @@
         type: Boolean,
         default: true
       },
+      ignore: {
+        type: Boolean,
+        default: false
+      },
       page: Object,
       labelWidth: String,
       gutter: Number
@@ -88,15 +92,24 @@
       if (isNotNull(this.conf.statusIcon)) {
         this.statusIcon = this.conf.statusIcon && this.statusIcon
       }
+      let exist = !(this.ignore === true || this.conf.ignore === true)
+      let maxFormCols = 0
       return {
         key: Symbol('itemkey'),
         labelW,
+        maxFormCols,
         gutterProp,
-        groups: []
+        groups: [],
+        exist
       }
     },
     watch: {
       conf () {
+        this.$mount()
+        callHook(this, 'mounted')
+      },
+      ignore (v) {
+        this.exist = !(v === true || this.conf.ignore === true)
         this.$mount()
         callHook(this, 'mounted')
       }
@@ -116,6 +129,9 @@
       formItem
     },
     methods: {
+      groupCss (group) {
+        return group.css + ' fac-form-width' + this.maxFormCols
+      },
       resetFields () {
         this.$refs['elForm'].forEach(v => {
           v.resetFields()
@@ -144,14 +160,20 @@
         })
       },
       changeState () {
-        let {page, conf, css} = this
+        let vm = this
+        let {page, conf, css, exist} = vm
         let pageState = page && page['pageState'] ? page.pageState : 'init'
+        if (!exist) {
+          vm.groups = []
+          return
+        }
         let groups = conf.groups || []
         if (groups.length === 0) {
           let group = buildFormGroup(conf, pageState, css)
+          vm.maxFormCols = group.cols
           group && groups.push(group)
         } else {
-          groups = groups.map(group => buildFormGroup(group, pageState, css)).filter(group => !group)
+          groups = groups.map(group => buildFormGroup(group, pageState, css)).filter(group => group ? (vm.maxFormCols < group.cols ? !!(vm.maxFormCols = group.cols) || true : true) : false)
         }
         this.groups = groups
       }
@@ -159,7 +181,11 @@
   }
 </script>
 <style lang="less">
+  .fac-form-group{
+    background: none 0px 0px repeat scroll rgb(255, 255, 255);
+  }
   .fac-form {
+    margin: 0 auto;
     background: none 0px 0px repeat scroll rgb(255, 255, 255);
     border-radius: 3px;
     .title {
@@ -168,7 +194,7 @@
       padding-left: 15px;
       line-height: 50px;
       margin-top: 0px;
-      margin-right: 0px;
+      margin-right: 0px;el-col el-col-xs-24 el-col-md-24 el-col-lg-24
       text-align: left;
     }
     +.fac-form {
@@ -176,6 +202,8 @@
     }
     .form-body{
       padding: 30px;
+      width: 100%;
+      display: table;
     }
     .el-form-item {
       margin-bottom: 26px;

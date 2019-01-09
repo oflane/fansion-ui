@@ -39,19 +39,19 @@
       return {loadText, visible: true, hasFrame}
     },
     created () {
-      let title = this.title
+      let title = this.title ? ' title="' + this.title + '"' : ''
       if (this.component) {
         let components = {'dialog-content': this.component}
         let prop = toProps(this.params, null, null, 'params')
         if (this.hasFrame) {
-          toRender(this, `<dialog-content ${prop} ref="content" title="${title}" >{{loadText}}{{html}}</dialog-content>`, components)
+          toRender(this, `<dialog-content ${prop} ref="content"${title} >{{loadText}}{{html}}</dialog-content>`, components)
         } else {
           let dprops = toProps(this.dialogProps)
-          toRender(this, `<el-dialog ${dprops} :visible.sync="visible" title="${title}"><dialog-content ${prop}>{{loadText}}{{html}}</dialog-content></el-dialog>`, components)
+          toRender(this, `<el-dialog ${dprops} :visible.sync="visible"${title}><dialog-content ${prop}>{{loadText}}{{html}}</dialog-content></el-dialog>`, components)
         }
       } else {
         let dprops = toProps(this.dialogProps)
-        toRender(this, `<el-dialog ${dprops} :visible.sync="visible" title="${title}">{{loadText}}{{html}}</el-dialog>`)
+        toRender(this, `<el-dialog ${dprops} :visible.sync="visible"${title}>{{loadText}}{{html}}</el-dialog>`)
       }
     },
     methods: {

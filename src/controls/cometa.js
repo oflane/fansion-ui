@@ -1,13 +1,7 @@
 /*
  * Copyright(c) Oflane Software 2017. All Rights Reserved.
  */
-import combo from './combo.vue'
-import reference from './reference.vue'
-import search from './search.vue'
-import xquery from './xquery.vue'
-import pagination from './pagination.vue'
 import vueJsonEditor from 'vue-json-editor'
-import tags from './tags.vue'
 import '../styles/style.less'
 
 /**
@@ -50,16 +44,16 @@ export default {
       'rows': 4
     }
   },
-  jsonEditor: {
+  'json-editor': {
     component: vueJsonEditor,
-    props: ['ref', 'vModel'],
+    props: ['ref', 'vModel', 'mode', 'modes'],
     attrs: {
-      ':showBtns': false
+      ':showBtns': 'false'
     }
   },
   'combo': {
     tagName: 'fac-combo',
-    props: ['ref', 'vModel', 'options', 'opCode', 'opUrl', 'placeholder', 'multiple', 'multipleLimit', 'size', 'clearable', 'itemValue', 'itemLabel', '@change']
+    props: ['ref', 'vModel', 'options', 'opCode', 'opUrl', 'disabled', 'placeholder', 'multiple', 'multipleLimit', 'size', 'clearable', 'itemValue', 'itemLabel', '@change']
   },
   date: {
     tagName: 'el-date-picker',
@@ -88,7 +82,7 @@ export default {
   },
   search: {
     tagName: 'fac-search',
-    props: ['ref', 'conf', 'page', 'loader']
+    props: ['ref', 'conf', 'page', 'loader', 'disabled', '@search']
   },
   xquery: {
     tagName: 'fac-xquery',
@@ -100,8 +94,8 @@ export default {
   },
   tree: {
     tagName: 'el-tree',
-    props: ['ref', 'data', 'node-key', 'load', 'renderContent', 'highlightCurrent', 'expandOnClickNode',
-      'auto-expand-parent', 'default-expanded-keys', 'show-checkbox', 'filter-node-method', '@node-click', '@check-change',
+    props: ['ref', 'data', 'node-key', 'load', 'renderContent', 'highlightCurrent:boolean', 'expandOnClickNode:boolean',
+      'auto-expand-parent:boolean', 'default-expanded-keys', 'show-checkbox:boolean', 'filter-node-method', '@node-click', '@check-change',
       '@current-change', '@node-expand', '@node-collapse']
   },
   tags: {
