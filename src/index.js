@@ -10,7 +10,11 @@ import fase from 'fansion-base'
 import fac from 'fansion-fac'
 import generator from './generator'
 import handler from './handler'
-
+import sortDialog from './pages/sort-dailog'
+// 页面注册
+let pageComps = {
+  '/ui/page/sort-dialog': sortDialog
+}
 
 /**
  * 安装方法
@@ -25,7 +29,7 @@ const install = function (Vue, opts = {}) {
     Vue.component(component.name, component)
   })
   init(opts)
-  fase.init({dialogs: {default: dialogOpener}})
+  fase.init({pages: {pageComps}, dialogs: {default: dialogOpener}})
   Vue.use(fac)
   fac.init({cometas: {...containers.cometa, ...controls.cometa}})
 }

@@ -50,10 +50,9 @@
       return group
     }
     items = items.map((item) => {
-      if (item[state]) {
-        item = Object.assign({}, item, item[state])
-      }
-      return {...item}
+      let s = item[state] || item[state.substring(6)]
+      s && (item = Object.assign({}, item, s))
+      return item
     }).filter(item => !item.ignore)
     if (items.length === 0) {
       return
@@ -82,6 +81,7 @@
         type: Boolean,
         default: false
       },
+      state: String,
       page: Object,
       labelWidth: String,
       gutter: Number
@@ -108,6 +108,9 @@
         this.$mount()
         callHook(this, 'mounted')
       },
+      state () {
+        this.changeState()
+      },
       ignore (v) {
         this.exist = !(v === true || this.conf.ignore === true)
         this.$mount()
@@ -115,7 +118,7 @@
       }
     },
     mounted () {
-      if (this.page) {
+      if (this.page && !this.state) {
         this.page.$on('stateChanged', this.changeState)
       }
       this.changeState()
@@ -162,7 +165,8 @@
       changeState () {
         let vm = this
         let {page, conf, css, exist} = vm
-        let pageState = page && page['pageState'] ? page.pageState : 'init'
+        let pageState = this.state || (page && page['pageState'] ? page.pageState : 'init')
+        pageState = pageState.startsWith('state_') ? pageState : 'state_' + pageState
         if (!exist) {
           vm.groups = []
           return

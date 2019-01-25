@@ -28,7 +28,7 @@ export default {
   },
   'switch-box': {
     tagName: 'el-switch',
-    props: ['ref', 'vModel', 'activeText', 'inactiveText', 'activeValue', 'inactiveValue', 'activeColor', 'inactiveColor'],
+    props: ['ref', 'vModel', 'activeText', 'inactiveText', 'activeValue', 'inactiveValue', 'activeColor', 'inactiveColor', 'disabled'],
     default: {
       ':activeValue': true,
       ':inactiveValue': false,
@@ -60,7 +60,10 @@ export default {
     props: ['ref', 'vModel', 'type', 'pickerOptions', 'placeholder', 'size', 'format', 'valueFormat', 'readonly']
   },
   span: {
-    props: ['ref', 'vText']
+    props: ['ref', 'vText', '#content']
+  },
+  comtext: {
+    props: ['ref', 'vModel', 'options', 'opCode', 'opUrl', 'multiple', 'itemValue', 'itemLabel']
   },
   'autocomplete': {
     tagName: 'el-autocomplete',
@@ -100,6 +103,6 @@ export default {
   },
   tags: {
     tagName: 'fac-tags',
-    props: ['ref', 'single', 'valueField', 'labelField', 'vModel', 'disabled', 'value']
+    props: ['ref', 'single', 'valueField', 'labelField', 'vModel', 'disabled', 'value', 'readonlyValue']
   }
 }

@@ -7,7 +7,7 @@
   <div class="reference" v-clickoutside="handleClickoutside">
     <el-input
       ref="input"
-      :value="refLabel"
+      :value="showLabel"
       :readonly="readonly"
       :disabled="disabled"
       :placeholder="placeholder"
@@ -90,7 +90,7 @@
       name: String,
       size: String,
       value: String,
-      refLabel: String,
+      showLabel: String,
       triggerOnFocus: {
         type: Boolean,
         default: true
@@ -322,5 +322,6 @@
   .reference {
     position: relative;
     display: inline-block;
+    width:100%;
   }
 </style>

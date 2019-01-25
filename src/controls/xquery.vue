@@ -34,6 +34,10 @@
       if (this.loader) {
         this.loader.addPlugin(this)
       }
+      this.conf.items.forEach(v => {
+        v.query = this
+        v.events ? v.events['@keyup.enter.native'] = 'conf.query.handleSearch()' : v.events = {'@keyup.enter.native': 'conf.query.handleSearch()'}
+      })
       return {
         visible: undefined,
         advance: {}
@@ -75,13 +79,13 @@
         let advance = this.advance
         let citems = this.conf.items.map(item => {
           let field = item.field
-          let val = advance[field]
-          if (val) {
+          let value = advance[field]
+          if (value) {
             let op = item.op
-            return {field, op, val}
+            return {field, op, value}
           }
           return false
-        })
+        }).filter(v => v !== false)
         if (citems.length > 0) {
           condition['__xquery'] = JSON.stringify(citems)
         }
@@ -102,6 +106,7 @@
     .query-button{
       margin:0 auto;
       width: 170px;
+      padding-top:15px;
       button{
         border: 0px;
         border-radius: 0px;

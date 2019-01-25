@@ -13,7 +13,7 @@
       <el-tag
         :key="$index"
         v-if="!single||currentEditIndex!=$index"
-        :closable="closable"
+        :closable="isEdit(item)"
         :disable-transitions="false"
         @close="handleClose(item,$index)">
         <a @click="handleEdit($event, item,$index)" href="javascript:void(0)">{{label(item)}}</a>
@@ -74,11 +74,24 @@
         type: String,
         default: 'label'
       },
-      value: Array,
-      disabled: Boolean
+      value: [Array, String],
+      readonlyValue: [Array, String],
+      disabled: Boolean,
+      resultString: Boolean
     },
     data () {
       let items = this.value || []
+      if (typeof items === 'string') {
+        try {
+          items = JSON.parse(items)
+        } catch (e) {
+          items = items.split(',')
+        }
+      }
+      let readonlys = []
+      if (this.readonlyValue) {
+        readonlys = Array.isArray(this.readonlyValue) ? this.readonlyValue : this.readonlyValue.split(',')
+      }
       let itemForm = {
         cols: 1,
         items: [
@@ -120,6 +133,7 @@
           value: null,
           label: null
         },
+        readonlys,
         closable: !this.disabled
       }
     },
@@ -127,9 +141,13 @@
       label (item) {
         return this.single ? item : item[this.labelField]
       },
+      isEdit (item) {
+        let val = this.single ? item : item[this.valueField]
+        return this.closable && (this.readonlys.length === 0 || this.readonlys.indexOf(val) < 0)
+      },
       handleClose (item, index) {
         this.items.splice(index, 1)
-        this.$emit('input', this.items)
+        this.$emit('input', this.getValue())
       },
       setPosition (ss) {
         let pop = this.$refs.popover
@@ -157,10 +175,13 @@
         let inputValue = this.inputValue
         if (inputValue) {
           this.items.push(inputValue)
-          this.$emit('input', this.items)
+          this.$emit('input', this.getValue())
         }
         this.inputVisible = false
         this.inputValue = ''
+      },
+      getValue () {
+        return this.resultString ? JSON.stringify(this.items) : [...this.items]
       },
       handleEditInputConfirm () {
         let inputValue = this.inputValue
@@ -173,13 +194,16 @@
           items.splice(i, 1)
         }
         if (change) {
-          this.$emit('input', this.items)
+          this.$emit('input', this.getValue())
         }
         this.currentEditIndex = -1
         this.inputValue = ''
       },
       handleEdit (event, item, $index) {
         let vm = this
+        if (!vm.isEdit(item)) {
+          return
+        }
         vm.currentEditIndex = $index
         if (!vm.single) {
           let m = vm.itemModel
@@ -238,12 +262,12 @@
 <style lang="less">
   .fac-tags {
     height: 40px;
-    padding-top: 4px;
     .el-tag {
       margin-right: 10px;
     }
     .button-new-tag {
-      margin-top: -1px;
+      margin-top: -3px;
+      vertical-align: middle;
       height: 32px;
       line-height: 30px;
       padding-top: 0;
