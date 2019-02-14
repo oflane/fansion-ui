@@ -26,6 +26,10 @@ export default {
     tagName: 'fac-card-list',
     props: ['page', 'model', 'conf', 'css', 'comps', 'before', 'end']
   },
+  'item-list': {
+    tagName: 'fac-item-list',
+    props: ['page', 'model', 'current', 'label', 'image', 'key', 'noDefaultd']
+  },
   'simple-table': {
     component: simpleTable.component,
     props: ['type', 'columns', 'model', 'slot', 'loader', 'selection']

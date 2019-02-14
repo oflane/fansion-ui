@@ -31,12 +31,12 @@
    * @param lf 选项中的显示文本字段
    */
   const findText = (multiple, value, options, vf, lf, emptyText) => {
-    if(!value || !options || options.length === 0) {
+    if (!value || !options || options.length === 0) {
       return multiple ? (emptyText ? [emptyText] : []) : emptyText
     }
-    if (multiple){
-      if(!Array.isArray(value)){
-        typeof value === 'string' ? value = value.split(',') : [value.toString()]
+    if (multiple) {
+      if (!Array.isArray(value)) {
+        value = typeof value === 'string' ? value.split(',') : [value.toString()]
       }
       return options.filter(v => value.indexOf(v[vf].toString()) > -1).map(v => v[lf])
     } else {
@@ -64,7 +64,7 @@
         type: String,
         default: 'label'
       },
-      value: [String, Number, Boolean, Object,Array],
+      value: [String, Number, Boolean, Object, Array],
       emptyText: String
     },
     data () {

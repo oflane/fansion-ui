@@ -8,6 +8,7 @@ import simpleTable from './simple-table'
 import tabs from './tabs'
 import buttonBar from './button-bar.vue'
 import cardList from './card-list.vue'
+import itemList from './item-list.vue'
 import cometa from './cometa'
 /**
  * 容器组件集合
@@ -20,10 +21,12 @@ export default {
    */
   components: {
     facTable,
+    simpleTable,
     buttonBar,
     facForm,
     tabs,
-    cardList
+    cardList,
+    itemList
   },
   /**
    * 容器控件元数据信息
