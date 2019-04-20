@@ -20,8 +20,8 @@
     "vue-json-editor": "^1.2.3"
   },
   "devDependencies": {
-    "fansion-base": "^1.0.0",
-    "fansion-fac": "^1.0.0",
+    "fansion-base": "../fansion-base",
+    "fansion-fac": "../fansion-fac",
     "element-ui": "^2.4.6",
     "babel-core": "^6.26.3",
     "babel-cli": "^6.26.0",
@@ -45,9 +45,9 @@
     "eslint-plugin-standard": "^4.0.0",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
-    "vue-loader": "^15.4.2",
+    "vue-loader": "^15.7.0",
     "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.5.17",
+    "vue-template-compiler": "^2.6.10",
     "css-loader": "^1.0.1",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",

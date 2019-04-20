@@ -4,7 +4,6 @@
 
 import facForm from './fac-form.vue'
 import facTable from './fac-table.vue'
-import simpleTable from './simple-table'
 import tabs from './tabs'
 import buttonBar from './button-bar.vue'
 import cardList from './card-list.vue'
@@ -21,7 +20,6 @@ export default {
    */
   components: {
     facTable,
-    simpleTable,
     buttonBar,
     facForm,
     tabs,

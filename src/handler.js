@@ -62,10 +62,11 @@ const delRow = ({vm, url, row, success, fail, msg, loading, valid}) => {
     loading && (vm[loading] = true)
     url = fillRestPath(url, row)
     fail = fail || (() => {
-      loading && (vm[loading] = false)
       vm.$message({type: 'error', message: '删除失败'})
     })
-    post(url).then(success).catch(fail)
+    post(url).then(success).catch(fail).finally(() => {
+      loading && (vm[loading] = false)
+    })
   }, msg || '删除数据操作, 是否继续?')
 }
 /**
