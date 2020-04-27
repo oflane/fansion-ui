@@ -133,7 +133,7 @@
     },
     methods: {
       groupCss (group) {
-        return group.css + changeState' fac-form-width' + this.maxFormCols
+        return group.css + changeState + ' fac-form-width' + this.maxFormCols
       },
       resetFields () {
         this.$refs['elForm'].forEach(v => {
