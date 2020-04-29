@@ -20,8 +20,8 @@
     "vue-json-editor": "^1.4.0"
   },
   "devDependencies": {
-    "fansion-base": "../fansion-base",
-    "fansion-fac": "../fansion-fac",
+    "fansion-base": "^1.0.0",
+    "fansion-fac": "^1.0.0",
     "element-ui": "^2.13.1",
     "babel-core": "^6.26.3",
     "babel-cli": "^6.26.0",

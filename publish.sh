@@ -1,4 +1,4 @@
 #!/bin/bash
 
 npm run build
-#npm publish
+cd npm publish
