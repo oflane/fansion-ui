@@ -24,7 +24,9 @@ export default {
   password: {
     tagName: 'el-input',
     props: ['ref', 'vModel', 'placeholder'],
-    attrs: {type: 'password'}
+    attrs: {
+      type: 'password'
+    }
   },
   'switch-box': {
     tagName: 'el-switch',
@@ -39,9 +41,11 @@ export default {
   textarea: {
     tagName: 'el-input',
     props: ['ref', 'vModel', 'placeholder', 'rows'],
-    attrs: {type: 'textarea'},
+    attrs: {
+      type: 'textarea'
+    },
     default: {
-      'rows': 4
+      rows: 4
     }
   },
   'json-editor': {
@@ -51,7 +55,7 @@ export default {
       ':showBtns': 'false'
     }
   },
-  'combo': {
+  combo: {
     tagName: 'fac-combo',
     props: ['ref', 'vModel', 'options', 'opCode', 'opUrl', 'disabled', 'placeholder', 'multiple', 'multipleLimit', 'size', 'clearable', 'itemValue', 'itemLabel', '@change']
   },
@@ -65,7 +69,7 @@ export default {
   comtext: {
     props: ['ref', 'vModel', 'options', 'opCode', 'opUrl', 'multiple', 'itemValue', 'itemLabel']
   },
-  'autocomplete': {
+  autocomplete: {
     tagName: 'el-autocomplete',
     props: ['ref', 'vModel', 'popperClass', 'placeholder', 'disabled', 'name', 'size', 'value', 'autofocus',
       'fetchSuggestions', 'triggerOnFocus', 'customSugguest', 'sugguest', 'filter', 'ref-to', 'readFields', 'writeFields']
@@ -75,7 +79,7 @@ export default {
     props: ['ref', '@sizeChange', '@currentChange', 'currentPage', 'pageSizes', 'pageSize', 'total', 'layout'],
     default: {
       ':page-sizes': '[20, 50, 100]',
-      'layout': 'total, sizes, prev, pager, next, jumper'
+      layout: 'total, sizes, prev, pager, next, jumper'
     }
   },
   reference: {
@@ -91,7 +95,7 @@ export default {
     tagName: 'fac-xquery',
     props: ['ref', 'conf', 'page', 'loader']
   },
-  'pagination': {
+  pagination: {
     tagName: 'fac-pagination',
     props: ['ref', 'conf', 'page', 'loader', 'model', '@sizeChange', '@current-change']
   },
