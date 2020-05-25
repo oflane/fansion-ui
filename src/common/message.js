@@ -14,7 +14,7 @@ const isNull = fase.util.isNull
 Object.assign(Vue.prototype, {
   $msg: function ({type = 'info', message, items, html, autoClose, iconClass, customClass, duration, showClose = false, onClose, center = false}) {
 
-    let hasItem = items && items.length > 0
+    const hasItem = items && items.length > 0
     if (!message && !hasItem) {
       console.log('$msg is call but not message content!')
       return
@@ -22,10 +22,10 @@ Object.assign(Vue.prototype, {
     if (isNull(html) && hasItem) {
       html = true
     }
-    let dangerouslyUseHTMLString = html
+    const dangerouslyUseHTMLString = html
     if (hasItem) {
       if (html) {
-        let itemHtml = items.map(i => `<li>${i}</li>`).join('')
+        const itemHtml = items.map(i => `<li>${i}</li>`).join('')
         message = `<p class="msg"><label>${message}</label><u>${itemHtml}</u>`
       } else {
         message = `${message}<br/>${items.join('<br/>')}`

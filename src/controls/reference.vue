@@ -43,7 +43,7 @@
    * 引入基础对象及方法
    */
   const Elm = fase.mixins.elm
-  const getJson = fase.rest.getJson
+  const gson = fase.rest.gson
 
   /**
    * 关闭参照全局方法
@@ -243,7 +243,7 @@
         }
         let suggest = this.suggest
         if (typeof suggest === 'string') {
-          getJson(suggest, {filter: inputString}).then(cb)
+          gson(suggest, {filter: inputString}).then(cb)
         } else if (typeof suggest === 'function') {
           suggest(inputString, cb)
         } else {

@@ -8,7 +8,7 @@ import defautContainer from './container'
 /**
  * 获取工具方法
  */
-const {getJson, fillRestPath} = fase.rest
+const {gson, furl} = fase.rest
 /**
  * 默认参照容器
  * @type {string}
@@ -18,14 +18,14 @@ const DAFAULT_CONTAINER = 'default'
  * 参照注册信息
  * @type {{}}
  */
-let refs = {}
+const refs = {}
 /**
  * 容器注册信息
  * @type {{}}
  */
-let containers = {}
+const containers = {}
 /**
- * 家子安书记的url
+ * 加载参照的url
  * @type {null}
  */
 let loadUrl = null
@@ -55,10 +55,10 @@ const load = fase.builder.loader(refs, 'code')
  * @returns {*}
  */
 const get = (code, cb) => {
-  let info = refs[code]
-  let params = {code}
-  let url = fillRestPath(loadUrl, params)
-  info ? cb(info) : loadUrl && load(getJson(url, params), () => cb(refs[code]))
+  const info = refs[code]
+  const params = {code}
+  const url = furl(loadUrl, params)
+  info ? cb(info) : loadUrl && load(gson(url, params), () => cb(refs[code]))
 }
 
 /**

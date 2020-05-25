@@ -4,7 +4,7 @@
 
 import fase from 'fansion-base'
 
-const {fillRestPath, post} = fase.rest
+const { furl, post } = fase.rest
 /**
  * 确认操作处理
  * @param vm vue组件对象
@@ -32,7 +32,7 @@ const confirm = (vm, handler, msg, csg) => {
  * @param csg 取消提示消息
  * @param canceler 取消时处理
  */
-const confirmHandle = ({vm, handler, canceler, msg, csg}) => {
+const confirmHandle = ({ vm, handler, canceler, msg, csg }) => {
   vm.$confirm(msg || '操作确认, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -54,15 +54,15 @@ const confirmHandle = ({vm, handler, canceler, msg, csg}) => {
  * @param msg 确认提示消息
  * @param loading 加载状态字段
  */
-const delRow = ({vm, url, row, success, fail, msg, loading, valid}) => {
+const delRow = ({ vm, url, row, success, fail, msg, loading, valid }) => {
   confirm(vm, () => {
     if (valid && !valid()) {
       return
     }
     loading && (vm[loading] = true)
-    url = fillRestPath(url, row)
+    url = furl(url, row)
     fail = fail || (() => {
-      vm.$message({type: 'error', message: '删除失败'})
+      vm.$message({ type: 'error', message: '删除失败' })
     })
     post(url).then(success).catch(fail).finally(() => {
       loading && (vm[loading] = false)
@@ -88,13 +88,13 @@ const formProxy = {
  * @param loading 加载状态字段
  */
 const saveData = ({vm, url, form, model, success, fail, final, loading}) => {
-  let formCtrl = !form ? formProxy : typeof form === 'string' ? vm.$refs[form] : typeof form === 'function' ? form() : form
+  const formCtrl = !form ? formProxy : typeof form === 'string' ? vm.$refs[form] : typeof form === 'function' ? form() : form
   formCtrl.validate(valid => {
     if (!valid) {
       return
     }
     loading && (vm[loading] = true)
-    let data = typeof model === 'string' ? vm[model] : typeof model === 'function' ? model() : model
+    const data = typeof model === 'string' ? vm[model] : typeof model === 'function' ? model() : model
     post(url, data).then(success || fase.constant.EMPTY_FUNC).catch(fail || fase.constant.EMPTY_FUNC).finally(() => {
       loading && (vm[loading] = false)
       final && final()

@@ -29,24 +29,14 @@
       page: Object
     },
     data () {
-      let buttons
-      if (Array.isArray(this.conf)) {
-        buttons = this.conf
-      } else {
-        buttons = this.conf.buttons
-      }
-
+      const buttons = !this.conf ? [] : Array.isArray(this.conf) ? this.conf : this.conf.buttons
       return {
         buttons
       }
     },
     watch: {
       conf (conf) {
-        if (Array.isArray(conf)) {
-          this.buttons = conf
-        } else {
-          this.buttons = conf.buttons
-        }
+        this.buttons = !conf ? [] : Array.isArray(conf) ? conf : conf.buttons
       }
     },
     methods: {
@@ -67,8 +57,8 @@
     width: 100%;
     .el-button--primary {
       color: #fff;
-      background-color: #20a0ff;
-      border-color: #20a0ff;
+      background-color: #414959;
+      border-color: #414959;
     }
     .el-button {
       border: 0px;

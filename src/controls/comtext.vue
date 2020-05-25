@@ -20,7 +20,7 @@
    * 引入工具方法
    */
   const isNotEmpty = fase.util.isNotEmpty
-  const {getJson, fillRestPath} = fase.rest
+  const {gson, furl} = fase.rest
 
   /**
    * 查找显示文本
@@ -77,9 +77,9 @@
           url = this.opUrl
         } else if (isNotEmpty(this.opCode)) {
           //  根据预置的枚举url加载选项
-          url = fillRestPath(window.$fansionUrls['enum-load'], {code: this.optionCode})
+          url = furl(window.$fansionUrls['enum-load'], {code: this.optionCode})
         }
-        url && getJson(url).then((res) => {
+        url && gson(url).then((res) => {
           if (Array.isArray(res) && res.length > 0) {
             vm.options = res
             showText = findText(multiple, value, res, itemValue, itemLabel, emptyText)

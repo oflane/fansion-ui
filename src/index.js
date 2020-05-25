@@ -10,9 +10,10 @@ import fase from 'fansion-base'
 import fac from 'fansion-fac'
 import generator from './generator'
 import handler from './handler'
+import msg from './msg'
 import sortDialog from './pages/sort-dailog'
 // 页面注册
-let pageComps = {
+const pageComps = {
   '/ui/page/sort-dialog': sortDialog
 }
 
@@ -55,5 +56,6 @@ export default {
   ...containers.components,
   ...controls.components,
   generator,
-  handler
+  handler,
+  msg
 }

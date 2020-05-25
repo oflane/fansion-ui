@@ -59,6 +59,7 @@
         if (this.hasFrame) {
           this.$refs['content'].show()
         }
+        this.$emit('open',this.$refs['content'])
         this.visible = true
       },
       isVisible () {
@@ -72,6 +73,7 @@
           this.$refs['content'].hide()
         }
         this.visible = false
+        this.$emit('close', this.$refs['content'])
       }
     }
   }
