@@ -55,11 +55,6 @@
   .button-bar{
     overflow: auto;
     width: 100%;
-    .el-button--primary {
-      color: #fff;
-      background-color: #414959;
-      border-color: #414959;
-    }
     .el-button {
       border: 0px;
       border-radius: 0px;
