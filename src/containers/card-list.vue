@@ -75,6 +75,7 @@
     min-height:   60px;
     padding: 20px 20px;
     .card{
+      border-radius: 0;
       display:inline-block;
       margin: 10px 10px;
     }
