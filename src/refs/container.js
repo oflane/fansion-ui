@@ -8,7 +8,7 @@ import fase from 'fansion-base'
 /**
  * 引入工具方法
  */
-let toProps = fase.render.toProps
+const toProps = fase.render.toProps
 
 /**
  * 默认的参照容器
@@ -30,14 +30,14 @@ export default {
   },
   created () {
     let refContent = ''
-    let title = this.title
-    let options = this.$options
+    const title = this.title
+    const options = this.$options
     if (this.component) {
-      if (!options.hasOwnProperty('components')) {
+      if (!('components' in options)) {
         options.components = Object.create(options.components)
       }
       Object.assign(options.components, {'ref-content': this.component})
-      let cprops = toProps(this.params)
+      const cprops = toProps(this.params)
       refContent = `<ref-content ref="content" ${cprops}/>`
     }
     if (this.html) {
@@ -46,7 +46,7 @@ export default {
     if (this.text) {
       refContent += this.text
     }
-    let dprops = toProps(this.dialogProps)
+    const dprops = toProps(this.dialogProps)
     options.template = `<el-dialog ${dprops} :visible.sync="visible" title="${title}">${refContent}
 <div slot="footer">
     <el-button type="primary" @click="onOk">确定</el-button>
@@ -55,25 +55,30 @@ export default {
 </div>
 </el-dialog>`
   },
+  mounted () {
+    this.$emit('open', this.$refs.content)
+  },
   methods: {
     show () {
       this.visible = true
+      this.$emit('open', this.$refs.content)
     },
     isVisible () {
       return this.visible
     },
     hide () {
       this.visible = false
+      this.$emit('close', this.$refs.content)
     },
     onOk () {
-      let ref = this.$refs.content
+      const ref = this.$refs.content
       if (ref && typeof ref.getData === 'function') {
-        let row = ref.getData()
+        const row = ref.getData()
         if (row) {
           this.$closeReference(row)
         }
       } else {
-        let el = this.$el.querySelector('[selected]')
+        const el = this.$el.querySelector('[selected]')
         if (el) {
           let data = el.getAttribute('data')
           if (data) {
@@ -81,8 +86,8 @@ export default {
             data = eval(data)
             this.$closeReference(data)
           } else {
-            let value = el.getAttribute('value')
-            let l = el.getAttribute('label')
+            const value = el.getAttribute('value')
+            const l = el.getAttribute('label')
             this.$closeReference({value, label: l || el.innerText})
           }
         }

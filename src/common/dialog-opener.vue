@@ -18,6 +18,7 @@
    */
   const {toRender, toProps} = fase.render
   const getText = fase.rest.getText
+  const isFunction = fase.util.isFunction
 
   export default {
     name: 'dialogOpener',
@@ -54,12 +55,15 @@
         toRender(this, `<el-dialog ${dprops} :visible.sync="visible"${title}>{{loadText}}{{html}}</el-dialog>`)
       }
     },
+    mounted () {
+      this.$emit('open', this.$refs.content)
+    },
     methods: {
       show () {
         if (this.hasFrame) {
           this.$refs['content'].show()
         }
-        this.$emit('open',this.$refs['content'])
+        this.$emit('open', this.$refs.content)
         this.visible = true
       },
       isVisible () {
@@ -69,11 +73,11 @@
         return this.visible
       },
       hide () {
-        if (this.hasFrame) {
-          this.$refs['content'].hide()
+        if (this.hasFrame && this.$refs.content && isFunction(this.$refs.content.hide)) {
+          this.$refs.content.hide()
         }
         this.visible = false
-        this.$emit('close', this.$refs['content'])
+        this.$emit('close', this.$refs.content)
       }
     }
   }

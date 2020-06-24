@@ -18,7 +18,7 @@ const confirm = (vm, handler, msg, csg) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(handler).catch(() => {
-    this.$message({
+    vm.$message({
       type: 'info',
       message: csg || '已取消操作'
     })
@@ -38,7 +38,7 @@ const confirmHandle = ({ vm, handler, canceler, msg, csg }) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(handler).catch(canceler || (() => {
-    this.$message({
+    vm.$message({
       type: 'info',
       message: csg || '已取消操作'
     })

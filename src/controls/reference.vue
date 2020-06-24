@@ -19,7 +19,7 @@
       @keydown.down.native.prevent="highlight(highlightedIndex + 1)"
       @keydown.enter.stop.native="handleKeyEnter"
     >
-      <i class="el-input__icon fa fa-list is-clickable" @click="handleIconClick"　slot="suffix">
+      <i class="el-input__icon fa fa-list is-clickable" @click="handleIconClick($event)"　slot="suffix">
       </i>
     </el-input>
     <reference-suggestions
@@ -39,12 +39,13 @@
   import ReferenceSuggestions from './reference-suggestions.vue'
   import Vue from 'vue'
 
+
   /**
    * 引入基础对象及方法
    */
   const Elm = fase.mixins.elm
   const gson = fase.rest.gson
-
+  const getData = fase.data.getData
   /**
    * 关闭参照全局方法
    * @param data 返回数据
@@ -116,7 +117,17 @@
       }
     },
     data: function () {
+      let ref = this.refTo
+      let suggestTarget = this.suggest
+      if (typeof ref === 'string') {
+        refs.get(ref, (r) => {
+          ref = r
+          !suggestTarget && (suggestTarget = getData(r.params, 'suggest') || getData(r.component, 'suggest'))
+        })
+      }
       return {
+        ref,
+        suggestTarget,
         isFocus: false,
         isOnComposition: false,
         suggestions: [],
@@ -134,6 +145,16 @@
     watch: {
       suggestionVisible (val) {
         this.$emit('ReferenceSuggestions', 'visible', [val, this.$refs.input.$refs.input.offsetWidth])
+      },
+      refTo (refTo) {
+        const vm = this
+        if (typeof refTo === 'string') {
+          refs.get()
+          refs.get(refTo, (r) => {
+            vm.ref = r
+            vm.suggestTarget = getData(r.params, 'suggest') || getData(r.component, 'suggest')
+          })
+        }
       }
     },
     methods: {
@@ -184,6 +205,9 @@
         }
       },
       handleClickoutside () {
+        if (!this.suggestTarget) {
+          return
+        }
         if (!this.label) {
           if (this.suggestions.length === 1 && this.suggestions[0].label === this.label) {
             this.select(this.suggestions[0])
@@ -201,6 +225,8 @@
             this.model[f] = item[f]
           }
         })
+        this.value = item.value
+        this.showLabel = item.label
         this.$emit('input', item.value)
         this.$emit('update:label', item.label)
         this.$emit('select', item)
@@ -234,6 +260,7 @@
         }
       },
       fetchSuggestions: function (inputString, cb) {
+        const suggest = this.suggestTarget
         if (!this.suggest) {
           return
         }
@@ -241,7 +268,6 @@
           cb.call(this, [])
           return
         }
-        let suggest = this.suggest
         if (typeof suggest === 'string') {
           gson(suggest, {filter: inputString}).then(cb)
         } else if (typeof suggest === 'function') {
@@ -250,8 +276,9 @@
           cb(this.suggest.filter(this.filter(inputString)))
         }
       },
-      handleIconClick () {
+      handleIconClick (e) {
         this.showReference()
+
       },
       setParams (params, isClear = true) {
         if (this.refParams === params) {
