@@ -13,6 +13,7 @@
       :placeholder="placeholder"
       :name="name"
       :size="size"
+      :com="listenerTrans"
       @focus="handleFocus"
       @blur="handleBlur"
       @keydown.up.native.prevent="highlight(highlightedIndex - 1)"
@@ -55,7 +56,7 @@
   }
   /**
    * 打开参照对话框
-   * @param vm 参照对象
+   * @param vm vue对象
    * @param conf 对象化框配置对象
    */
   const openReference = (vm, conf) => {
@@ -66,6 +67,56 @@
     }
     Object.assign(conf, vm.getDialogOptions())
     vm.$dialogs.show(conf)
+  }
+
+  /**
+   * 翻译方法
+   * @param value 业务引用值
+   */
+  function trans (vm) {
+    const value = vm.value
+    const trans = vm.trans
+    const cb = (res) => {
+      const r = !res || typeof res === 'string' ? res : res.value || res.label
+      r && vm.$emit('update:showLabel', r)
+    }
+    trans && (typeof trans === 'string' ? gson(trans, {value}, cb) : trans(value, cb))
+  }
+
+  /**
+   * 初始化业务引用回调
+   * @param vm
+   * @param ref 业务引用对象
+   */
+  function intRefCb (vm, ref) {
+    if (!vm.suggest) {
+      const s = ref.params ? getData(ref.params, 'suggest') : null
+      const suggestTarget = s ? s : getData(ref.component, 'suggest')
+      vm.suggestTarget = suggestTarget
+      if (!vm.trans && Array.isArray(suggestTarget)) {
+        vm.trans = (value, cb) => {
+          const rs = suggestTarget.filter(v => v.value === value)
+          rs.length > 0 && cb(rs[0].label)
+        }
+      }
+    }
+  }
+
+  /**
+   * 初始化
+   * @param vm vue对象
+   * @param cb 回调方法
+   */
+  function initRef(vm, cb){
+    const ref = vm.ref
+    if (!ref) {
+      return
+    }
+    typeof ref === 'string' ? refs.get(ref, (r) => {
+      vm.ref = r
+      intRefCb(vm, r)
+      cb && cb(vm)
+    }) : intRefCb(vm, ref) || cb && cb(vm)
   }
   /**
    * 对话框选择组件
@@ -97,6 +148,7 @@
         default: true
       },
       suggest: [String, Array, Function],
+      translate: [String, Function],
       filter: {
         type: Function,
         default: function (filterString) {
@@ -117,16 +169,13 @@
       }
     },
     data: function () {
-      let ref = this.refTo
-      let suggestTarget = this.suggest
-      if (typeof ref === 'string') {
-        refs.get(ref, (r) => {
-          ref = r
-          !suggestTarget && (suggestTarget = getData(r.params, 'suggest') || getData(r.component, 'suggest'))
-        })
-      }
+      const vm = this
+      let ref = vm.refTo
+      let suggestTarget = vm.suggest
+      let trans = vm.translate
       return {
         ref,
+        trans,
         suggestTarget,
         isFocus: false,
         isOnComposition: false,
@@ -140,6 +189,14 @@
         const suggestions = this.suggestions
         let isValidData = Array.isArray(suggestions) && suggestions.length > 0
         return (isValidData || this.loading) && this.isFocus
+      },
+      listenerTrans () {
+        const {value,showLabel} = this
+        if (value && !showLabel && this.trans) {
+          console.log(`value:${value},label:${showLabel}`)
+          trans(this)
+        }
+        return {value,showLabel}
       }
     },
     watch: {
@@ -148,14 +205,25 @@
       },
       refTo (refTo) {
         const vm = this
-        if (typeof refTo === 'string') {
-          refs.get()
-          refs.get(refTo, (r) => {
-            vm.ref = r
-            vm.suggestTarget = getData(r.params, 'suggest') || getData(r.component, 'suggest')
-          })
-        }
+        vm.ref = refTo
+        initRef(vm, trans)
+      },
+      value (v) {
+        console.log(v)
+      },
+      showLabel (v) {
+        console.log(v)
       }
+    },
+    mounted () {
+      const vm = this
+      initRef(vm, trans)
+      vm.$on('item-click', item => {
+        this.select(item)
+      })
+    },
+    beforeDestroy () {
+      this.$refs.suggestions.$destroy()
     },
     methods: {
       getData (queryString) {
@@ -218,18 +286,19 @@
         this.isFocus = false
       },
       select (item) {
-        this.writeFields.forEach((f, i) => {
-          if (i >= this.readFields.length) {
-            this.model[f] = null
-          } else {
-            this.model[f] = item[f]
-          }
-        })
-        this.value = item.value
-        this.showLabel = item.label
-        this.$emit('input', item.value)
-        this.$emit('update:label', item.label)
-        this.$emit('select', item)
+        if (item && this.value !== item.value) {
+          this.writeFields.forEach((f, i) => {
+            if (i >= this.readFields.length) {
+              this.model[f] = null
+            } else {
+              this.model[f] = item[f]
+            }
+          })
+
+          this.$emit('input', item.value)
+          this.$emit('update:showLabel', item.label)
+          this.$emit('change', item)
+        }
         if (this.readonly) {
           return
         }
@@ -271,7 +340,7 @@
         if (typeof suggest === 'string') {
           gson(suggest, {filter: inputString}).then(cb)
         } else if (typeof suggest === 'function') {
-          suggest(inputString, cb)
+          suggest(inputString, cb, this.refParam)
         } else {
           cb(this.suggest.filter(this.filter(inputString)))
         }
@@ -297,8 +366,10 @@
           params: o.refParams,
           dep: '#' + o.getElmID(),
           refresh: o.refresh,
-          '@open': () => {
+          '@open': ($event) => {
             o.$dialogs.getCurrent().$reference = o
+            console.log($event)
+            $event.reset && $event.reset()
           }
         }
         return options
@@ -334,14 +405,6 @@
       } else if (typeof this.writeFields === 'string') {
         this.writeFields = this.writeFields.split(',')
       }
-    },
-    mounted () {
-      this.$on('item-click', item => {
-        this.select(item)
-      })
-    },
-    beforeDestroy () {
-      this.$refs.suggestions.$destroy()
     }
   }
 </script>

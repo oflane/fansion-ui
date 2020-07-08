@@ -27,9 +27,12 @@
       }
     },
     watch: {
-      conf () {
-        this.$mount()
-        callHook(this, 'mounted')
+      conf: {
+        handler () {
+          this.$mount()
+          callHook(this, 'mounted')
+        },
+        deep: true
       }
     },
     components: {},

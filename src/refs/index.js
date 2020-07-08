@@ -49,6 +49,14 @@ const ref = code => this.refs[code]
  * @return {*}
  */
 const load = fase.builder.loader(refs, 'code', fase.dialog.buildDialogMeta)
+
+/**
+ * 注册参照数据
+ * @param data 注册数据
+ * @param target 注册目标数据
+ * @return {*}
+ */
+const add = fase.builder.register(refs, 'code', fase.dialog.buildDialogMeta)
 /**
  * 根据参照编码获取参数信息
  * @param code 参照编码
@@ -134,6 +142,10 @@ export default {
    */
   load,
   /**
+   *
+   */
+  add,
+  /**
    * 根据参照编码获取参数信息
    * @param code 参照编码
    * @returns {*}
@@ -175,6 +187,7 @@ export default {
     if (!options) {
       return
     }
+    add(options.refs)
     addContainer(options.containers)
     loadUrl = options.loadUrl
     options.default && setDefaultContainer(options.default)
