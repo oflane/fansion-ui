@@ -369,7 +369,7 @@
           '@open': ($event) => {
             o.$dialogs.getCurrent().$reference = o
             console.log($event)
-            $event.reset && $event.reset()
+            $event && $event.reset && $event.reset()
           }
         }
         return options
