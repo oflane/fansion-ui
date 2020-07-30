@@ -64,12 +64,14 @@ const add = fase.builder.register(refs, 'code', fase.dialog.buildDialogMeta)
  */
 const get = (code, cb) => {
   let info = refs[code]
-  if (!info) {
+  if (info) {
     info = fase.dialog.buildDialogMeta(code)
-    if (info) {
+    if (info && info.component) {
       refs[code] = info
       cb(info)
       return
+    } else {
+      info = null
     }
   }
   const params = {code}

@@ -17,7 +17,8 @@
     "dist": "cross-env NODE_ENV=prod MODE=dist node build/build.js"
   },
   "dependencies": {
-    "vue-json-editor": "^1.4.0"
+    "vue-json-editor": "^1.4.0",
+    "vue-codemirror": "^4.0.6"
   },
   "devDependencies": {
     "fansion-base": "^1.0.0",

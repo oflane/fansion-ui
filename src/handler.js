@@ -4,7 +4,7 @@
 
 import fase from 'fansion-base'
 
-const { furl, post } = fase.rest
+const { furl, post, pson } = fase.rest
 /**
  * 确认操作处理
  * @param vm vue组件对象
@@ -102,6 +102,31 @@ const saveData = ({vm, url, form, model, success, fail, final, loading}) => {
   })
 }
 /**
+ * 保存数据
+ * @param vm vue组件对象
+ * @param url 保存url
+ * @param form 表单对象
+ * @param model 模型
+ * @param success 成功后处理
+ * @param fail 失败后处理
+ * @param final 保存后的最终处理
+ * @param loading 加载状态字段
+ */
+const saveJson = ({vm, url, form, model, success, fail, final, loading}) => {
+  const formCtrl = !form ? formProxy : typeof form === 'string' ? vm.$refs[form] : typeof form === 'function' ? form() : form
+  formCtrl.validate(valid => {
+    if (!valid) {
+      return
+    }
+    loading && (vm[loading] = true)
+    const data = typeof model === 'string' ? vm[model] : typeof model === 'function' ? model() : model
+    pson(url, data).then(success || fase.constant.EMPTY_FUNC).catch(fail || fase.constant.EMPTY_FUNC).finally(() => {
+      loading && (vm[loading] = false)
+      final && final()
+    })
+  })
+}
+/**
  * 设置页面标题
  * @param vm vue组件对象
  * @param title 标题
@@ -162,7 +187,7 @@ export default {
    */
   delRow,
   /**
-   * 保存数据
+   * 通过表单保存数据
    * @param vm vue组件对象
    * @param url 保存url
    * @param form 表单对象
@@ -172,5 +197,17 @@ export default {
    * @param final 保存后的最终处理
    * @param loading 加载状态字段
    */
-  saveData
+  saveData,
+  /**
+   * 通过json保存数据
+   * @param vm vue组件对象
+   * @param url 保存url
+   * @param form 表单对象
+   * @param model 模型
+   * @param success 成功后处理
+   * @param fail 失败后处理
+   * @param final 保存后的最终处理
+   * @param loading 加载状态字段
+   */
+  saveJson
 }

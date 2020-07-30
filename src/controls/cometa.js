@@ -2,6 +2,10 @@
  * Copyright(c) Oflane Software 2017. All Rights Reserved.
  */
 import vueJsonEditor from 'vue-json-editor'
+import { codemirror } from 'vue-codemirror'
+// 这里引入的是主题样式，根据设置的theme的主题引入，一定要引入！！
+import 'codemirror/theme/ambiance.css'
+import 'codemirror/mode/javascript/javascript'
 import '../styles/style.less'
 
 /**
@@ -46,13 +50,6 @@ export default {
     },
     default: {
       rows: 4
-    }
-  },
-  'json-editor': {
-    component: vueJsonEditor,
-    props: ['ref', 'vModel', 'mode', 'modes'],
-    attrs: {
-      ':showBtns': 'false'
     }
   },
   combo: {
@@ -108,5 +105,21 @@ export default {
   tags: {
     tagName: 'fac-tags',
     props: ['ref', 'single', 'valueField', 'labelField', 'vModel', 'disabled', 'value', 'readonlyValue']
+  },
+  'json-editor': {
+    component: vueJsonEditor,
+    props: ['ref', 'vModel', 'mode', 'modes'],
+    attrs: {
+      ':showBtns': 'false'
+    }
+  },
+  codemirror: {
+    component: codemirror,
+    props: ['ref', 'vModel', 'options'],
+    default: {
+      ':options': {
+        theme: 'ambiance'
+      }
+    }
   }
 }
