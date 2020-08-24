@@ -5,8 +5,8 @@
  -->
 <template>
   <div class="button-bar">
-    <template v-for="item in buttons">
-      <el-dropdown v-if="item.group" trigger="click" @command="handleCommand">
+    <template v-for="(item,$index) in buttons">
+      <el-dropdown v-if="item.group" trigger="click"  :key="$index" @command="handleCommand">
         <el-button :type="item.type">
           {{item.name}}<i class="el-icon-caret-bottom el-icon--right"></i>
         </el-button>
@@ -15,7 +15,7 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button v-else :type="item.type" @click="handleCommand(item.click)" v-bind="item">{{item.name}}</el-button>
+      <el-button v-else :type="item.type"  :key="$index" @click="handleCommand(item.click)" v-bind="item">{{item.name}}</el-button>
     </template>
   </div>
 </template>
@@ -26,7 +26,8 @@
     name: 'FacButtonBar',
     props: {
       conf: [Object, Array],
-      page: Object
+      page: Object,
+      fac: Object
     },
     data () {
       const buttons = !this.conf ? [] : Array.isArray(this.conf) ? this.conf : this.conf.buttons
@@ -41,7 +42,7 @@
     },
     methods: {
       handleCommand (cmd) {
-        let f = this.page[cmd] || new Function(cmd)
+        const f = this.page[cmd] || new Function(cmd)
         if (f) {
           f.call(this.page)
         } else {
@@ -56,8 +57,8 @@
     overflow: auto;
     width: 100%;
     .el-button {
-      border: 0px;
-      border-radius: 0px;
+      border: 0;
+      border-radius: 0;
       min-width: 80px;
     }
     .el-button+.el-button {

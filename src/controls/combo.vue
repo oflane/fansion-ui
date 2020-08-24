@@ -54,7 +54,7 @@
       }
     },
     data () {
-      let _self = this
+      const vm = this
       if (!Array.isArray(this.options)) {
         let url
         if (isNotEmpty(this.opUrl)) {
@@ -65,7 +65,7 @@
         }
         url && gson(url).then((res) => {
           if (Array.isArray(res) && res.length > 0) {
-            _self.options = res
+            vm.options = res
           }
         })
       }
@@ -82,4 +82,3 @@
     }
   }
 </script>
-

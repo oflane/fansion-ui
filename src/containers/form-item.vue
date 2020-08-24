@@ -19,6 +19,7 @@
     props: {
       conf: Object,
       page: Object,
+      fac: Object,
       model: {}
     },
     data: function () {
@@ -37,7 +38,7 @@
     },
     components: {},
     beforeMount: function () {
-      let conf = this.conf
+      const conf = this.conf
       let validation = this.conf.validation
       validation = validation && (!Array.isArray(validation) ? validation.ignore ? null : validation : validation.filter(v => !v.ignore).map(v => {
         if (typeof v.method === 'string') {
@@ -48,7 +49,7 @@
         return v
       }))
       this.validation = validation
-      let {components, template} = compile(conf)
+      const {components, template} = compile(conf)
       console.log(template)
       toRender(this, `<el-form-item :prop="conf.field" :label="conf.label" :rules="validation">${template}</el-form-item>`, components)
     }

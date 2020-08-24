@@ -24,6 +24,7 @@
     name: 'FacItemList',
     props: {
       page: Object,
+      fac: Object,
       model: Array,
       current: [String, Number],
       label: {
@@ -59,8 +60,8 @@
         if (!this.current) {
           return
         }
-        let isActrive = this.key ? item[this.key] === this.current : this.current === $index
-        return isActrive && 'active'
+        let isActive = this.key ? item[this.key] === this.current : this.current === $index
+        return isActive && 'active'
       },
       onClickItem (item, $index) {
         this.current = this.key ? item[this.key] : $index
@@ -101,20 +102,5 @@
       }
     }
   }
-  .item-list-empty-block{
-    position: relative;
-    min-height: 60px;
-    text-align: center;
-    width: 100%;
-    height: 100%;
 
-    .no-data{
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      -ms-transform: translate(-50%,-50%);
-      transform: translate(-50%,-50%);
-      color: #5e7382;
-    }
-  }
 </style>

@@ -5,15 +5,13 @@
  -->
 <template>
   <div class="fac-form-group" >
-    <el-form ref="elForm" v-for="group in groups" :status-icon="statusIcon" :model="model" :key="key" class="fac-form" :class="groupCss(group)" :label-width="labelW" label-position="right">
+    <el-form ref="elForm" v-for="(group,$index) in groups" :status-icon="statusIcon" :model="model" :key="$index" class="fac-form" :class="groupCss(group)" :label-width="labelW" label-position="right">
       <div class="title" v-if="group.title">{{group.title}}</div>
       <el-row class="form-body" :gutter="gutterProp">
-        <template v-for="item in group.items">
-          <el-col :span="8" :xs="24" :md="Number(group.elcols)*Number(item.cols)||group.elcols"
+          <el-col  v-for="(item, $i) in group.items" :key="$i" :span="8" :xs="24" :md="Number(group.elcols)*Number(item.cols)||group.elcols"
                   :lg="Number(group.elcols)*Number(item.cols)||group.elcols">
-            <form-item :conf="item" :model="model" :page="page"/>
+            <form-item :conf="item" :model="model" :page="page" :fac="fac"/>
           </el-col>
-        </template>
       </el-row>
     </el-form>
   </div>
@@ -43,14 +41,14 @@
     if (!items || items.length === 0) {
       return
     }
-    let elcols = 24 / Number(cols) || 12
+    const elcols = 24 / Number(cols) || 12
     if (!state) {
       group.elcols = elcols
       group.col = cols
       return group
     }
     items = items.map((item) => {
-      let s = item[state] || item[state.substring(6)]
+      const s = item[state] || item[state.substring(6)]
       s && (item = Object.assign({}, item, s))
       return item
     }).filter(item => !item.ignore)
@@ -83,19 +81,19 @@
       },
       state: String,
       page: Object,
+      fac: Object,
       labelWidth: String,
       gutter: Number
     },
     data: function () {
-      let labelW = this.conf.labelWidth || this.labelWidth || '120px'
-      let gutterProp = this.conf.gutter || this.gutter || 20
+      const labelW = this.conf.labelWidth || this.labelWidth || '120px'
+      const gutterProp = this.conf.gutter || this.gutter || 20
       if (isNotNull(this.conf.statusIcon)) {
         this.statusIcon = this.conf.statusIcon && this.statusIcon
       }
-      let exist = !(this.ignore === true || this.conf.ignore === true)
-      let maxFormCols = 0
+      const exist = !(this.ignore === true || this.conf.ignore === true)
+      const maxFormCols = 0
       return {
-        key: Symbol('itemkey'),
         labelW,
         maxFormCols,
         gutterProp,
@@ -136,15 +134,15 @@
         return group.css + ' ' + this.state + ' fac-form-width' + this.maxFormCols
       },
       resetFields () {
-        this.$refs['elForm'].forEach(v => {
+        this.$refs.elForm.forEach(v => {
           v.resetFields()
         })
       },
       validate (callback) {
         let valid = true
         let count = 0
-        let forms = this.$refs['elForm']
-        let len = forms.length
+        const forms = this.$refs.elForm
+        const len = forms.length
         forms.forEach(v => {
           v.validate(c => {
             if (!c) {
@@ -158,13 +156,13 @@
         })
       },
       clearValidate () {
-        this.$refs['elForm'].forEach(v => {
+        this.$refs.elForm.forEach(v => {
           v.clearValidate()
         })
       },
       changeState () {
-        let vm = this
-        let {page, conf, css, exist} = vm
+        const vm = this
+        const {page, conf, css, exist} = vm
         let pageState = this.state || (page && ('pageState' in page) && page.pageState ? page.pageState : 'init')
         pageState = pageState.startsWith('state_') ? pageState : 'state_' + pageState
         if (!exist) {
@@ -173,7 +171,7 @@
         }
         let groups = conf.groups || []
         if (groups.length === 0) {
-          let group = buildFormGroup(conf, pageState, css)
+          const group = buildFormGroup(conf, pageState, css)
           vm.maxFormCols = group.cols
           group && groups.push(group)
         } else {
@@ -186,19 +184,19 @@
 </script>
 <style lang="less">
   .fac-form-group{
-    background: none 0px 0px repeat scroll rgb(255, 255, 255);
+    background: none 0 0 repeat scroll rgb(255, 255, 255);
   }
   .fac-form {
     margin: 0 auto;
-    background: none 0px 0px repeat scroll rgb(255, 255, 255);
+    background: none 0 0 repeat scroll rgb(255, 255, 255);
     border-radius: 3px;
     .title {
       border-bottom: 1px dotted rgb(221, 221, 221);
       height: 50px;
       padding-left: 15px;
       line-height: 50px;
-      margin-top: 0px;
-      margin-right: 0px;el-col el-col-xs-24 el-col-md-24 el-col-lg-24
+      margin-top: 0;
+      margin-right: 0;
       text-align: left;
     }
     +.fac-form {
@@ -237,4 +235,3 @@
     }
   }
 </style>
-

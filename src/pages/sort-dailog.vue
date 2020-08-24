@@ -16,7 +16,7 @@
                      :allow-drop="allowDrop"
                      highlight-current
             />
-            <template slot="lr-right-float" slot="button">
+            <template slot="button">
                 <div class="center">
                     <div class="el-row">
                         <el-button type="primary" icon="fa fa-arrow-up" circle @click="top"/>
@@ -56,7 +56,7 @@
       model: Array
     },
     data () {
-      let layout = {
+      const layout = {
         body: {
           class: 'layout-body cleafix',
           children: [
@@ -71,7 +71,7 @@
           ]
         }
       }
-      let rows = reloadData(this)
+      const rows = reloadData(this)
       return {
         visible: true,
         rows,
@@ -100,11 +100,11 @@
         !flag && this.$emit('cancel')
       },
       getCurrent () {
-        return this.$refs['leftTree'].getCurrentNode()
+        return this.$refs.leftTree.getCurrentNode()
       },
       move (target) {
-        let vm = this
-        let current = vm.getCurrent()
+        const vm = this
+        const current = vm.getCurrent()
         if (!current) {
           vm.$message({
             type: 'warning',
@@ -112,14 +112,14 @@
           })
           return
         }
-        let rows = vm.rows
+        const rows = vm.rows
         let i = rows.indexOf(current)
         if (Math.abs(target) === 1) {
           target = i + target
         }
         let [r] = rows.splice(i, 1)
         r = {...r}
-        delete r['$treeNodeId']
+        delete r.$treeNodeId
         rows.splice(target, 0, r)
       },
       top () {
@@ -144,9 +144,8 @@
        * 确定按钮
        */
       onOk () {
-        let vm = this
-        let model = vm.model
-        let rows = vm.rows
+        const vm = this
+        const {model, rows} = vm
         rows.forEach((v, i) => (model[i] = v.data))
         this.$dialogs.closeCurrent()
         this.$emit('ok')

@@ -1,6 +1,3 @@
-<template>
-  <!-- -->
-</template>
 <script>
   import fase from 'fansion-base'
 
@@ -22,7 +19,7 @@
     },
     data () {
       this.loader.addPlugin(this)
-      let sort = this.defaultSort || {}
+      const sort = this.defaultSort || {}
       return {
         sort
       }

@@ -16,19 +16,23 @@ export default {
   },
   'fac-form': {
     tagName: 'fac-form',
-    props: ['ref', 'page', 'conf', 'model', 'ignore']
+    props: ['ref', 'page', 'fac', 'conf', 'model', 'ignore']
   },
   'fac-table': {
     tagName: 'fac-table',
-    props: ['page', 'conf', 'model', 'loader', 'selection']
+    props: ['ref', 'page', 'fac', 'conf', 'model', 'loader', 'selection']
   },
   'card-list': {
     tagName: 'fac-card-list',
-    props: ['page', 'model', 'conf', 'css', 'comps', 'before', 'end']
+    props: ['ref', 'page', 'fac', 'model', 'conf', 'css', 'comps', 'before', 'end']
   },
   'item-list': {
     tagName: 'fac-item-list',
-    props: ['page', 'model', 'current', 'label', 'image', 'key', 'noDefaultd']
+    props: ['ref', 'page', 'fac', 'model', 'current', 'label', 'image', 'key', 'noDefault']
+  },
+  'box-list': {
+    tagName: 'fac-box-list',
+    props: ['ref', 'page', 'fac', 'model', 'vModel', 'label', 'cols', 'selectEnable', 'previewImage', 'image', 'icon', 'key', 'noDefault']
   },
   'simple-table': {
     component: simpleTable.component,

@@ -8,6 +8,7 @@ import tabs from './tabs'
 import buttonBar from './button-bar.vue'
 import cardList from './card-list.vue'
 import itemList from './item-list.vue'
+import boxList from './box-list.vue'
 import cometa from './cometa'
 /**
  * 容器组件集合
@@ -24,7 +25,8 @@ export default {
     facForm,
     tabs,
     cardList,
-    itemList
+    itemList,
+    boxList
   },
   /**
    * 容器控件元数据信息

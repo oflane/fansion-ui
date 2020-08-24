@@ -17,15 +17,14 @@
         view-class="el-autocomplete-suggestion__list"
       >
         <li v-if="parent.loading"><i class="el-icon-loading"></i></li>
-        <template v-for="(item, index) in suggestions" v-else>
-          <li
-            v-if="!parent.customItem"
+        <template v-for="(item, $index) in suggestions" v-else>
+          <li v-if="!parent.customItem" :key="'li'+$index"
             :class="{'highlighted': parent.highlightedIndex === index}"
             @click="select(item)"
           >
             {{item.label}}
           </li>
-          <component
+          <component :key="'comp'+$index"
             v-else
             :class="{'highlighted': parent.highlightedIndex === index}"
             @click="select(item)"

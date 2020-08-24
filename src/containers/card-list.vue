@@ -35,6 +35,7 @@
     name: 'FacCardList',
     props: {
       page: Object,
+      fac: Object,
       model: Array,
       conf: [String, Object],
       comps: [Array, Object],

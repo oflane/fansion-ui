@@ -28,7 +28,8 @@
     props: {
       conf: Object,
       loader: DataLoader,
-      page: Object
+      page: Object,
+      fac: Object
     },
     data () {
       if (this.loader) {

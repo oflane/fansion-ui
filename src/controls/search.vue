@@ -41,6 +41,7 @@
       conf: Object,
       loader: DataLoader,
       page: Object,
+      fac: Object,
       advance: String,
       disabled: Boolean,
       free: Boolean

@@ -38,7 +38,7 @@ const exclude = ['comps', 'template']
  * 列属性别名
  * @type {{field: string}}
  */
-const alias = {'field': 'prop'}
+const alias = {field: 'prop'}
 /**
  * 根据列配置
  * @param columns 列配置数组
@@ -46,8 +46,8 @@ const alias = {'field': 'prop'}
  * @returns {*}
  */
 const buildColumn = (columns, components) => columns.filter(column => !column.ignore).map(column => {
-  let c = Object.assign({}, defaultColumn, column)
-  let colProps = toProps(c, exclude, alias)
+  const c = Object.assign({}, defaultColumn, column)
+  const colProps = toProps(c, exclude, alias)
   if (c.selection) {
     console.log(c)
     if (!c.width) {
@@ -58,7 +58,7 @@ const buildColumn = (columns, components) => columns.filter(column => !column.ig
     }
     return `<el-table-column type="selection" ${colProps}/>`
   } else if (column.columns && column.columns.length > 0) {
-    let children = buildColumn(column.columns, components)
+    const children = buildColumn(column.columns, components)
     return `<el-table-column label="${column.label}"><templat>${children}</templat></el-table-column>`
   } else if (column.template) {
     confs2Comps(column.components, components)
@@ -96,14 +96,14 @@ export default {
     if (conf.selection) {
       conf.columns = [{selection: true}, ...conf.columns]
     }
-    let options = Object.assign({}, defaultTable, conf)
-    let tableProps = toProps(options, ['type', 'columns', 'model', 'pos', 'loader', 'selection'])
-    let components = {
+    const options = Object.assign({}, defaultTable, conf)
+    const tableProps = toProps(options, ['type', 'columns', 'model', 'pos', 'loader', 'selection'])
+    const components = {
       tableSort
     }
     let columnTemplate = buildColumn(conf.columns, components)
-    let slot = conf.pos ? ` slot="${conf.pos}"` : ''
-    let model = conf.model || conf[':model'] || 'model'
+    const slot = conf.pos ? ` slot="${conf.pos}"` : ''
+    const model = conf.model || conf[':model'] || 'model'
     if (conf[':loader']) {
       columnTemplate += '<table-sort ref="tableSort" :loader="' + conf[':loader'] + '"/>'
     }

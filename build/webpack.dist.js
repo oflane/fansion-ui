@@ -10,7 +10,7 @@ var merge = require('webpack-merge');
 module.exports = merge(webpackBase, {
   output: {
     path: path.resolve(process.cwd(), './dist'),
-    publicPath: '/dist/',
+    publicPath: 'fansion-ui/',
     filename: 'fansion-ui.all.js',
     chunkFilename: '[id].js',
     libraryTarget: 'umd',

@@ -20,12 +20,12 @@ const buildTabItems = (items, components) => items.map((item, index) => {
   let itemSlot
   let tabProps
   if (item.icon) {
-    let exclude = ['label', 'icon', 'component']
-    itemSlot = `<span slot="label"><i class="item.icon"></i>item.label</span>`
+    const exclude = ['label', 'icon', 'component']
+    itemSlot = `<span slot="label"><i class="${item.icon}"></i>item.label</span>`
     tabProps = toProps(item, exclude)
   } else {
     itemSlot = ''
-    let exclude = ['component']
+    const exclude = ['component']
     tabProps = toProps(item, exclude)
   }
   if (item.template) {
@@ -36,11 +36,11 @@ const buildTabItems = (items, components) => items.map((item, index) => {
     if (typeof item.component === 'string') {
       let {props, component} = getPageMeta(item.component)
       props = toProps(props)
-      let tagName = component.name || 'child' + index
+      const tagName = component.name || 'child' + index
       components[tagName] = component
       return `<el-tab-pane ${tabProps}>${itemSlot}<${tagName} ${props}/></el-tab-pane>`
     }
-    let tagName = item.component.name || 'child' + index
+    const tagName = item.component.name || 'child' + index
     components[tagName] = item.component
     return `<el-tab-pane ${tabProps}>${itemSlot}<${tagName}/></el-tab-pane>`
   }
@@ -53,10 +53,10 @@ const buildTabItems = (items, components) => items.map((item, index) => {
  * @version 1.0 2017-8-14
  */
 export default (conf) => {
-  let tabsProps = toProps(conf, ['type', 'conf', 'items', 'pos'], {'tab-type': 'type'})
-  let components = {}
-  let tabTmpls = buildTabItems(conf.items, components)
-  let slot = conf.pos ? ` slot="${conf.pos}"` : ''
+  const tabsProps = toProps(conf, ['type', 'conf', 'items', 'pos'], {'tab-type': 'type'})
+  const components = {}
+  const tabTmpls = buildTabItems(conf.items, components)
+  const slot = conf.pos ? ` slot="${conf.pos}"` : ''
   console.log(`<el-tabs ${tabsProps} ${slot}>${tabTmpls}</el-tabs>`)
   return {
     name: 'FaceTabs',

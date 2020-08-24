@@ -27,6 +27,7 @@
       columns: Array,
       model: Array,
       page: Object,
+      fac: Object,
       selection: {
         type: Number,
         default: -1

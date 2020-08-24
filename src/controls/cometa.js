@@ -4,8 +4,25 @@
 import vueJsonEditor from 'vue-json-editor'
 import { codemirror } from 'vue-codemirror'
 // 这里引入的是主题样式，根据设置的theme的主题引入，一定要引入！！
+import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/ambiance.css'
+import 'codemirror/theme/ambiance-mobile.css'
+import 'codemirror/theme/darcula.css'
+import 'codemirror/addon/hint/show-hint.js'
+import 'codemirror/addon/hint/show-hint.css'
+import 'codemirror/addon/display/fullscreen.js'
+import 'codemirror/addon/display/fullscreen.css'
+import 'codemirror/addon/fold/brace-fold.js'
+import 'codemirror/addon/fold/comment-fold.js'
+import 'codemirror/addon/fold/indent-fold.js'
+import 'codemirror/addon/fold/foldgutter.js'
+import 'codemirror/addon/fold/foldgutter.css'
+import 'codemirror/addon/search/search.js'
+import 'codemirror/addon/search/match-highlighter.js'
+import 'codemirror/keymap/sublime.js'
 import 'codemirror/mode/javascript/javascript'
+import 'codemirror/mode/clike/clike'
+import 'codemirror/mode/groovy/groovy'
 import '../styles/style.less'
 
 /**
@@ -86,15 +103,15 @@ export default {
   },
   search: {
     tagName: 'fac-search',
-    props: ['ref', 'conf', 'page', 'loader', 'disabled', '@search']
+    props: ['ref', 'conf', 'page', 'fac', 'loader', 'disabled', '@search']
   },
   xquery: {
     tagName: 'fac-xquery',
-    props: ['ref', 'conf', 'page', 'loader']
+    props: ['ref', 'conf', 'page', 'fac', 'loader']
   },
   pagination: {
     tagName: 'fac-pagination',
-    props: ['ref', 'conf', 'page', 'loader', 'model', '@sizeChange', '@current-change']
+    props: ['ref', 'conf', 'page', 'fac', 'loader', 'model', '@sizeChange', '@current-change']
   },
   tree: {
     tagName: 'el-tree',

@@ -36,15 +36,16 @@
       loader: DataLoader,
       model: Object,
       page: Object,
+      fac: Object,
       pageSize: Number,
       pageSizes: Array,
       layout: String
     },
     data () {
-      let c = this.conf || {}
-      let ps = c.pageSize || this.pageSize || 20
-      let pss = [20, 50, 100, 400]
-      let ly = c.layout || this.layout || 'total, sizes, prev, pager, next, jumper'
+      const c = this.conf || {}
+      const ps = c.pageSize || this.pageSize || 20
+      const pss = [20, 50, 100, 400]
+      const ly = c.layout || this.layout || 'total, sizes, prev, pager, next, jumper'
       this.loader.addPlugin(this)
 
       return {
@@ -86,7 +87,7 @@
         this.$emit('current-change', this, ...arguments)
       },
       getParameters () {
-        return {'_pageNo': this.currentPage, '_pageSize': this.ps}
+        return {_pageNo: this.currentPage, _pageSize: this.ps}
       },
       reset () {
         this.loading = true

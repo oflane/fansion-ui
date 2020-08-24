@@ -20,7 +20,7 @@
       @keydown.down.native.prevent="highlight(highlightedIndex + 1)"
       @keydown.enter.stop.native="handleKeyEnter"
     >
-      <i class="el-input__icon fa fa-list is-clickable" @click="handleIconClick($event)"　slot="suffix">
+      <i class="el-input__icon fa fa-list is-clickable" @click="handleIconClick($event)" slot="suffix">
       </i>
     </el-input>
     <reference-suggestions
@@ -34,18 +34,16 @@
 <script>
   import refs from '../refs'
   import fase from 'fansion-base'
-
   import Emitter from 'element-ui/lib/mixins/emitter'
   import Clickoutside from 'element-ui/lib/utils/clickoutside'
   import ReferenceSuggestions from './reference-suggestions.vue'
   import Vue from 'vue'
-
-
   /**
    * 引入基础对象及方法
    */
   const Elm = fase.mixins.elm
   const gson = fase.rest.gson
+  const sure = fase.util.sure
   const getData = fase.data.getData
   /**
    * 关闭参照全局方法
@@ -71,7 +69,7 @@
 
   /**
    * 翻译方法
-   * @param value 业务引用值
+   * @param vm 业务引用值
    */
   function trans (vm) {
     const value = vm.value
@@ -91,7 +89,7 @@
   function intRefCb (vm, ref) {
     if (!vm.suggest) {
       const s = ref.params ? getData(ref.params, 'suggest') : null
-      const suggestTarget = s ? s : getData(ref.component, 'suggest')
+      const suggestTarget = s || getData(ref.component, 'suggest')
       vm.suggestTarget = suggestTarget
       if (!vm.trans && Array.isArray(suggestTarget)) {
         vm.trans = (value, cb) => {
@@ -107,7 +105,7 @@
    * @param vm vue对象
    * @param cb 回调方法
    */
-  function initRef(vm, cb){
+  function initRef (vm, cb) {
     const ref = vm.ref
     if (!ref) {
       return
@@ -116,7 +114,7 @@
       vm.ref = r
       intRefCb(vm, r)
       cb && cb(vm)
-    }) : intRefCb(vm, ref) || cb && cb(vm)
+    }) : sure(intRefCb(vm, ref)) && (cb && cb(vm))
   }
   /**
    * 对话框选择组件
@@ -170,9 +168,9 @@
     },
     data: function () {
       const vm = this
-      let ref = vm.refTo
-      let suggestTarget = vm.suggest
-      let trans = vm.translate
+      const ref = vm.refTo
+      const suggestTarget = vm.suggest
+      const trans = vm.translate
       return {
         ref,
         trans,
@@ -187,16 +185,16 @@
     computed: {
       suggestionVisible () {
         const suggestions = this.suggestions
-        let isValidData = Array.isArray(suggestions) && suggestions.length > 0
+        const isValidData = Array.isArray(suggestions) && suggestions.length > 0
         return (isValidData || this.loading) && this.isFocus
       },
       listenerTrans () {
-        const {value,showLabel} = this
+        const {value, showLabel} = this
         if (value && !showLabel && this.trans) {
           console.log(`value:${value},label:${showLabel}`)
           trans(this)
         }
-        return {value,showLabel}
+        return {value, showLabel}
       }
     },
     watch: {
@@ -317,9 +315,9 @@
         const suggestion = this.$refs.suggestions.$el.querySelector('.el-autocomplete-suggestion__wrap')
         const suggestionList = suggestion.querySelectorAll('.el-autocomplete-suggestion__list li')
 
-        let highlightItem = suggestionList[index]
-        let scrollTop = suggestion.scrollTop
-        let offsetTop = highlightItem.offsetTop
+        const highlightItem = suggestionList[index]
+        const scrollTop = suggestion.scrollTop
+        const offsetTop = highlightItem.offsetTop
 
         if (offsetTop + highlightItem.scrollHeight > (scrollTop + suggestion.clientHeight)) {
           suggestion.scrollTop += highlightItem.scrollHeight
@@ -345,9 +343,8 @@
           cb(this.suggest.filter(this.filter(inputString)))
         }
       },
-      handleIconClick (e) {
+      handleIconClick () {
         this.showReference()
-
       },
       setParams (params, isClear = true) {
         if (this.refParams === params) {
@@ -361,36 +358,35 @@
         this.refresh = true
       },
       getDialogOptions () {
-        let o = this
-        let options = {
-          params: o.refParams,
-          dep: '#' + o.getElmID(),
-          refresh: o.refresh,
+        const vm = this
+        return {
+          params: vm.refParams,
+          dep: '#' + vm.getElmID(),
+          refresh: vm.refresh,
           '@open': ($event) => {
-            o.$dialogs.getCurrent().$reference = o
+            vm.$dialogs.getCurrent().$reference = vm
             console.log($event)
             $event && $event.reset && $event.reset()
           }
         }
-        return options
       },
       showReference () {
-        let _self = this
-        let ref = this.refTo
+        const vm = this
+        const ref = this.refTo
         if (typeof ref === 'string') {
           refs.get(ref, (conf) => {
-            openReference(_self, conf)
+            openReference(vm, conf)
           })
           return
         }
-        let conf = ref.component ? ref : {component: ref}
-        openReference(_self, conf)
+        const conf = ref.component ? ref : {component: ref}
+        openReference(vm, conf)
       },
       closeReference (item) {
         if (item) {
           this.select(item)
         }
-        this.$dialogs.closeCurrent()
+        this.$dialogs.closeCurrent(item)
         this.$emit('afterReference', item, this)
       }
     },
