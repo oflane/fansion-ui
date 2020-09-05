@@ -92,7 +92,7 @@
     methods: {
       cellClass (index) {
         const cols = this.fixed && parseInt(this.model.length / this.cols) === 0 ? this.model.length : this.cols
-        return 'col' + cols + (this.currentIndex === index && !this.selectDisable ? ' selected' : '')
+        return 'col' + cols + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.icon || this.image ? '' : ' only_label')
       },
       preview (item) {
         return this.previewImage ? item[this.previewImage] || item[this.image] : item[this.image]
@@ -136,13 +136,14 @@
     margin-bottom: -1px;
     display: list-item;
     cursor: pointer;
+    height: 30px;
     &.col8 {
       width: 12.5%;
     }
     &.col7 {
       width: 14.2%;
     }
-    &.col6 {
+    &.col6 {label
       width: 16.6%;
     }
     &.col5 {
@@ -160,8 +161,11 @@
     &.col1 {
       width: 100%;
     }
+    &.only_label{
+      height: 40px;
+      line-height: 40px;
+    }
     .label{
-      height: 32px;
       cursor: pointer;
       &:hover{
         text-decoration: underline;

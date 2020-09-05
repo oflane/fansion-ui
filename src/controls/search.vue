@@ -6,12 +6,12 @@
 <template>
   <div :class="xclass">
     <el-input
-      v-bind="props"
       v-model="quickValue"
       :disabled.sync="disabled"
       clearable
       @keydown.enter.stop.native="handleSearch"
       @clear="handleSearch"
+      v-bind="[$props, $attrs]"
     >
       <i class="el-input__icon el-icon-search" @click="handleSearch" slot="suffix"/>
     </el-input>
@@ -47,13 +47,13 @@
       free: Boolean
     },
     data () {
-      let c = this.conf || {}
-      let props = filterProps(c, ['conf', 'items', 'pos', 'xclass', '@search', 'type'])
+      const c = this.conf || {}
+      const props = filterProps(c, ['conf', 'items', 'pos', 'xclass', '@search', 'type'])
       if (this.loader) {
         this.loader.addPlugin(this)
       }
-      let xclass = c.xclass ? 'xsearch ' + c.xclass : 'xsearch'
-      let advCtrl = c.advance || this.advance
+      const xclass = c.xclass ? 'xsearch ' + c.xclass : 'xsearch'
+      const advCtrl = c.advance || this.advance
       let isFree = true
       if (c.free === false) {
         isFree = false
@@ -102,13 +102,13 @@
         return this.quickValue
       },
       getParameters () {
-        let condition = {}
-        let qitems = this.conf.items
-        let qvalue = this.quickValue
+        const condition = {}
+        const qitems = this.conf.items
+        const qvalue = this.quickValue
         if (this.quickValue && qitems) {
           if (this.isFree) {
-            condition['_freeCon'] = Array.isArray(qitems) ? qitems.join(',') : qitems
-            condition['_freeConVal'] = qvalue
+            condition._freeCon = Array.isArray(qitems) ? qitems.join(',') : qitems
+            condition._freeConVal = qvalue
           } else if (Array.isArray(qitems)) {
             qitems.forEach((v) => {
               condition[v] = qvalue

@@ -191,7 +191,7 @@ export default {
     }
     add(options.refs)
     addContainer(options.containers)
-    loadUrl = options.loadUrl
+    options.loadUrl && (loadUrl = options.loadUrl)
     options.default && setDefaultContainer(options.default)
   }
 }

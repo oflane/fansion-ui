@@ -7,21 +7,29 @@
   <div class="reference" v-clickoutside="handleClickoutside">
     <el-input
       ref="input"
-      :value="showLabel"
+      v-focusInput="focusInput"
+      v-model="nativeLabel"
       :readonly="readonly"
       :disabled="disabled"
       :placeholder="placeholder"
       :name="name"
       :size="size"
       :com="listenerTrans"
+      @compositionstart.native="handleComposition"
+      @compositionupdate.native="handleComposition"
+      @compositionend.native="handleComposition"
       @focus="handleFocus"
-      @blur="handleBlur"
       @keydown.up.native.prevent="highlight(highlightedIndex - 1)"
       @keydown.down.native.prevent="highlight(highlightedIndex + 1)"
+      @mouseenter.native="inputHovering = true"
+      @mouseleave.native="inputHovering = false"
+      @keydown.native.tab="handleClickoutside"
       @keydown.enter.stop.native="handleKeyEnter"
     >
-      <i class="el-input__icon fa fa-list is-clickable" @click="handleIconClick($event)" slot="suffix">
-      </i>
+      <span slot="suffix">
+        <i class="el-icon-circle-close is-show-close" @click="deleteSelected" v-show="clearIcon"></i>
+        <i class="el-input__icon fa fa-list is-clickable" @click.stop="handleIconClick"></i>
+      </span>
     </el-input>
     <reference-suggestions
       :class="[popperClass ? popperClass : '']"
@@ -43,7 +51,7 @@
    */
   const Elm = fase.mixins.elm
   const gson = fase.rest.gson
-  const sure = fase.util.sure
+  const {sure, isNotEmpty} = fase.util
   const getData = fase.data.getData
   /**
    * 关闭参照全局方法
@@ -127,7 +135,18 @@
     components: {
       ReferenceSuggestions
     },
-    directives: { Clickoutside },
+    directives: {
+      Clickoutside,
+      focusInput: {
+        inserted: function (el, binding) {
+          if (binding.value) {
+            setTimeout(() => {
+              el.querySelector('input').focus()
+            })
+          }
+        }
+      }
+    },
     mixins: [Elm, Emitter],
     props: {
       popperClass: String,
@@ -151,7 +170,7 @@
         type: Function,
         default: function (filterString) {
           return function (item) {
-            return (item.label.indexOf(filterString.toLowerCase()) === 0)
+            return (item.label && item.label.toLowerCase().indexOf(filterString.toLowerCase()) >= 0)
           }
         }
       },
@@ -164,6 +183,10 @@
       writeFields: {
         type: [String, Array],
         default: _ => []
+      },
+      clearable: {
+        type: Boolean,
+        default: true
       }
     },
     data: function () {
@@ -171,7 +194,10 @@
       const ref = vm.refTo
       const suggestTarget = vm.suggest
       const trans = vm.translate
+      const nativeLabel = this.showLabel
       return {
+        nativeLabel,
+        inputHovering: false,
         ref,
         trans,
         suggestTarget,
@@ -188,6 +214,13 @@
         const isValidData = Array.isArray(suggestions) && suggestions.length > 0
         return (isValidData || this.loading) && this.isFocus
       },
+      clearIcon () {
+        return this.clearable &&
+          !this.readonly &&
+          this.inputHovering &&
+          !this.disabled &&
+          isNotEmpty(this.showLabel)
+      },
       listenerTrans () {
         const {value, showLabel} = this
         if (value && !showLabel && this.trans) {
@@ -199,7 +232,7 @@
     },
     watch: {
       suggestionVisible (val) {
-        this.$emit('ReferenceSuggestions', 'visible', [val, this.$refs.input.$refs.input.offsetWidth])
+        this.broadcast('ReferenceSuggestions', 'visible', [val, this.$refs.input.$refs.input.offsetWidth])
       },
       refTo (refTo) {
         const vm = this
@@ -210,7 +243,12 @@
         console.log(v)
       },
       showLabel (v) {
-        console.log(v)
+        if (this.nativeLabel !== v) {
+          this.nativeLabel = v
+        }
+      },
+      nativeLabel (v) {
+        this.handleChangeLabel(v)
       }
     },
     mounted () {
@@ -226,45 +264,56 @@
     methods: {
       getData (queryString) {
         this.loading = true
-        this.fetchSuggestions(queryString, (suggestions) => {
-          this.loading = false
-          if (Array.isArray(suggestions)) {
-            this.suggestions = suggestions
-          } else {
-            console.error('autocomplete suggestions must be an array')
-          }
-        })
+        queryString = queryString || ''
+        if (queryString.length === 0) {
+          this.suggestions = []
+        } else {
+          this.fetchSuggestions(queryString, (suggestions) => {
+            this.loading = false
+            if (Array.isArray(suggestions)) {
+              this.suggestions = suggestions
+            } else {
+              console.error('autocomplete suggestions must be an array')
+            }
+          })
+        }
       },
       handleComposition (event) {
         if (event.type === 'compositionend') {
           this.isOnComposition = false
-          this.handleChange(event.data)
+          /**
+           * chrome下composition事件会比input事件的触发事件晚，再次调用handleChange方法，
+           * 会把当次修改的值，而不是全部的值传递过去，导致过滤的数据不对，手动在input事件的回
+           * 调里面延迟一下compositionend的判断触发
+           */
         } else {
           this.isOnComposition = true
         }
       },
-      handleChange (value) {
-        this.$emit('input', value)
-        if (this.isOnComposition || (!this.triggerOnFocus && !value)) {
-          this.suggestions = []
+      handleChangeLabel (label) {
+        const vm = this
+        if (label === this.showLabel) {
           return
         }
-        this.getData(value)
+        setTimeout(() => {
+          if (vm.isOnComposition || (!vm.triggerOnFocus && !label)) {
+            this.suggestions = []
+            return
+          }
+          if (!vm.readonly) {
+            vm.getData(label)
+          }
+        }, 0)
       },
+
       handleFocus () {
         this.isFocus = true
         this.$emit('focus')
       },
-      handleBlur () {
-        // 因为 blur 事件处理优先于 select 事件执行
-        setTimeout(_ => {
-          this.isFocus = false
-        }, 100)
-      },
       handleKeyEnter () {
         if (this.suggestionVisible && this.highlightedIndex >= 0 && this.highlightedIndex < this.suggestions.length) {
           this.select(this.suggestions[this.highlightedIndex])
-        } else if (this.label && (this.suggestions.length === 1 && this.suggestions[0].label === this.label)) {
+        } else if (this.showLabel && (this.suggestions.length === 1 && this.suggestions[0].label === this.showLabel)) {
           this.select(this.suggestions[0])
         } else {
           this.select({})
@@ -274,13 +323,12 @@
         if (!this.suggestTarget) {
           return
         }
-        if (!this.label) {
-          if (this.suggestions.length === 1 && this.suggestions[0].label === this.label) {
+        const vm = this
+        setTimeout(() => {
+          if (!vm.showLabel && this.suggestions.length === 1 && vm.suggestions[0].label === vm.showLabel) {
             this.select(this.suggestions[0])
-          } else {
-            this.select({})
           }
-        }
+        }, 100)
         this.isFocus = false
       },
       select (item) {
@@ -306,9 +354,11 @@
         this.highlight(-1)
       },
       highlight (index) {
-        this.highlightedIndex = index
         if (!this.suggestionVisible || this.loading) { return }
-        if (index < 0) index = 0
+        if (index < 0) {
+          this.highlightedIndex = -1
+          return
+        }
         if (index >= this.suggestions.length) {
           index = this.suggestions.length - 1
         }
@@ -325,10 +375,12 @@
         if (offsetTop < scrollTop) {
           suggestion.scrollTop -= highlightItem.scrollHeight
         }
+        this.highlightedIndex = index
+        this.$el.querySelector('.el-input__inner').setAttribute('aria-activedescendant', `${this.id}-item-${this.highlightedIndex}`)
       },
       fetchSuggestions: function (inputString, cb) {
         const suggest = this.suggestTarget
-        if (!this.suggest) {
+        if (!suggest) {
           return
         }
         if (!inputString) {
@@ -340,10 +392,11 @@
         } else if (typeof suggest === 'function') {
           suggest(inputString, cb, this.refParam)
         } else {
-          cb(this.suggest.filter(this.filter(inputString)))
+          cb(suggest.filter(this.filter(inputString)))
         }
       },
       handleIconClick () {
+        this.isFocus = false
         this.showReference()
       },
       setParams (params, isClear = true) {
@@ -352,8 +405,8 @@
         }
         this.refParams = params
         if (isClear) {
-          this.model[this.field] = null
-          this.model[this.labelField] = null
+          this.$emit('input', null)
+          this.$emit('update:showLabel', null)
         }
         this.refresh = true
       },
@@ -388,6 +441,20 @@
         }
         this.$dialogs.closeCurrent(item)
         this.$emit('afterReference', item, this)
+      },
+      /**
+       * @desc: 清空操作  1.已经选中过数据，现在清空数据 2.还未选中数据，只是清除掉输入框中的值
+       * @param {type}
+       * @return:
+       */
+      deleteSelected () {
+        if (this.value) {
+          this.select({})
+        } else {
+          this.$emit('input', null)
+          this.$emit('update:showLabel', null)
+        }
+        this.suggestions = []
       }
     },
     created: function () {
