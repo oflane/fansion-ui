@@ -92,7 +92,8 @@
     methods: {
       cellClass (index) {
         const cols = this.fixed && parseInt(this.model.length / this.cols) === 0 ? this.model.length : this.cols
-        return 'col' + cols + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.icon || this.image ? '' : ' only_label')
+        const last = (index + 1) % this.cols === 0 ? ' last' : ''
+        return 'col' + cols + last + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.icon || this.image ? '' : ' only_label')
       },
       preview (item) {
         return this.previewImage ? item[this.previewImage] || item[this.image] : item[this.image]
@@ -143,7 +144,7 @@
     &.col7 {
       width: 14.2%;
     }
-    &.col6 {label
+    &.col6 {
       width: 16.6%;
     }
     &.col5 {
@@ -160,6 +161,9 @@
     }
     &.col1 {
       width: 100%;
+    }
+    &.last{
+      border-right:0px;
     }
     &.only_label{
       height: 40px;

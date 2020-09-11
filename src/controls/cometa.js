@@ -99,7 +99,7 @@ export default {
   reference: {
     tagName: 'fac-reference',
     props: ['ref', 'popperClass', 'placeholder', 'readonly', 'name', 'size', 'vModel', 'showLabel.sync', 'value', 'showLabel',
-      'suggest', 'filter', 'refTo', 'readFields', 'writeFields', '@change']
+      'suggest', 'filter', 'refTo', 'readFields', 'writeFields', 'refParam', '@change']
   },
   search: {
     tagName: 'fac-search',

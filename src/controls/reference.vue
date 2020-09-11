@@ -50,8 +50,8 @@
    * 引入基础对象及方法
    */
   const Elm = fase.mixins.elm
-  const gson = fase.rest.gson
-  const {sure, isNotEmpty} = fase.util
+  const {gson, furl} = fase.rest
+  const {sure, isNotEmpty, isFunction} = fase.util
   const getData = fase.data.getData
   /**
    * 关闭参照全局方法
@@ -66,7 +66,7 @@
    * @param conf 对象化框配置对象
    */
   const openReference = (vm, conf) => {
-    if (!conf.dialog) {
+    if (!conf.dialog && (conf.component && !conf.component.dialog)) {
       if (!conf.container || typeof conf.container === 'string') {
         conf.container = refs.getContainer(conf.container)
       }
@@ -81,30 +81,28 @@
    */
   function trans (vm) {
     const value = vm.value
+    if (!value) {
+      return
+    }
     const trans = vm.trans
     const cb = (res) => {
       const r = !res || typeof res === 'string' ? res : res.value || res.label
       r && vm.$emit('update:showLabel', r)
     }
-    trans && (typeof trans === 'string' ? gson(trans, {value}, cb) : trans(value, cb))
+    const params = {value}
+    trans && (typeof trans === 'string' ? gson(furl(trans, params), params, cb) : trans(value, cb))
   }
 
   /**
    * 初始化业务引用回调
-   * @param vm
+   * @param vm 参照组件
    * @param ref 业务引用对象
    */
   function intRefCb (vm, ref) {
-    if (!vm.suggest) {
-      const s = ref.params ? getData(ref.params, 'suggest') : null
-      const suggestTarget = s || getData(ref.component, 'suggest')
-      vm.suggestTarget = suggestTarget
-      if (!vm.trans && Array.isArray(suggestTarget)) {
-        vm.trans = (value, cb) => {
-          const rs = suggestTarget.filter(v => v.value === value)
-          rs.length > 0 && cb(rs[0].label)
-        }
-      }
+    !vm.suggest && (vm.suggestTarget = ref.params ? getData(ref.params, 'suggest') : getData(ref.component, 'suggest'))
+    if (!vm.trans) {
+      const trans = ref.params ? getData(ref.params, 'translate') : getData(ref.component, 'translate')
+      vm.trans = trans || vm.fetchSuggestions
     }
   }
 
@@ -279,16 +277,12 @@
         }
       },
       handleComposition (event) {
-        if (event.type === 'compositionend') {
-          this.isOnComposition = false
-          /**
-           * chrome下composition事件会比input事件的触发事件晚，再次调用handleChange方法，
-           * 会把当次修改的值，而不是全部的值传递过去，导致过滤的数据不对，手动在input事件的回
-           * 调里面延迟一下compositionend的判断触发
-           */
-        } else {
-          this.isOnComposition = true
-        }
+        /**
+         * chrome下composition事件会比input事件的触发事件晚，再次调用handleChange方法，
+         * 会把当次修改的值，而不是全部的值传递过去，导致过滤的数据不对，手动在input事件的回
+         * 调里面延迟一下compositionend的判断触发
+         */
+        this.isOnComposition = event.type !== 'compositionend'
       },
       handleChangeLabel (label) {
         const vm = this
@@ -388,8 +382,8 @@
           return
         }
         if (typeof suggest === 'string') {
-          gson(suggest, {filter: inputString}).then(cb)
-        } else if (typeof suggest === 'function') {
+          gson(suggest, {keyword: inputString}, cb)
+        } else if (isFunction(suggest)) {
           suggest(inputString, cb, this.refParam)
         } else {
           cb(suggest.filter(this.filter(inputString)))
@@ -400,10 +394,10 @@
         this.showReference()
       },
       setParams (params, isClear = true) {
-        if (this.refParams === params) {
+        if (this.refParam === params) {
           return
         }
-        this.refParams = params
+        this.refParam = params
         if (isClear) {
           this.$emit('input', null)
           this.$emit('update:showLabel', null)
@@ -413,7 +407,7 @@
       getDialogOptions () {
         const vm = this
         return {
-          params: vm.refParams,
+          params: vm.refParam,
           dep: '#' + vm.getElmID(),
           refresh: vm.refresh,
           '@open': ($event) => {
@@ -444,8 +438,6 @@
       },
       /**
        * @desc: 清空操作  1.已经选中过数据，现在清空数据 2.还未选中数据，只是清除掉输入框中的值
-       * @param {type}
-       * @return:
        */
       deleteSelected () {
         if (this.value) {
