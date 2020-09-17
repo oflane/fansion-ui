@@ -15,6 +15,7 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+      <span v-else-if="item.type==='space'" class="group-space" :key="$index"></span>
       <el-button v-else :type="item.type"  :key="$index" @click="handleCommand(item.click)" v-bind="item">{{item.name}}</el-button>
     </template>
   </div>
@@ -63,6 +64,9 @@
     }
     .el-button+.el-button {
       margin-left: 6px;
+    }
+    .group-space {
+      width: 100px;
     }
     .el-button+.el-dropdown {
       margin-left: 6px;

@@ -45,7 +45,7 @@ const alias = {field: 'prop'}
  * @param components 组件注册对象
  * @returns {*}
  */
-const buildColumn = (columns, components) => columns.filter(column => !column.ignore).map(column => {
+const buildColumn = (columns, components) => columns.filter(column => column && !column.ignore).map(column => {
   const c = Object.assign({}, defaultColumn, column)
   const colProps = toProps(c, exclude, alias)
   if (c.selection) {

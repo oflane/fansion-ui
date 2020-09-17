@@ -18,12 +18,12 @@ const columnButton = buttons => buttons.map(v => `<el-button type="text" class="
  * @param buttons
  * @returns {*}
  */
-const buttonsColumn = buttons => ({
+const buttonsColumn = buttons => buttons && buttons.length > 0 ? {
   label: '操作: ',
   width: '150px',
   align: 'center',
   template: columnButton(buttons)
-})
+} : null
 
 /**
  * 代码生成工具
