@@ -50,7 +50,7 @@
    * 引入基础对象及方法
    */
   const Elm = fase.mixins.elm
-  const {gson, furl} = fase.rest
+  const {gson, furl, gext} = fase.rest
   const {sure, isNotEmpty, isFunction} = fase.util
   const getData = fase.data.getData
   /**
@@ -86,11 +86,15 @@
     }
     const trans = vm.trans
     const cb = (res) => {
-      const r = !res || typeof res === 'string' ? res : res.value || res.label
+      let r = res
+      if (res && res.startsWith('{')) {
+        const j = JSON.parse(res)
+        r = j.label || j.value
+      }
       r && vm.$emit('update:showLabel', r)
     }
     const params = {value}
-    trans && (typeof trans === 'string' ? gson(furl(trans, params), params, cb) : trans(value, cb))
+    trans && (typeof trans === 'string' ? gext(furl(trans, params), params, cb) : trans(value, cb))
   }
 
   /**
@@ -99,9 +103,9 @@
    * @param ref 业务引用对象
    */
   function intRefCb (vm, ref) {
-    !vm.suggest && (vm.suggestTarget = ref.params ? getData(ref.params, 'suggest') : getData(ref.component, 'suggest'))
+    !vm.suggest && (vm.suggestTarget = ref.params ? (ref.params.suggest || ref.component.suggest) : ref.component.suggest)
     if (!vm.trans) {
-      const trans = ref.params ? getData(ref.params, 'translate') : getData(ref.component, 'translate')
+      const trans = ref.params ? (ref.params.translate || ref.component.translate) : ref.component.translate
       vm.trans = trans || vm.fetchSuggestions
     }
   }
@@ -166,11 +170,7 @@
       translate: [String, Function],
       filter: {
         type: Function,
-        default: function (filterString) {
-          return function (item) {
-            return (item.label && item.label.toLowerCase().indexOf(filterString.toLowerCase()) >= 0)
-          }
-        }
+        default: (filterString) => (item) => (item.label && item.label.toLowerCase().indexOf(filterString.toLowerCase()) >= 0)
       },
       refTo: [String, Object],
       refParam: Object,

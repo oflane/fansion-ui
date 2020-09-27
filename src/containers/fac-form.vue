@@ -163,7 +163,7 @@
       changeState () {
         const vm = this
         const {page, conf, css, exist} = vm
-        let pageState = this.state || (page && ('pageState' in page) && page.pageState ? page.pageState : 'init')
+        let pageState = this.state || (page && ('pageState' in page.constructor.prototype) && page.pageState ? page.pageState : 'init')
         pageState = pageState.startsWith('state_') ? pageState : 'state_' + pageState
         if (!exist) {
           vm.groups = []

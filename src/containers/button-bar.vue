@@ -66,7 +66,8 @@
       margin-left: 6px;
     }
     .group-space {
-      width: 100px;
+      width: 50px;
+      display: inline-block;
     }
     .el-button+.el-dropdown {
       margin-left: 6px;

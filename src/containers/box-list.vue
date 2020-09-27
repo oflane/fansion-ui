@@ -133,11 +133,8 @@
     color: #666;
     border-right: 1px solid #eee;
     border-bottom: 1px solid #eee;
-    margin-right: -1px;
-    margin-bottom: -1px;
     display: list-item;
     cursor: pointer;
-    height: 30px;
     &.col8 {
       width: 12.5%;
     }

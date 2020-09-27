@@ -1,3 +1,6 @@
+<template>
+  <!-- -->
+</template>
 <script>
   import fase from 'fansion-base'
 

@@ -33,7 +33,7 @@ import '../styles/style.less'
 export default {
   input: {
     tagName: 'el-input',
-    props: ['ref', 'vModel', 'placeholder', 'disabled', 'size'],
+    props: ['ref', 'vModel', 'placeholder', 'disabled', 'size', 'readonly'],
     config: {
 
     }
@@ -115,7 +115,7 @@ export default {
   },
   tree: {
     tagName: 'el-tree',
-    props: ['ref', 'data', 'node-key', 'load', 'renderContent', 'highlightCurrent:boolean', 'expandOnClickNode:boolean',
+    props: ['ref', 'data', 'nodeKey', 'load', 'renderContent', 'highlightCurrent:boolean', 'expandOnClickNode:boolean',
       'auto-expand-parent:boolean', 'default-expanded-keys', 'show-checkbox:boolean', 'filter-node-method', '@node-click', '@check-change',
       '@current-change', '@node-expand', '@node-collapse']
   },

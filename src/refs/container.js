@@ -30,13 +30,12 @@ export default {
   },
   created () {
     let refContent = ''
-    const title = this.title
-    const options = this.$options
-    if (this.component) {
-      if (!('components' in options)) {
-        options.components = Object.create(options.components)
+    const {title, $options, component} = this
+    if (component) {
+      if (!('components' in $options)) {
+        $options.components = Object.create($options.components)
       }
-      Object.assign(options.components, {'ref-content': this.component})
+      Object.assign($options.components, {'ref-content': this.component})
       const cprops = toProps(this.params)
       refContent = `<ref-content ref="content" ${cprops}/>`
     }
@@ -47,7 +46,14 @@ export default {
       refContent += this.text
     }
     const dprops = toProps(this.dialogProps)
-    options.template = `<el-dialog ${dprops} :visible.sync="visible" title="${title}">${refContent}
+    const refresh = component && component.methods && component.methods.refresh ? '<button @click="onRefresh"><i class="el-icon-refresh"></i></button>' : ''
+    const search = component && component.methods && component.methods.search ? '<fac-search ref="search" @search="onSearch" size="small" />' : ''
+    $options.template = `<el-dialog ${dprops} :visible.sync="visible">
+    <template slot="title">
+      <span class="el-dialog__title">${title}</span>
+      <div class="ref-search">${search}${refresh}</div>
+    </template>
+${refContent}
 <div slot="footer">
     <el-button type="primary" @click="onOk">确定</el-button>
     <el-button @click="onCancel">取消</el-button>
@@ -93,9 +99,39 @@ export default {
         }
       }
     },
+    /**
+     * 取得搜索关键字
+     * @returns {*}
+     */
+    getKeyword () {
+      const s = this.$refs.search
+      if (s) {
+        return s.getValue()
+      }
+    },
+    /**
+     * 刷新操作
+     */
+    onRefresh () {
+      this.$refs.content.refresh()
+    },
+    /**
+     * 搜索操作
+     * @param kw
+     */
+    onSearch (kw) {
+      const ref = this.$refs.content
+      ref.search(kw)
+    },
+    /**
+     * 取消操作
+     */
     onCancel () {
       this.$closeReference()
     },
+    /**
+     * 清空操作
+     */
     onClear () {
       this.$closeReference({})
     }
