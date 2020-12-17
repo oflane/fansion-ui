@@ -22,52 +22,52 @@
 </template>
 
 <script>
-  import fac from 'fansion-fac'
-  import fase from 'fansion-base'
+import fac from 'fansion-fac'
+import fase from 'fansion-base'
 
-  /**
-   * 获取工具方法
-   */
-  const {toRender} = fase.render
-  const {confs2Comps} = fac.comps
+/**
+ * 获取工具方法
+ */
+const {toRender} = fase.render
+const {confs2Comps} = fac.comps
 
-  export default {
-    name: 'FacCardList',
-    props: {
-      page: Object,
-      fac: Object,
-      model: Array,
-      conf: [String, Object],
-      comps: [Array, Object],
-      before: String,
-      end: String,
-      css: String
-    },
-    created () {
-      let cardTemplate
-      if (typeof this.conf !== 'string') {
-        let cardClass = this.css ? this.css : 'card'
-        let card = this.conf
-        let image = card.img ? `<img :src="item.${card.img}" class="image"/>` : ''
-        let title = card.titleHtml || `{{item.${card.title || 'title'}}}`
-        let time = card.time ? `<time class="time">{{new Date(item.${card.time}).format('yyyy-MM-dd hh:mm')}}</time>` : ''
-        let bottom = time !== '' || card.buttons ? `<div class="bottom clearfix">${time}${card.buttons}</div>` : ''
-        cardTemplate = `<el-card class="${cardClass}" body-style="padding:0px;">${image}
-            <div class="card-content">
-                <span class="title">${title}</span>
-                ${bottom}
-            </div>
-          </el-card>`
-      } else {
-        cardTemplate = this.conf
-      }
-      let components = {}
-      confs2Comps(this.comps, components)
-      let before = this.before || ''
-      let end = this.end || ''
-      toRender(this, `<el-row class="fac-card-list">${before}<div class="card-list-empty-block" v-if="!model||model.length==0"><span class="no-data" >暂无数据</span></div><template v-for="item in model">${cardTemplate}</template>${end}</el-row>`, components)
+export default {
+  name: 'FacCardList',
+  props: {
+    page: Object,
+    fac: Object,
+    model: Array,
+    conf: [String, Object],
+    comps: [Array, Object],
+    before: String,
+    end: String,
+    css: String
+  },
+  created () {
+    let cardTemplate
+    if (typeof this.conf !== 'string') {
+      let cardClass = this.css ? this.css : 'card'
+      let card = this.conf
+      let image = card.img ? `<img :src="item.${card.img}" class="image"/>` : ''
+      let title = card.titleHtml || `{{item.${card.title || 'title'}}}`
+      let time = card.time ? `<time class="time">{{new Date(item.${card.time}).format('yyyy-MM-dd hh:mm')}}</time>` : ''
+      let bottom = time !== '' || card.buttons ? `<div class="bottom clearfix">${time}${card.buttons}</div>` : ''
+      cardTemplate = `<el-card class="${cardClass}" body-style="padding:0px;">${image}
+          <div class="card-content">
+              <span class="title">${title}</span>
+              ${bottom}
+          </div>
+        </el-card>`
+    } else {
+      cardTemplate = this.conf
     }
+    let components = {}
+    confs2Comps(this.comps, components)
+    let before = this.before || ''
+    let end = this.end || ''
+    toRender(this, `<el-row class="fac-card-list">${before}<div class="card-list-empty-block" v-if="!model||model.length==0"><span class="no-data" >暂无数据</span></div><template v-for="item in model">${cardTemplate}</template>${end}</el-row>`, components)
   }
+}
 </script>
 
 <style lang="less">

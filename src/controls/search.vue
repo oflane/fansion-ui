@@ -101,6 +101,10 @@
       getValue () {
         return this.quickValue
       },
+      reset () {
+        this.quickValue = ''
+        this.handleSearch()
+      },
       getParameters () {
         const condition = {}
         const qitems = this.conf.items

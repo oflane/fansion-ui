@@ -44,123 +44,123 @@
 </template>
 
 <script>
-  const reloadData = (vm) => vm.model.map((v, i) => ({id: `node${i}`, label: v[vm.labelKey], data: v}))
-  export default {
-    name: 'SortDialog',
-    dialog: true,
-    props: {
-      labelKey: {
-        type: String,
-        default: 'label'
-      },
-      model: Array
+const reloadData = (vm) => vm.model.map((v, i) => ({id: `node${i}`, label: v[vm.labelKey], data: v}))
+export default {
+  name: 'SortDialog',
+  dialog: true,
+  props: {
+    labelKey: {
+      type: String,
+      default: 'label'
     },
-    data () {
-      const layout = {
-        body: {
-          class: 'layout-body cleafix',
-          children: [
-            {
-              class: 'lr-left-content',
-              slot: 'content'
-            },
-            {
-              class: 'lr-right-float',
-              slot: 'button'
-            }
-          ]
-        }
-      }
-      const rows = reloadData(this)
-      return {
-        visible: true,
-        rows,
-        layout
-      }
-    },
-    methods: {
-      /**
-       * 显示对话框
-       */
-      show () {
-        this.visible = true
-      },
-      /**
-       * 判断是否显示
-       * @returns {boolean}
-       */
-      isVisible () {
-        return this.visible
-      },
-      /**
-       * 隐藏对话框
-       */
-      hide (flag) {
-        this.visible = false
-        !flag && this.$emit('cancel')
-      },
-      getCurrent () {
-        return this.$refs.leftTree.getCurrentNode()
-      },
-      move (target) {
-        const vm = this
-        const current = vm.getCurrent()
-        if (!current) {
-          vm.$message({
-            type: 'warning',
-            message: '未选中任何数据!'
-          })
-          return
-        }
-        const rows = vm.rows
-        let i = rows.indexOf(current)
-        if (Math.abs(target) === 1) {
-          target = i + target
-        }
-        let [r] = rows.splice(i, 1)
-        r = {...r}
-        delete r.$treeNodeId
-        rows.splice(target, 0, r)
-      },
-      top () {
-        this.move(0)
-      },
-      bottom () {
-        this.move(this.rows.length)
-      },
-      up () {
-        this.move(-1)
-      },
-      down () {
-        this.move(1)
-      },
-      /**
-       * 刷新
-       */
-      reload () {
-        reloadData(this)
-      },
-      /**
-       * 确定按钮
-       */
-      onOk () {
-        const vm = this
-        const {model, rows} = vm
-        rows.forEach((v, i) => (model[i] = v.data))
-        this.$dialogs.closeCurrent()
-        this.$emit('ok')
-      },
-      /**
-       * 取消按钮
-       */
-      onCancel () {
-        this.$dialogs.closeCurrent()
-      },
-      allowDrop (draggingNode, dropNode, type) {
-        return type !== 'inner'
+    model: Array
+  },
+  data () {
+    const layout = {
+      body: {
+        class: 'layout-body cleafix',
+        children: [
+          {
+            class: 'lr-left-content',
+            slot: 'content'
+          },
+          {
+            class: 'lr-right-float',
+            slot: 'button'
+          }
+        ]
       }
     }
+    const rows = reloadData(this)
+    return {
+      visible: true,
+      rows,
+      layout
+    }
+  },
+  methods: {
+    /**
+     * 显示对话框
+     */
+    show () {
+      this.visible = true
+    },
+    /**
+     * 判断是否显示
+     * @returns {boolean}
+     */
+    isVisible () {
+      return this.visible
+    },
+    /**
+     * 隐藏对话框
+     */
+    hide (flag) {
+      this.visible = false
+      !flag && this.$emit('cancel')
+    },
+    getCurrent () {
+      return this.$refs.leftTree.getCurrentNode()
+    },
+    move (target) {
+      const vm = this
+      const current = vm.getCurrent()
+      if (!current) {
+        vm.$message({
+          type: 'warning',
+          message: '未选中任何数据!'
+        })
+        return
+      }
+      const rows = vm.rows
+      let i = rows.indexOf(current)
+      if (Math.abs(target) === 1) {
+        target = i + target
+      }
+      let [r] = rows.splice(i, 1)
+      r = {...r}
+      delete r.$treeNodeId
+      rows.splice(target, 0, r)
+    },
+    top () {
+      this.move(0)
+    },
+    bottom () {
+      this.move(this.rows.length)
+    },
+    up () {
+      this.move(-1)
+    },
+    down () {
+      this.move(1)
+    },
+    /**
+     * 刷新
+     */
+    reload () {
+      reloadData(this)
+    },
+    /**
+     * 确定按钮
+     */
+    onOk () {
+      const vm = this
+      const {model, rows} = vm
+      rows.forEach((v, i) => (model[i] = v.data))
+      this.$dialogs.closeCurrent()
+      this.$emit('ok')
+    },
+    /**
+     * 取消按钮
+     */
+    onCancel () {
+      this.$dialogs.closeCurrent()
+    },
+    allowDrop (draggingNode, dropNode, type) {
+      return type !== 'inner'
+    }
   }
+}
 </script>
 <style lang="less" scoped>
   .el-dialog{

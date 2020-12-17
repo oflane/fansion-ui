@@ -22,100 +22,100 @@
   </div>
 </template>
 <script>
-  const computeIndex = ({valueProp, model, value, noDefault}) => {
-    if (model == null || model.length === 0){
-      return -1
+const computeIndex = ({valueProp, model, value, noDefault}) => {
+  if (model == null || model.length === 0){
+    return -1
+  }
+  if (valueProp) {
+    const i = model.findIndex(v => v[valueProp] === value)
+    if (i >= 0) {
+      return i
     }
-    if (valueProp) {
-      const i = model.findIndex(v => v[valueProp] === value)
-      if (i >= 0) {
-        return i
-      }
+    return noDefault ? -1 : 0
+  } else if (typeof value === 'number') {
+    const i = value
+    if (i < 0 || i >= model.length) {
       return noDefault ? -1 : 0
-    } else if (typeof value === 'number') {
-      const i = value
-      if (i < 0 || i >= model.length) {
-        return noDefault ? -1 : 0
-      }
     }
   }
-  export default {
-    name: 'FacBoxList',
-    props: {
-      page: Object,
-      fac: Object,
-      model: Array,
-      value: [String, Number],
-      label: {
-        type: String,
-        default: 'label'
-      },
-      cols: {
-        type: Number,
-        default: 5
-      },
-      selectDisable: {
-        type: Boolean,
-        default: false
-      },
-      previewImage: String,
-      image: String,
-      icon: String,
-      valueProp: String,
-      noDefault: {
-        type: Boolean,
-        default: true
-      },
-      fixed: Boolean
+}
+export default {
+  name: 'FacBoxList',
+  props: {
+    page: Object,
+    fac: Object,
+    model: Array,
+    value: [String, Number],
+    label: {
+      type: String,
+      default: 'label'
     },
-    data () {
-      const currentIndex = computeIndex(this)
-      return {
-        currentIndex
-      }
+    cols: {
+      type: Number,
+      default: 5
     },
-    watch: {
-      model () {
-        this.currentIndex = computeIndex(this)
-      },
-      value () {
-        this.currentIndex = computeIndex(this)
-      },
-      currentIndex (val, old) {
-        const k = this.valueProp
-        const o = val === -1 ? null : old >= 0 ? (k ? this.model[old][k] : old) : k ? null : old
-        const r = this.currentIndex >= 0 ? (k ? this.model[this.currentIndex][k] : this.currentIndex) : k ? null : this.currentIndex
-        this.$emit('input', r)
-        this.$emit('change', r, o)
-      }
+    selectDisable: {
+      type: Boolean,
+      default: false
     },
-    methods: {
-      cellClass (index) {
-        const cols = this.fixed && parseInt(this.model.length / this.cols) === 0 ? this.model.length : this.cols
-        const last = (index + 1) % this.cols === 0 ? ' last' : ''
-        return 'col' + cols + last + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.icon || this.image ? '' : ' only_label')
-      },
-      preview (item) {
-        return this.previewImage ? item[this.previewImage] || item[this.image] : item[this.image]
-      },
-      getCurrentItem () {
-        return this.currentIndex !== -1 ? this.model[this.currentIndex] : null
-      },
-      getCurrentIndex () {
-        return this.currentIndex
-      },
-      click (e, item, index) {
-        this.currentIndex = index
-        this.$emit('click', item, index, e)
-      },
-      dblclick (e, item, index) {
-        this.$emit('dblclick', item, index, e)
-      },
-      reset () {
-        this.currentIndex = this.noDefault ? -1 : 0
-      }
+    previewImage: String,
+    image: String,
+    icon: String,
+    valueProp: String,
+    noDefault: {
+      type: Boolean,
+      default: true
+    },
+    fixed: Boolean
+  },
+  data () {
+    const currentIndex = computeIndex(this)
+    return {
+      currentIndex
+    }
+  },
+  watch: {
+    model () {
+      this.currentIndex = computeIndex(this)
+    },
+    value () {
+      this.currentIndex = computeIndex(this)
+    },
+    currentIndex (val, old) {
+      const k = this.valueProp
+      const o = val === -1 ? null : old >= 0 ? (k ? this.model[old][k] : old) : k ? null : old
+      const r = this.currentIndex >= 0 ? (k ? this.model[this.currentIndex][k] : this.currentIndex) : k ? null : this.currentIndex
+      this.$emit('input', r)
+      this.$emit('change', r, o)
+    }
+  },
+  methods: {
+    cellClass (index) {
+      const cols = this.fixed && parseInt(this.model.length / this.cols) === 0 ? this.model.length : this.cols
+      const last = (index + 1) % this.cols === 0 ? ' last' : ''
+      return 'col' + cols + last + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.icon || this.image ? '' : ' only_label')
+    },
+    preview (item) {
+      return this.previewImage ? item[this.previewImage] || item[this.image] : item[this.image]
+    },
+    getCurrentItem () {
+      return this.currentIndex !== -1 ? this.model[this.currentIndex] : null
+    },
+    getCurrentIndex () {
+      return this.currentIndex
+    },
+    click (e, item, index) {
+      this.currentIndex = index
+      this.$emit('click', item, index, e)
+    },
+    dblclick (e, item, index) {
+      this.$emit('dblclick', item, index, e)
+    },
+    reset () {
+      this.currentIndex = this.noDefault ? -1 : 0
     }
   }
+}
 </script>
 <style scoped lang="less">
 .fac-box-list{

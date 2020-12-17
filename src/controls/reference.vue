@@ -103,9 +103,9 @@
    * @param ref 业务引用对象
    */
   function intRefCb (vm, ref) {
-    !vm.suggest && (vm.suggestTarget = ref.params ? (ref.params.suggest || ref.component.suggest) : ref.component.suggest)
+    !vm.suggest && (vm.suggestTarget = ref.suggest || ref.component.suggest)
     if (!vm.trans) {
-      const trans = ref.params ? (ref.params.translate || ref.component.translate) : ref.component.translate
+      const trans = ref.translate || ref.component.translate
       vm.trans = trans || vm.fetchSuggestions
     }
   }

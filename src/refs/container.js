@@ -46,8 +46,8 @@ export default {
       refContent += this.text
     }
     const dprops = toProps(this.dialogProps)
-    const refresh = component && component.methods && component.methods.refresh ? '<button @click="onRefresh"><i class="el-icon-refresh"></i></button>' : ''
-    const search = component && component.methods && component.methods.search ? '<fac-search ref="search" @search="onSearch" size="small" />' : ''
+    const refresh = '<button @click="onRefresh"><i class="el-icon-refresh"></i></button>'
+    const search = '<fac-search ref="search" @search="onSearch" size="small" />'
     $options.template = `<el-dialog ${dprops} :visible.sync="visible">
     <template slot="title">
       <span class="el-dialog__title">${title}</span>
@@ -122,6 +122,14 @@ ${refContent}
     onSearch (kw) {
       const ref = this.$refs.content
       ref.search(kw)
+    },
+    /**
+     * 搜索操作
+     * @param kw
+     */
+    reset () {
+      const s = this.$refs.search
+      s && s.reset()
     },
     /**
      * 取消操作

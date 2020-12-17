@@ -21,37 +21,36 @@
   </div>
 </template>
 <script>
-  /* eslint-disable no-new-func */
-
-  export default {
-    name: 'FacButtonBar',
-    props: {
-      conf: [Object, Array],
-      page: Object,
-      fac: Object
-    },
-    data () {
-      const buttons = !this.conf ? [] : Array.isArray(this.conf) ? this.conf : this.conf.buttons
-      return {
-        buttons
-      }
-    },
-    watch: {
-      conf (conf) {
-        this.buttons = !conf ? [] : Array.isArray(conf) ? conf : conf.buttons
-      }
-    },
-    methods: {
-      handleCommand (cmd) {
-        const f = this.page[cmd] || new Function(cmd)
-        if (f) {
-          f.call(this.page)
-        } else {
-          console.log(`Can not find method "${cmd}"`)
-        }
+/* eslint-disable no-new-func */
+export default {
+  name: 'FacButtonBar',
+  props: {
+    conf: [Object, Array],
+    page: Object,
+    fac: Object
+  },
+  data () {
+    const buttons = !this.conf ? [] : Array.isArray(this.conf) ? this.conf : this.conf.buttons
+    return {
+      buttons
+    }
+  },
+  watch: {
+    conf (conf) {
+      this.buttons = !conf ? [] : Array.isArray(conf) ? conf : conf.buttons
+    }
+  },
+  methods: {
+    handleCommand (cmd) {
+      const f = this.page[cmd] || new Function(cmd)
+      if (f) {
+        f.call(this.page)
+      } else {
+        console.log(`Can not find method "${cmd}"`)
       }
     }
   }
+}
 </script>
 <style lang="less">
   .button-bar{

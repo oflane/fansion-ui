@@ -9,10 +9,10 @@
  -->
 <template>
   <div class="fac-item-list">
-    <div class="item-list-empty-block" v-if="!model||model.length==0"><span class="no-data" >暂无数据</span></div>
+    <div class="item-list-empty-block" v-if="!model||model.length===0"><span class="no-data" >暂无数据</span></div>
     <ul v-else>
-      <li :class="getItemClass(item, $index)" v-for="(item,$index) in model" @click="onClickItem(item,$index)">
-        <img :src="item[image]" class="image" v-if="image != null">
+      <li :class="getItemClass(item, $index)" v-for="(item,$index) in model" @click="onClickItem(item,$index)" :key="$index">
+        <img :src="item[image]" class="image" v-if="image != null" alt="图片">
         <span></span>
       </li>
     </ul>
@@ -20,72 +20,72 @@
 </template>
 
 <script>
-  export default {
-    name: 'FacItemList',
-    props: {
-      page: Object,
-      fac: Object,
-      model: Array,
-      current: [String, Number],
-      label: {
-        type: String,
-        default: 'label'
-      },
-      image: String,
-      key: String,
-      noDefault: Boolean
+export default {
+  name: 'FacItemList',
+  props: {
+    page: Object,
+    fac: Object,
+    model: Array,
+    current: [String, Number],
+    label: {
+      type: String,
+      default: 'label'
     },
-    data () {
-      let {key, model, current, noDefault} = this
-      if (key) {
-        if (current && !model.find(v => v[key] === current)) {
-          this.current = noDefault ? null : model[0][key]
-        }
-      } else if (typeof current * 1 === 'number') {
-        current = current * 1
-        if (current < 0 || current >= model.length) {
-          this.current = noDefault ? null : 0
-        }
+    image: String,
+    key: String,
+    noDefault: Boolean
+  },
+  data () {
+    let {key, model, current, noDefault} = this
+    if (key) {
+      if (current && !model.find(v => v[key] === current)) {
+        this.current = noDefault ? null : model[0][key]
       }
-      return {
+    } else if (typeof current * 1 === 'number') {
+      current = current * 1
+      if (current < 0 || current >= model.length) {
+        this.current = noDefault ? null : 0
       }
+    }
+    return {
+    }
+  },
+  watch: {
+    current (value) {
+      this.setCurrent(value)
+    }
+  },
+  methods: {
+    getItemClass (item, $index) {
+      if (!this.current) {
+        return
+      }
+      const isActive = this.key ? item[this.key] === this.current : this.current === $index
+      return isActive && 'active'
     },
-    watch: {
-      current (value) {
-        this.setCurrent(value)
-      }
+    onClickItem (item, $index) {
+      this.current = this.key ? item[this.key] : $index
+      this.$emit('change', item, $index)
     },
-    methods: {
-      getItemClass (item, $index) {
-        if (!this.current) {
-          return
-        }
-        let isActive = this.key ? item[this.key] === this.current : this.current === $index
-        return isActive && 'active'
-      },
-      onClickItem (item, $index) {
-        this.current = this.key ? item[this.key] : $index
-        this.$emit('change', item, $index)
-      },
-      getCurrent () {
-        let vm = this
-        let {key, model, current} = vm
-        if (!current) {
-          return
-        }
-        return key ? model.find(v => v[key] === current) : current < 0 || current >= model.length ? null : model[current]
-      },
-      setCurrent (current) {
-        let vm = this
-        let {key, model} = vm
-        let item = key ? model.find(v => v[key] === current) : current < 0 || current >= model.length ? null : model[current]
-        if (item) {
-          vm.current = current
-          vm.$emit('change', item)
-        }
+    getCurrent () {
+      const vm = this
+      const {key, model, current} = vm
+      if (!current) {
+        return
+      }
+      return key ? model.find(v => v[key] === current) : current < 0 || current >= model.length ? null : model[current]
+    },
+    setCurrent (current) {
+      const vm = this
+      const {key, model} = vm
+      const item = key ? model.find(v => v[key] === current) : current < 0 || current >= model.length ? null : model[current]
+      if (item) {
+        vm.current = current
+        vm.$emit('change', item)
       }
     }
   }
+}
 </script>
 
 <style lang="less">

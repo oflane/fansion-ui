@@ -17,170 +17,170 @@
   </div>
 </template>
 <script>
-  import formItem from './form-item.vue'
-  import fase from 'fansion-base'
+import formItem from './form-item.vue'
+import fase from 'fansion-base'
 
-  /**
-   * 获取工具方法
-   */
-  const isNotNull = fase.util.isNotNull
-  const callHook = fase.render.callHook
+/**
+ * 获取工具方法
+ */
+const isNotNull = fase.util.isNotNull
+const callHook = fase.render.callHook
 
-  /**
-   * 构建表单分组
-   * @param group 分组配置
-   * @param state 当前状态
-   * @param css 样式名class
-   * @returns {*}
-   */
-  const buildFormGroup = (group, state, css) => {
-    if (group.ignore) {
-      return
-    }
-    let {items, cols = 2, title} = group
-    if (!items || items.length === 0) {
-      return
-    }
-    const elcols = 24 / Number(cols) || 12
-    if (!state) {
-      group.elcols = elcols
-      group.col = cols
-      return group
-    }
-    items = items.map((item) => {
-      const s = item[state] || item[state.substring(6)]
-      s && (item = Object.assign({}, item, s))
-      return item
-    }).filter(item => !item.ignore)
-    if (items.length === 0) {
-      return
-    }
-
-    css = css ? css + ' fac-form-cols' + group.cols : 'fac-form-cols' + group.cols
-    return {
-      title,
-      cols,
-      elcols,
-      items,
-      css
-    }
+/**
+ * 构建表单分组
+ * @param group 分组配置
+ * @param state 当前状态
+ * @param css 样式名class
+ * @returns {*}
+ */
+const buildFormGroup = (group, state, css) => {
+  if (group.ignore) {
+    return
   }
-  export default {
-    name: 'FacForm',
-    props: {
-      css: String,
-      conf: Object,
-      model: Object,
-      statusIcon: {
-        type: Boolean,
-        default: true
-      },
-      ignore: {
-        type: Boolean,
-        default: false
-      },
-      state: String,
-      page: Object,
-      fac: Object,
-      labelWidth: String,
-      gutter: Number
+  let {items, cols = 2, title} = group
+  if (!items || items.length === 0) {
+    return
+  }
+  const elcols = 24 / Number(cols) || 12
+  if (!state) {
+    group.elcols = elcols
+    group.col = cols
+    return group
+  }
+  items = items.map((item) => {
+    const s = item[state] || item[state.substring(6)]
+    s && (item = Object.assign({}, item, s))
+    return item
+  }).filter(item => !item.ignore)
+  if (items.length === 0) {
+    return
+  }
+
+  css = css ? css + ' fac-form-cols' + group.cols : 'fac-form-cols' + group.cols
+  return {
+    title,
+    cols,
+    elcols,
+    items,
+    css
+  }
+}
+export default {
+  name: 'FacForm',
+  props: {
+    css: String,
+    conf: Object,
+    model: Object,
+    statusIcon: {
+      type: Boolean,
+      default: true
     },
-    data: function () {
-      const labelW = this.conf.labelWidth || this.labelWidth || '120px'
-      const gutterProp = this.conf.gutter || this.gutter || 20
-      if (isNotNull(this.conf.statusIcon)) {
-        this.statusIcon = this.conf.statusIcon && this.statusIcon
-      }
-      const exist = !(this.ignore === true || this.conf.ignore === true)
-      const maxFormCols = 0
-      return {
-        labelW,
-        maxFormCols,
-        gutterProp,
-        groups: [],
-        exist
-      }
+    ignore: {
+      type: Boolean,
+      default: false
     },
-    watch: {
-      conf () {
-        this.$mount()
-        callHook(this, 'mounted')
-      },
-      state () {
-        this.changeState()
-      },
-      ignore (v) {
-        this.exist = !(v === true || this.conf.ignore === true)
-        this.$mount()
-        callHook(this, 'mounted')
-      }
+    state: String,
+    page: Object,
+    fac: Object,
+    labelWidth: String,
+    gutter: Number
+  },
+  data: function () {
+    const labelW = this.conf.labelWidth || this.labelWidth || '120px'
+    const gutterProp = this.conf.gutter || this.gutter || 20
+    if (isNotNull(this.conf.statusIcon)) {
+      this.statusIcon = this.conf.statusIcon && this.statusIcon
+    }
+    const exist = !(this.ignore === true || this.conf.ignore === true)
+    const maxFormCols = 0
+    return {
+      labelW,
+      maxFormCols,
+      gutterProp,
+      groups: [],
+      exist
+    }
+  },
+  watch: {
+    conf () {
+      this.$mount()
+      callHook(this, 'mounted')
     },
-    mounted () {
-      if (this.page && !this.state) {
-        this.page.$on('stateChanged', this.changeState)
-      }
+    state () {
       this.changeState()
     },
-    destroy () {
-      if (this.page) {
-        this.page.$off('stateChanged', this.changeState)
-      }
+    ignore (v) {
+      this.exist = !(v === true || this.conf.ignore === true)
+      this.$mount()
+      callHook(this, 'mounted')
+    }
+  },
+  mounted () {
+    if (this.page && !this.state) {
+      this.page.$on('stateChanged', this.changeState)
+    }
+    this.changeState()
+  },
+  destroy () {
+    if (this.page) {
+      this.page.$off('stateChanged', this.changeState)
+    }
+  },
+  components: {
+    formItem
+  },
+  methods: {
+    groupCss (group) {
+      return group.css + ' ' + this.state + ' fac-form-width' + this.maxFormCols
     },
-    components: {
-      formItem
+    resetFields () {
+      this.$refs.elForm.forEach(v => {
+        v.resetFields()
+      })
     },
-    methods: {
-      groupCss (group) {
-        return group.css + ' ' + this.state + ' fac-form-width' + this.maxFormCols
-      },
-      resetFields () {
-        this.$refs.elForm.forEach(v => {
-          v.resetFields()
+    validate (callback) {
+      let valid = true
+      let count = 0
+      const forms = this.$refs.elForm
+      const len = forms.length
+      forms.forEach(v => {
+        v.validate(c => {
+          if (!c) {
+            valid = false
+          }
+          count++
+          if (count === len) {
+            callback(valid)
+          }
         })
-      },
-      validate (callback) {
-        let valid = true
-        let count = 0
-        const forms = this.$refs.elForm
-        const len = forms.length
-        forms.forEach(v => {
-          v.validate(c => {
-            if (!c) {
-              valid = false
-            }
-            count++
-            if (count === len) {
-              callback(valid)
-            }
-          })
-        })
-      },
-      clearValidate () {
-        this.$refs.elForm.forEach(v => {
-          v.clearValidate()
-        })
-      },
-      changeState () {
-        const vm = this
-        const {page, conf, css, exist} = vm
-        let pageState = this.state || (page && ('pageState' in page.constructor.prototype) && page.pageState ? page.pageState : 'init')
-        pageState = pageState.startsWith('state_') ? pageState : 'state_' + pageState
-        if (!exist) {
-          vm.groups = []
-          return
-        }
-        let groups = conf.groups || []
-        if (groups.length === 0) {
-          const group = buildFormGroup(conf, pageState, css)
-          vm.maxFormCols = group.cols
-          group && groups.push(group)
-        } else {
-          groups = groups.map(group => buildFormGroup(group, pageState, css)).filter(group => group ? (vm.maxFormCols < group.cols ? !!(vm.maxFormCols = group.cols) || true : true) : false)
-        }
-        this.groups = groups
+      })
+    },
+    clearValidate () {
+      this.$refs.elForm.forEach(v => {
+        v.clearValidate()
+      })
+    },
+    changeState () {
+      const vm = this
+      const {page, conf, css, exist} = vm
+      let pageState = this.state || (page && ('pageState' in page.constructor.prototype) && page.pageState ? page.pageState : 'init')
+      pageState = pageState.startsWith('state_') ? pageState : 'state_' + pageState
+      if (!exist) {
+        vm.groups = []
+        return
       }
+      let groups = conf.groups || []
+      if (groups.length === 0) {
+        const group = buildFormGroup(conf, pageState, css)
+        vm.maxFormCols = group.cols
+        group && groups.push(group)
+      } else {
+        groups = groups.map(group => buildFormGroup(group, pageState, css)).filter(group => group ? (vm.maxFormCols < group.cols ? !!(vm.maxFormCols = group.cols) || true : true) : false)
+      }
+      this.groups = groups
     }
   }
+}
 </script>
 <style lang="less">
   .fac-form-group{

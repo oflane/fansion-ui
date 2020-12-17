@@ -37,10 +37,11 @@ module.exports = {
     'generator-star-spacing': 0,
     //"indent": ["error", 2, {"SwitchCase": 1}],
     "vue/script-indent": ["error", 2, {  // script标签缩进设置
-      "baseIndent": 1,
+      "baseIndent": 0,
       "switchCase": 0,
       "ignores": []
     }],
+    "vue/valid-template-root": 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   },
