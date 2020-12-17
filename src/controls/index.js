@@ -3,6 +3,7 @@
  */
 
 import combo from './combo.vue'
+import simpleTree from './simple-tree.vue'
 import reference from './reference.vue'
 import search from './search.vue'
 import xquery from './xquery.vue'
@@ -25,7 +26,8 @@ export default {
     search,
     xquery,
     pagination,
-    tags
+    tags,
+    simpleTree
   },
   /**
    * 简单控件元数据信息

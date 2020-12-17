@@ -123,6 +123,10 @@ export default {
     tagName: 'fac-tags',
     props: ['ref', 'single', 'valueField', 'labelField', 'vModel', 'disabled', 'value', 'readonlyValue']
   },
+  'simple-tree': {
+    tagName: 'simple-tree',
+    props: ['ref', 'url', 'lazy', 'label', 'icon', 'search', 'rootName', 'children', 'isLeaf', 'keyword']
+  },
   'json-editor': {
     component: vueJsonEditor,
     props: ['ref', 'vModel', 'mode', 'modes'],
