@@ -40,433 +40,432 @@
   </div>
 </template>
 <script>
-  import refs from '../refs'
-  import fase from 'fansion-base'
-  import Emitter from 'element-ui/lib/mixins/emitter'
-  import Clickoutside from 'element-ui/lib/utils/clickoutside'
-  import ReferenceSuggestions from './reference-suggestions.vue'
-  import Vue from 'vue'
-  /**
-   * 引入基础对象及方法
-   */
-  const Elm = fase.mixins.elm
-  const {gson, furl, gext} = fase.rest
-  const {sure, isNotEmpty, isFunction} = fase.util
-  const getData = fase.data.getData
-  /**
-   * 关闭参照全局方法
-   * @param data 返回数据
-   */
-  Vue.prototype.$closeReference = function (data) {
-    this.$dialogs.getCurrent().$reference.closeReference(data)
-  }
-  /**
-   * 打开参照对话框
-   * @param vm vue对象
-   * @param conf 对象化框配置对象
-   */
-  const openReference = (vm, conf) => {
-    if (!conf.dialog && (conf.component && !conf.component.dialog)) {
-      if (!conf.container || typeof conf.container === 'string') {
-        conf.container = refs.getContainer(conf.container)
-      }
+import refs from '../refs'
+import fase from 'fansion-base'
+import Emitter from 'element-ui/lib/mixins/emitter'
+import Clickoutside from 'element-ui/lib/utils/clickoutside'
+import ReferenceSuggestions from './reference-suggestions.vue'
+import Vue from 'vue'
+/**
+ * 引入基础对象及方法
+ */
+const Elm = fase.mixins.elm
+const {gson, furl, gext} = fase.rest
+const {sure, isNotEmpty, isFunction} = fase.util
+/**
+ * 关闭参照全局方法
+ * @param data 返回数据
+ */
+Vue.prototype.$closeReference = function (data) {
+  this.$dialogs.getCurrent().$reference.closeReference(data)
+}
+/**
+ * 打开参照对话框
+ * @param vm vue对象
+ * @param conf 对象化框配置对象
+ */
+const openReference = (vm, conf) => {
+  if (!conf.dialog && (conf.component && !conf.component.dialog)) {
+    if (!conf.container || typeof conf.container === 'string') {
+      conf.container = refs.getContainer(conf.container)
     }
-    Object.assign(conf, vm.getDialogOptions())
-    vm.$dialogs.show(conf)
   }
+  Object.assign(conf, vm.getDialogOptions())
+  vm.$dialogs.show(conf)
+}
 
-  /**
-   * 翻译方法
-   * @param vm 业务引用值
-   */
-  function trans (vm) {
-    const value = vm.value
-    if (!value) {
-      return
-    }
-    const trans = vm.trans
-    const cb = (res) => {
-      let r = res
-      if (res && res.startsWith('{')) {
-        const j = JSON.parse(res)
-        r = j.label || j.value
-      }
-      r && vm.$emit('update:showLabel', r)
-    }
-    const params = {value}
-    trans && (typeof trans === 'string' ? gext(furl(trans, params), params, cb) : trans(value, cb))
+/**
+ * 翻译方法
+ * @param vm 业务引用值
+ */
+function trans (vm) {
+  const value = vm.value
+  if (!value) {
+    return
   }
+  const trans = vm.trans
+  const cb = (res) => {
+    let r = res
+    if (res && res.startsWith('{')) {
+      const j = JSON.parse(res)
+      r = j.label || j.value
+    }
+    r && vm.$emit('update:showLabel', r)
+  }
+  const params = {value}
+  trans && (typeof trans === 'string' ? gext(furl(trans, params), params, cb) : trans(value, cb))
+}
 
-  /**
-   * 初始化业务引用回调
-   * @param vm 参照组件
-   * @param ref 业务引用对象
-   */
-  function intRefCb (vm, ref) {
-    !vm.suggest && (vm.suggestTarget = ref.suggest || ref.component.suggest)
-    if (!vm.trans) {
-      const trans = ref.translate || ref.component.translate
-      vm.trans = trans || vm.fetchSuggestions
-    }
+/**
+ * 初始化业务引用回调
+ * @param vm 参照组件
+ * @param ref 业务引用对象
+ */
+function intRefCb (vm, ref) {
+  !vm.suggest && (vm.suggestTarget = ref.suggest || ref.component.suggest)
+  if (!vm.trans) {
+    const trans = ref.translate || ref.component.translate
+    vm.trans = trans || vm.fetchSuggestions
   }
+}
 
-  /**
-   * 初始化
-   * @param vm vue对象
-   * @param cb 回调方法
-   */
-  function initRef (vm, cb) {
-    const ref = vm.ref
-    if (!ref) {
-      return
-    }
-    typeof ref === 'string' ? refs.get(ref, (r) => {
-      vm.ref = r
-      intRefCb(vm, r)
-      cb && cb(vm)
-    }) : sure(intRefCb(vm, ref)) && (cb && cb(vm))
+/**
+ * 初始化
+ * @param vm vue对象
+ * @param cb 回调方法
+ */
+function initRef (vm, cb) {
+  const ref = vm.ref
+  if (!ref) {
+    return
   }
-  /**
-   * 对话框选择组件
-   * @author Paul.Yang E-mail:yaboocn@qq.com
-   * @version 1.0 2018-1-22
-   */
-  export default {
-    name: 'FacReference',
-    componentName: 'Reference',
-    components: {
-      ReferenceSuggestions
-    },
-    directives: {
-      Clickoutside,
-      focusInput: {
-        inserted: function (el, binding) {
-          if (binding.value) {
-            setTimeout(() => {
-              el.querySelector('input').focus()
-            })
-          }
+  typeof ref === 'string' ? refs.get(ref, (r) => {
+    vm.ref = r
+    intRefCb(vm, r)
+    cb && cb(vm)
+  }) : sure(intRefCb(vm, ref)) && (cb && cb(vm))
+}
+/**
+ * 对话框选择组件
+ * @author Paul.Yang E-mail:yaboocn@qq.com
+ * @version 1.0 2018-1-22
+ */
+export default {
+  name: 'FacReference',
+  componentName: 'Reference',
+  components: {
+    ReferenceSuggestions
+  },
+  directives: {
+    Clickoutside,
+    focusInput: {
+      inserted: function (el, binding) {
+        if (binding.value) {
+          setTimeout(() => {
+            el.querySelector('input').focus()
+          })
         }
       }
+    }
+  },
+  mixins: [Elm, Emitter],
+  props: {
+    popperClass: String,
+    placeholder: {
+      type: String,
+      default: '请选择'
     },
-    mixins: [Elm, Emitter],
-    props: {
-      popperClass: String,
-      placeholder: {
-        type: String,
-        default: '请选择'
-      },
-      disabled: Boolean,
-      readonly: Boolean,
-      name: String,
-      size: String,
-      value: String,
-      showLabel: String,
-      triggerOnFocus: {
-        type: Boolean,
-        default: true
-      },
-      suggest: [String, Array, Function],
-      translate: [String, Function],
-      filter: {
-        type: Function,
-        default: (filterString) => (item) => (item.label && item.label.toLowerCase().indexOf(filterString.toLowerCase()) >= 0)
-      },
-      refTo: [String, Object],
-      refParam: Object,
-      readFields: {
-        type: [String, Array],
-        default: _ => []
-      },
-      writeFields: {
-        type: [String, Array],
-        default: _ => []
-      },
-      clearable: {
-        type: Boolean,
-        default: true
+    disabled: Boolean,
+    readonly: Boolean,
+    name: String,
+    size: String,
+    value: String,
+    showLabel: String,
+    triggerOnFocus: {
+      type: Boolean,
+      default: true
+    },
+    suggest: [String, Array, Function],
+    translate: [String, Function],
+    filter: {
+      type: Function,
+      default: (filterString) => (item) => (item.label && item.label.toLowerCase().indexOf(filterString.toLowerCase()) >= 0)
+    },
+    refTo: [String, Object],
+    refParam: Object,
+    readFields: {
+      type: [String, Array],
+      default: _ => []
+    },
+    writeFields: {
+      type: [String, Array],
+      default: _ => []
+    },
+    clearable: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data: function () {
+    const vm = this
+    const ref = vm.refTo
+    const suggestTarget = vm.suggest
+    const trans = vm.translate
+    const nativeLabel = this.showLabel
+    return {
+      nativeLabel,
+      inputHovering: false,
+      ref,
+      trans,
+      suggestTarget,
+      isFocus: false,
+      isOnComposition: false,
+      suggestions: [],
+      loading: false,
+      highlightedIndex: -1
+    }
+  },
+  computed: {
+    suggestionVisible () {
+      const suggestions = this.suggestions
+      const isValidData = Array.isArray(suggestions) && suggestions.length > 0
+      return (isValidData || this.loading) && this.isFocus
+    },
+    clearIcon () {
+      return this.clearable &&
+        !this.readonly &&
+        this.inputHovering &&
+        !this.disabled &&
+        isNotEmpty(this.showLabel)
+    },
+    listenerTrans () {
+      const {value, showLabel} = this
+      if (value && !showLabel && this.trans) {
+        console.log(`value:${value},label:${showLabel}`)
+        trans(this)
       }
+      return {value, showLabel}
+    }
+  },
+  watch: {
+    suggestionVisible (val) {
+      this.broadcast('ReferenceSuggestions', 'visible', [val, this.$refs.input.$refs.input.offsetWidth])
     },
-    data: function () {
+    refTo (refTo) {
       const vm = this
-      const ref = vm.refTo
-      const suggestTarget = vm.suggest
-      const trans = vm.translate
-      const nativeLabel = this.showLabel
-      return {
-        nativeLabel,
-        inputHovering: false,
-        ref,
-        trans,
-        suggestTarget,
-        isFocus: false,
-        isOnComposition: false,
-        suggestions: [],
-        loading: false,
-        highlightedIndex: -1
-      }
-    },
-    computed: {
-      suggestionVisible () {
-        const suggestions = this.suggestions
-        const isValidData = Array.isArray(suggestions) && suggestions.length > 0
-        return (isValidData || this.loading) && this.isFocus
-      },
-      clearIcon () {
-        return this.clearable &&
-          !this.readonly &&
-          this.inputHovering &&
-          !this.disabled &&
-          isNotEmpty(this.showLabel)
-      },
-      listenerTrans () {
-        const {value, showLabel} = this
-        if (value && !showLabel && this.trans) {
-          console.log(`value:${value},label:${showLabel}`)
-          trans(this)
-        }
-        return {value, showLabel}
-      }
-    },
-    watch: {
-      suggestionVisible (val) {
-        this.broadcast('ReferenceSuggestions', 'visible', [val, this.$refs.input.$refs.input.offsetWidth])
-      },
-      refTo (refTo) {
-        const vm = this
-        vm.ref = refTo
-        initRef(vm, trans)
-      },
-      value (v) {
-        console.log(v)
-      },
-      showLabel (v) {
-        if (this.nativeLabel !== v) {
-          this.nativeLabel = v
-        }
-      },
-      nativeLabel (v) {
-        this.handleChangeLabel(v)
-      }
-    },
-    mounted () {
-      const vm = this
+      vm.ref = refTo
       initRef(vm, trans)
-      vm.$on('item-click', item => {
-        this.select(item)
-      })
     },
-    beforeDestroy () {
-      this.$refs.suggestions.$destroy()
+    value (v) {
+      console.log(v)
     },
-    methods: {
-      getData (queryString) {
-        this.loading = true
-        queryString = queryString || ''
-        if (queryString.length === 0) {
-          this.suggestions = []
-        } else {
-          this.fetchSuggestions(queryString, (suggestions) => {
-            this.loading = false
-            if (Array.isArray(suggestions)) {
-              this.suggestions = suggestions
-            } else {
-              console.error('autocomplete suggestions must be an array')
-            }
-          })
-        }
-      },
-      handleComposition (event) {
-        /**
-         * chrome下composition事件会比input事件的触发事件晚，再次调用handleChange方法，
-         * 会把当次修改的值，而不是全部的值传递过去，导致过滤的数据不对，手动在input事件的回
-         * 调里面延迟一下compositionend的判断触发
-         */
-        this.isOnComposition = event.type !== 'compositionend'
-      },
-      handleChangeLabel (label) {
-        const vm = this
-        if (label === this.showLabel) {
-          return
-        }
-        setTimeout(() => {
-          if (vm.isOnComposition || (!vm.triggerOnFocus && !label)) {
-            this.suggestions = []
-            return
-          }
-          if (!vm.readonly) {
-            vm.getData(label)
-          }
-        }, 0)
-      },
-
-      handleFocus () {
-        this.isFocus = true
-        this.$emit('focus')
-      },
-      handleKeyEnter () {
-        if (this.suggestionVisible && this.highlightedIndex >= 0 && this.highlightedIndex < this.suggestions.length) {
-          this.select(this.suggestions[this.highlightedIndex])
-        } else if (this.showLabel && (this.suggestions.length === 1 && this.suggestions[0].label === this.showLabel)) {
-          this.select(this.suggestions[0])
-        } else {
-          this.select({})
-        }
-      },
-      handleClickoutside () {
-        if (!this.suggestTarget) {
-          return
-        }
-        const vm = this
-        setTimeout(() => {
-          if (!vm.showLabel && this.suggestions.length === 1 && vm.suggestions[0].label === vm.showLabel) {
-            this.select(this.suggestions[0])
-          }
-        }, 100)
-        this.isFocus = false
-      },
-      select (item) {
-        if (item && this.value !== item.value) {
-          this.writeFields.forEach((f, i) => {
-            if (i >= this.readFields.length) {
-              this.model[f] = null
-            } else {
-              this.model[f] = item[f]
-            }
-          })
-
-          this.$emit('input', item.value)
-          this.$emit('update:showLabel', item.label)
-          this.$emit('change', item)
-        }
-        if (this.readonly) {
-          return
-        }
-        this.$nextTick(_ => {
-          this.suggestions = []
-        })
-        this.highlight(-1)
-      },
-      highlight (index) {
-        if (!this.suggestionVisible || this.loading) { return }
-        if (index < 0) {
-          this.highlightedIndex = -1
-          return
-        }
-        if (index >= this.suggestions.length) {
-          index = this.suggestions.length - 1
-        }
-        const suggestion = this.$refs.suggestions.$el.querySelector('.el-autocomplete-suggestion__wrap')
-        const suggestionList = suggestion.querySelectorAll('.el-autocomplete-suggestion__list li')
-
-        const highlightItem = suggestionList[index]
-        const scrollTop = suggestion.scrollTop
-        const offsetTop = highlightItem.offsetTop
-
-        if (offsetTop + highlightItem.scrollHeight > (scrollTop + suggestion.clientHeight)) {
-          suggestion.scrollTop += highlightItem.scrollHeight
-        }
-        if (offsetTop < scrollTop) {
-          suggestion.scrollTop -= highlightItem.scrollHeight
-        }
-        this.highlightedIndex = index
-        this.$el.querySelector('.el-input__inner').setAttribute('aria-activedescendant', `${this.id}-item-${this.highlightedIndex}`)
-      },
-      fetchSuggestions: function (inputString, cb) {
-        const suggest = this.suggestTarget
-        if (!suggest) {
-          return
-        }
-        if (!inputString) {
-          cb.call(this, [])
-          return
-        }
-        if (typeof suggest === 'string') {
-          gson(suggest, {keyword: inputString}, cb)
-        } else if (isFunction(suggest)) {
-          suggest(inputString, cb, this.refParam)
-        } else {
-          cb(suggest.filter(this.filter(inputString)))
-        }
-      },
-      handleIconClick () {
-        this.isFocus = false
-        this.showReference()
-      },
-      setParams (params, isClear = true) {
-        if (this.refParam === params) {
-          return
-        }
-        this.refParam = params
-        if (isClear) {
-          this.$emit('input', null)
-          this.$emit('update:showLabel', null)
-        }
-        this.refresh = true
-      },
-      getDialogOptions () {
-        const vm = this
-        return {
-          params: vm.refParam,
-          dep: '#' + vm.getElmID(),
-          refresh: vm.refresh,
-          '@open': ($event) => {
-            vm.$dialogs.getCurrent().$reference = vm
-            console.log($event)
-            $event && $event.reset && $event.reset()
-          }
-        }
-      },
-      showReference () {
-        const vm = this
-        const ref = this.refTo
-        if (typeof ref === 'string') {
-          refs.get(ref, (conf) => {
-            openReference(vm, conf)
-          })
-          return
-        }
-        const conf = ref.component ? ref : {component: ref}
-        openReference(vm, conf)
-      },
-      closeReference (item) {
-        if (item) {
-          this.select(item)
-        }
-        this.$dialogs.closeCurrent(item)
-        this.$emit('afterReference', item, this)
-      },
-      /**
-       * @desc: 清空操作  1.已经选中过数据，现在清空数据 2.还未选中数据，只是清除掉输入框中的值
-       */
-      deleteSelected () {
-        if (this.value) {
-          this.select({})
-        } else {
-          this.$emit('input', null)
-          this.$emit('update:showLabel', null)
-        }
+    showLabel (v) {
+      if (this.nativeLabel !== v) {
+        this.nativeLabel = v
+      }
+    },
+    nativeLabel (v) {
+      this.handleChangeLabel(v)
+    }
+  },
+  mounted () {
+    const vm = this
+    initRef(vm, trans)
+    vm.$on('item-click', item => {
+      this.select(item)
+    })
+  },
+  beforeDestroy () {
+    this.$refs.suggestions.$destroy()
+  },
+  methods: {
+    getData (queryString) {
+      this.loading = true
+      queryString = queryString || ''
+      if (queryString.length === 0) {
         this.suggestions = []
+      } else {
+        this.fetchSuggestions(queryString, (suggestions) => {
+          this.loading = false
+          if (Array.isArray(suggestions)) {
+            this.suggestions = suggestions
+          } else {
+            console.error('autocomplete suggestions must be an array')
+          }
+        })
       }
     },
-    created: function () {
-      if (!this.readFields) {
-        this.readFields = []
-      } else if (typeof this.readFields === 'string') {
-        this.readFields = this.readFields.split(',')
+    handleComposition (event) {
+      /**
+       * chrome下composition事件会比input事件的触发事件晚，再次调用handleChange方法，
+       * 会把当次修改的值，而不是全部的值传递过去，导致过滤的数据不对，手动在input事件的回
+       * 调里面延迟一下compositionend的判断触发
+       */
+      this.isOnComposition = event.type !== 'compositionend'
+    },
+    handleChangeLabel (label) {
+      const vm = this
+      if (label === this.showLabel) {
+        return
       }
-      if (!this.writeFields) {
-        this.writeFields = []
-      } else if (typeof this.writeFields === 'string') {
-        this.writeFields = this.writeFields.split(',')
+      setTimeout(() => {
+        if (vm.isOnComposition || (!vm.triggerOnFocus && !label)) {
+          this.suggestions = []
+          return
+        }
+        if (!vm.readonly) {
+          vm.getData(label)
+        }
+      }, 0)
+    },
+
+    handleFocus () {
+      this.isFocus = true
+      this.$emit('focus')
+    },
+    handleKeyEnter () {
+      if (this.suggestionVisible && this.highlightedIndex >= 0 && this.highlightedIndex < this.suggestions.length) {
+        this.select(this.suggestions[this.highlightedIndex])
+      } else if (this.showLabel && (this.suggestions.length === 1 && this.suggestions[0].label === this.showLabel)) {
+        this.select(this.suggestions[0])
+      } else {
+        this.select({})
       }
+    },
+    handleClickoutside () {
+      if (!this.suggestTarget) {
+        return
+      }
+      const vm = this
+      setTimeout(() => {
+        if (!vm.showLabel && this.suggestions.length === 1 && vm.suggestions[0].label === vm.showLabel) {
+          this.select(this.suggestions[0])
+        }
+      }, 100)
+      this.isFocus = false
+    },
+    select (item) {
+      if (item && this.value !== item.value) {
+        this.writeFields.forEach((f, i) => {
+          if (i >= this.readFields.length) {
+            this.model[f] = null
+          } else {
+            this.model[f] = item[f]
+          }
+        })
+
+        this.$emit('input', item.value)
+        this.$emit('update:showLabel', item.label)
+        this.$emit('change', item)
+      }
+      if (this.readonly) {
+        return
+      }
+      this.$nextTick(_ => {
+        this.suggestions = []
+      })
+      this.highlight(-1)
+    },
+    highlight (index) {
+      if (!this.suggestionVisible || this.loading) { return }
+      if (index < 0) {
+        this.highlightedIndex = -1
+        return
+      }
+      if (index >= this.suggestions.length) {
+        index = this.suggestions.length - 1
+      }
+      const suggestion = this.$refs.suggestions.$el.querySelector('.el-autocomplete-suggestion__wrap')
+      const suggestionList = suggestion.querySelectorAll('.el-autocomplete-suggestion__list li')
+
+      const highlightItem = suggestionList[index]
+      const scrollTop = suggestion.scrollTop
+      const offsetTop = highlightItem.offsetTop
+
+      if (offsetTop + highlightItem.scrollHeight > (scrollTop + suggestion.clientHeight)) {
+        suggestion.scrollTop += highlightItem.scrollHeight
+      }
+      if (offsetTop < scrollTop) {
+        suggestion.scrollTop -= highlightItem.scrollHeight
+      }
+      this.highlightedIndex = index
+      this.$el.querySelector('.el-input__inner').setAttribute('aria-activedescendant', `${this.id}-item-${this.highlightedIndex}`)
+    },
+    fetchSuggestions: function (inputString, cb) {
+      const suggest = this.suggestTarget
+      if (!suggest) {
+        return
+      }
+      if (!inputString) {
+        cb.call(this, [])
+        return
+      }
+      if (typeof suggest === 'string') {
+        gson(suggest, {keyword: inputString}, cb)
+      } else if (isFunction(suggest)) {
+        suggest(inputString, cb, this.refParam)
+      } else {
+        cb(suggest.filter(this.filter(inputString)))
+      }
+    },
+    handleIconClick () {
+      this.isFocus = false
+      this.showReference()
+    },
+    setParams (params, isClear = true) {
+      if (this.refParam === params) {
+        return
+      }
+      this.refParam = params
+      if (isClear) {
+        this.$emit('input', null)
+        this.$emit('update:showLabel', null)
+      }
+      this.refresh = true
+    },
+    getDialogOptions () {
+      const vm = this
+      return {
+        params: vm.refParam,
+        dep: '#' + vm.getElmID(),
+        refresh: vm.refresh,
+        '@open': ($event) => {
+          vm.$dialogs.getCurrent().$reference = vm
+          console.log($event)
+          $event && $event.reset && $event.reset()
+        }
+      }
+    },
+    showReference () {
+      const vm = this
+      const ref = this.refTo
+      if (typeof ref === 'string') {
+        refs.get(ref, (conf) => {
+          openReference(vm, conf)
+        })
+        return
+      }
+      const conf = ref.component ? ref : {component: ref}
+      openReference(vm, conf)
+    },
+    closeReference (item) {
+      if (item) {
+        this.select(item)
+      }
+      this.$dialogs.closeCurrent(item)
+      this.$emit('afterReference', item, this)
+    },
+    /**
+     * @desc: 清空操作  1.已经选中过数据，现在清空数据 2.还未选中数据，只是清除掉输入框中的值
+     */
+    deleteSelected () {
+      if (this.value) {
+        this.select({})
+      } else {
+        this.$emit('input', null)
+        this.$emit('update:showLabel', null)
+      }
+      this.suggestions = []
+    }
+  },
+  created: function () {
+    if (!this.readFields) {
+      this.readFields = []
+    } else if (typeof this.readFields === 'string') {
+      this.readFields = this.readFields.split(',')
+    }
+    if (!this.writeFields) {
+      this.writeFields = []
+    } else if (typeof this.writeFields === 'string') {
+      this.writeFields = this.writeFields.split(',')
     }
   }
+}
 </script>
 <style lang="less" scoped>
-  .reference {
-    position: relative;
-    display: inline-block;
-    width:100%;
-  }
+.reference {
+  position: relative;
+  display: inline-block;
+  width:100%;
+}
 </style>

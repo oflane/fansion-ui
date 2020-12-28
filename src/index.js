@@ -10,7 +10,6 @@ import fase from 'fansion-base'
 import fac from 'fansion-fac'
 import generator from './generator'
 import handler from './handler'
-import constant from './constant'
 import msg from './msg'
 import sortDialog from './pages/sort-dailog'
 // 页面注册
@@ -58,6 +57,5 @@ export default {
   ...controls.components,
   generator,
   handler,
-  msg,
-  constant
+  msg
 }
