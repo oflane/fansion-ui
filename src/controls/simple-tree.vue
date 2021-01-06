@@ -39,7 +39,7 @@ export default {
   },
   data () {
     const model = []
-    const root = this.rootName ? {id: 'root'} : null
+    const root = this.rootName ? {id: fase.constant.ALL_DATA} : null
     if (root) {
       root[this.label] = this.rootName
       model.push(root)
@@ -89,6 +89,13 @@ export default {
     filter (value) {
       const vm = this
       vm.lazy ? vm.searchData(value) : vm.$refs.tree.filter(value)
+    },
+    /**
+     * 取得当前树节点
+     * @returns {*}
+     */
+    getCurrentNode () {
+      return this.$refs.tree.getCurrentNode()
     }
   }
 }

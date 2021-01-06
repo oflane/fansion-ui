@@ -85,11 +85,20 @@ function trans (vm) {
   }
   const trans = vm.trans
   const cb = (res) => {
-    let r = res
-    if (res && res.startsWith('{')) {
-      const j = JSON.parse(res)
-      r = j.label || j.value
+    if (!res) {
+      return
     }
+    // 处理回调结果的集中情况
+    if (isFunction(res)) {
+      res = res()
+    }
+    if (Array.isArray(res)) {
+      if (res.length === 0) {
+        return
+      }
+      res = res[0]
+    }
+    const r = typeof res === 'string' ? (res.startsWith('{') ? sure(res = JSON.parse(res)) && (res.label || res.value) : res) : res.label || res.value
     r && vm.$emit('update:showLabel', r)
   }
   const params = {value}
@@ -103,10 +112,10 @@ function trans (vm) {
  */
 function intRefCb (vm, ref) {
   !vm.suggest && (vm.suggestTarget = ref.suggest || ref.component.suggest)
-  if (!vm.trans) {
-    const trans = ref.translate || ref.component.translate
-    vm.trans = trans || vm.fetchSuggestions
-  }
+  // 数据源
+  vm.staticData = ref.ds || ref.component.ds
+  const trans = vm.translate || ref.translate || ref.component.translate
+  vm.trans = trans || ((val, cb) => vm.transByData(val, (res) => Array.isArray(res) && res.length > 0 && cb(res[0])))
 }
 
 /**
@@ -190,13 +199,12 @@ export default {
     const vm = this
     const ref = vm.refTo
     const suggestTarget = vm.suggest
-    const trans = vm.translate
+
     const nativeLabel = this.showLabel
     return {
       nativeLabel,
       inputHovering: false,
       ref,
-      trans,
       suggestTarget,
       isFocus: false,
       isOnComposition: false,
@@ -233,7 +241,13 @@ export default {
     },
     refTo (refTo) {
       const vm = this
+      vm.trans = vm.translate
       vm.ref = refTo
+      initRef(vm, trans)
+    },
+    translate (v) {
+      const vm = this
+      vm.trans = v
       initRef(vm, trans)
     },
     value (v) {
@@ -372,20 +386,43 @@ export default {
       this.$el.querySelector('.el-input__inner').setAttribute('aria-activedescendant', `${this.id}-item-${this.highlightedIndex}`)
     },
     fetchSuggestions: function (inputString, cb) {
-      const suggest = this.suggestTarget
-      if (!suggest) {
-        return
-      }
+      const vm = this
+      const suggest = vm.suggestTarget
       if (!inputString) {
-        cb.call(this, [])
+        cb.call(vm, [])
         return
       }
-      if (typeof suggest === 'string') {
-        gson(suggest, {keyword: inputString}, cb)
-      } else if (isFunction(suggest)) {
-        suggest(inputString, cb, this.refParam)
+      if (suggest) {
+        if (typeof suggest === 'string') {
+          gson(suggest, {keyword: inputString}, cb)
+        } else if (isFunction(suggest)) {
+          const rs = suggest(inputString, cb, vm.refParam)
+          Array.isArray(rs) && rs.length > 0 && cb(rs.filter(vm.filter(inputString)))
+        } else {
+          cb(suggest.filter(vm.filter(inputString)))
+        }
+      } else if (vm.staticData) {
+        if (isFunction(vm.staticData)) {
+          const rs = vm.staticData(inputString, cb, vm.refParam)
+          Array.isArray(rs) && rs.length > 0 && cb(rs.filter(vm.filter(inputString)))
+        } else {
+          cb(vm.staticData.filter(vm.filter(inputString)))
+        }
       } else {
-        cb(suggest.filter(this.filter(inputString)))
+        cb.call(vm, [])
+      }
+    },
+    transByData: function (inputString, cb) {
+      const vm = this
+      if (inputString && vm.staticData) {
+        if (isFunction(vm.staticData)) {
+          const rs = vm.staticData(inputString, cb, vm.refParam)
+          Array.isArray(rs) && rs.length > 0 && cb(rs.filter((item) => (item.value && item.value.toLowerCase().indexOf(inputString.toLowerCase()) >= 0)))
+        } else {
+          cb(vm.staticData.filter((item) => (item.value && item.value.toLowerCase().indexOf(inputString.toLowerCase()) >= 0)))
+        }
+      } else {
+        cb.call(vm, [])
       }
     },
     handleIconClick () {
