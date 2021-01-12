@@ -34,6 +34,10 @@ export default {
     tagName: 'fac-box-list',
     props: ['ref', 'page', 'fac', 'model', 'vModel', 'label', 'cols', 'selectEnable', 'previewImage', 'image', 'icon', 'key', 'noDefault']
   },
+  'blocks-items': {
+    tagName: 'fac-blocks-items',
+    props: ['ref', 'page', 'fac', 'model', 'cols', 'blockLabel', 'hasBlockClose', 'blockIcon', 'topColor', 'addLabel', 'addIcon', 'hasAdd', 'moreLabel', 'children', 'itemIcon', 'itemLabel', 'hasItemClose', 'foldCount']
+  },
   'simple-table': {
     component: simpleTable.component,
     props: ['type', 'columns', 'model', 'slot', 'loader', 'selection']

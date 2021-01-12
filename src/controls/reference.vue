@@ -111,10 +111,10 @@ function trans (vm) {
  * @param ref 业务引用对象
  */
 function intRefCb (vm, ref) {
-  !vm.suggest && (vm.suggestTarget = ref.suggest || ref.component.suggest)
+  !vm.suggest && ref && (vm.suggestTarget = ref.suggest || ref.component.suggest)
   // 数据源
-  vm.staticData = ref.ds || ref.component.ds
-  const trans = vm.translate || ref.translate || ref.component.translate
+  ref && (vm.staticData = ref.ds || ref.component.ds)
+  const trans = vm.translate || ref ? (ref.translate || ref.component.translate) : null
   vm.trans = trans || ((val, cb) => vm.transByData(val, (res) => Array.isArray(res) && res.length > 0 && cb(res[0])))
 }
 

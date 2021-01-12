@@ -9,6 +9,7 @@ import buttonBar from './button-bar.vue'
 import cardList from './card-list.vue'
 import itemList from './item-list.vue'
 import boxList from './box-list.vue'
+import blocksItems from './blocks-items.vue'
 import cometa from './cometa'
 /**
  * 容器组件集合
@@ -26,7 +27,8 @@ export default {
     tabs,
     cardList,
     itemList,
-    boxList
+    boxList,
+    blocksItems
   },
   /**
    * 容器控件元数据信息
