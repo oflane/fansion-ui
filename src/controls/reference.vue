@@ -70,8 +70,10 @@ const openReference = (vm, conf) => {
       conf.container = refs.getContainer(conf.container)
     }
   }
-  Object.assign(conf, vm.getDialogOptions())
-  vm.$dialogs.show(conf)
+  const dop = vm.getDialogOptions()
+  const params = Object.assign({}, conf.params || {}, dop.params || {})
+  const d = Object.assign({}, conf, vm.getDialogOptions(), {params})
+  vm.$dialogs.show(d)
 }
 
 /**
