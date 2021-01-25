@@ -125,7 +125,8 @@ export default {
   },
   'simple-tree': {
     tagName: 'simple-tree',
-    props: ['ref', 'url', 'lazy', 'label', 'icon', 'search', 'rootName', 'children', 'isLeaf', 'keyword']
+    props: ['ref', 'url', 'lazy', 'label', 'icon', 'search', 'rootName', 'children', 'isLeaf', 'keyword', '@node-click', '@check-change',
+      '@current-change', '@node-expand', '@node-collapse']
   },
   'json-editor': {
     component: vueJsonEditor,

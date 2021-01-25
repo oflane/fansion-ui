@@ -1,7 +1,7 @@
 <template>
-<el-tree v-on="$listeners" :data="model" v-bind="[$props, $attrs]" :load="loadNode" ref="tree">
-  <slot slot-scope="{ node }" v-if="icon === null"/>
-  <span class="custom-tree-node" slot-scope="{ node }"  v-if="icon !== null"><i :class="icon"/><span>{{ node.label }}</span></span>
+<el-tree v-on="$listeners" :data="model" v-bind="[$props, $attrs]" :load="loadNode" ref="tree" :filter-node-method="filterNode" :highlight-current=true>
+  <slot slot-scope="{ node, data }" v-if="icon === null"/>
+  <span class="custom-tree-node" slot-scope="{ node, data }"  v-if="icon !== null"><i :class="icon"/><span>{{ data[label] }}</span></span>
 </el-tree>
 </template>
 
@@ -56,7 +56,7 @@ export default {
     refresh () {
       const vm = this
       const param = {id: 'root'}
-      gson(furl(vm.url, param), param, res => vm.root ? (vm.root.children = res) : (vm.model = res))
+      gson(furl(vm.url, param), param, res => vm.root ? vm.$set(vm.root, 'children', res) : (vm.model = res))
     },
     /**
      * 懒加载时加载节点数据
@@ -89,6 +89,14 @@ export default {
     filter (value) {
       const vm = this
       vm.lazy ? vm.searchData(value) : vm.$refs.tree.filter(value)
+    },
+    /**
+     * 过滤节点
+     * @param value 关键字
+     * @param data 节点数据
+     */
+    filterNode (value, data) {
+      return !value || data[this.label].indexOf(value) !== -1 || (data.pinyin && data.pinyin.indexOf(value) !== -1) || (data.code && data.code.indexOf(value) !== -1)
     },
     /**
      * 取得当前树节点
