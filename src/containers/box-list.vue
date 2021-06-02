@@ -15,7 +15,7 @@
               </div>
             </div>
           </el-image>
-          <label class="label">{{item[label]}}</label>
+          <label class="label" :title="item[label]">{{item[label]}}</label>
         </slot>
       </li>
     </ul>
@@ -168,6 +168,9 @@ export default {
     }
     .label{
       cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       &:hover{
         text-decoration: underline;
         color: #409EFF

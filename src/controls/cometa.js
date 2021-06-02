@@ -7,6 +7,7 @@ import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/ambiance.css'
 import 'codemirror/theme/ambiance-mobile.css'
+import 'codemirror/theme/idea.css'
 import 'codemirror/theme/darcula.css'
 import 'codemirror/addon/hint/show-hint.js'
 import 'codemirror/addon/hint/show-hint.css'
@@ -140,7 +141,7 @@ export default {
     props: ['ref', 'vModel', 'options'],
     default: {
       ':options': {
-        theme: 'ambiance'
+        theme: 'idea'
       }
     }
   }

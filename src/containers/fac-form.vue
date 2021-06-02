@@ -10,7 +10,7 @@
       <el-row class="form-body" :gutter="gutterProp">
           <el-col  v-for="(item, $i) in group.items" :key="$i" :span="8" :xs="24" :md="Number(group.elcols)*Number(item.cols)||group.elcols"
                   :lg="Number(group.elcols)*Number(item.cols)||group.elcols">
-            <form-item :conf="item" :model="model" :page="page" :fac="fac"/>
+            <form-item :ref="itemRefName(item, $i)" :conf="item" :model="model" :page="page" :fac="fac"/>
           </el-col>
       </el-row>
     </el-form>
@@ -130,6 +130,9 @@ export default {
     formItem
   },
   methods: {
+    itemRefName (item, i) {
+      return 'formItem' + (item.ref || '__' + i)
+    },
     groupCss (group) {
       return group.css + ' ' + this.state + ' fac-form-width' + this.maxFormCols
     },
