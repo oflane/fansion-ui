@@ -4,6 +4,7 @@
 
 import fase from 'fansion-base'
 import defautContainer from './container'
+import Vue from 'vue'
 
 /**
  * 获取工具方法
@@ -60,6 +61,7 @@ const add = fase.builder.register(refs, 'code', fase.dialog.buildDialogMeta)
 /**
  * 根据参照编码获取参数信息
  * @param code 参照编码
+ * @param cb 回调方法
  * @returns {*}
  */
 const get = (code, cb) => {
@@ -98,13 +100,55 @@ const addContainer = fase.builder.register(containers, 'path')
  * @param container 默认的参照容器
  * @return {{}}
  */
-const setDefaultContainer = container => (containers[DAFAULT_CONTAINER] = containers)
+const setDefaultContainer = container => (containers[DAFAULT_CONTAINER] = container)
 
 /**
  * 取得默认的参照容器
  * @return {*}
  */
 const getDefaultContainer = () => containers[DAFAULT_CONTAINER]
+
+/**
+ * 关闭参照全局方法
+ * @param data 返回数据
+ */
+Vue.prototype.$closeReference = function (data) {
+  const ref = this.$dialogs.getCurrent().$reference
+  fase.util.isFunction(ref.closeReference) && ref.closeReference(data)
+  this.$dialogs.closeCurrent(data)
+}
+/**
+ * 打开参照对话框
+ * @param vm vue对象
+ * @param conf 对象化框配置对象
+ * @param options 参照打开选项
+ */
+const openReference = (vm, conf, options) => {
+  if (!conf.dialog && (conf.component && !conf.component.dialog)) {
+    if (!conf.container || typeof conf.container === 'string') {
+      conf.container = getContainer(conf.container)
+    }
+  }
+  const params = Object.assign({}, conf.params || {}, options.params || {})
+  const d = Object.assign({}, conf, options, {params})
+  vm.$dialogs.show(d)
+}
+/**
+ * 打开参照组件
+ * @param ref 参照组件(参照编码或者参照组件)
+ * @param options 参照打开选项
+ */
+Vue.prototype.$openReference = function (ref, options) {
+  const vm = this
+  if (typeof ref === 'string') {
+    get(ref, (conf) => {
+      openReference(vm, conf, options)
+    })
+    return
+  }
+  const conf = ref.component ? ref : {component: ref}
+  openReference(vm, conf, options)
+}
 
 /**
  * 参照加载器，主要负责编码到参照界面的转换

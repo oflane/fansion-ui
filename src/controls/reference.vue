@@ -45,36 +45,12 @@ import fase from 'fansion-base'
 import Emitter from 'element-ui/lib/mixins/emitter'
 import Clickoutside from 'element-ui/lib/utils/clickoutside'
 import ReferenceSuggestions from './reference-suggestions.vue'
-import Vue from 'vue'
 /**
  * 引入基础对象及方法
  */
 const Elm = fase.mixins.elm
 const {gson, furl, gext} = fase.rest
 const {sure, isNotEmpty, isFunction} = fase.util
-/**
- * 关闭参照全局方法
- * @param data 返回数据
- */
-Vue.prototype.$closeReference = function (data) {
-  this.$dialogs.getCurrent().$reference.closeReference(data)
-}
-/**
- * 打开参照对话框
- * @param vm vue对象
- * @param conf 对象化框配置对象
- */
-const openReference = (vm, conf) => {
-  if (!conf.dialog && (conf.component && !conf.component.dialog)) {
-    if (!conf.container || typeof conf.container === 'string') {
-      conf.container = refs.getContainer(conf.container)
-    }
-  }
-  const dop = vm.getDialogOptions()
-  const params = Object.assign({}, conf.params || {}, dop.params || {})
-  const d = Object.assign({}, conf, vm.getDialogOptions(), {params})
-  vm.$dialogs.show(d)
-}
 
 /**
  * 翻译方法
@@ -457,21 +433,13 @@ export default {
     },
     showReference () {
       const vm = this
-      const ref = this.refTo
-      if (typeof ref === 'string') {
-        refs.get(ref, (conf) => {
-          openReference(vm, conf)
-        })
-        return
-      }
-      const conf = ref.component ? ref : {component: ref}
-      openReference(vm, conf)
+      const ref = vm.refTo
+      vm.$openReference(ref, vm.getDialogOptions())
     },
     closeReference (item) {
       if (item) {
         this.select(item)
       }
-      this.$dialogs.closeCurrent(item)
       this.$emit('afterReference', item, this)
     },
     /**

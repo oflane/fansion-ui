@@ -114,6 +114,10 @@ export default {
     tagName: 'fac-pagination',
     props: ['ref', 'conf', 'page', 'fac', 'loader', 'model', '@sizeChange', '@current-change']
   },
+  slice: {
+    tagName: 'slice',
+    props: ['ref', 'conf', 'page', 'fac', 'loader', 'model', 'pageSize', '@sizeChange', '@current-change']
+  },
   tree: {
     tagName: 'el-tree',
     props: ['ref', 'data', 'nodeKey', 'load', 'renderContent', 'highlightCurrent:boolean', 'expandOnClickNode:boolean',

@@ -32,7 +32,7 @@ export default {
   },
   'box-list': {
     tagName: 'fac-box-list',
-    props: ['ref', 'page', 'fac', 'model', 'vModel', 'label', 'cols', 'selectEnable', 'previewImage', 'image', 'icon', 'key', 'noDefault']
+    props: ['ref', 'page', 'fac', 'model', 'vModel', 'label', 'cols', 'selectEnable', 'staticIcon', 'previewImage', 'image', 'icon', 'key', 'noDefault', '@click', '@dblclick']
   },
   'blocks-items': {
     tagName: 'fac-blocks-items',

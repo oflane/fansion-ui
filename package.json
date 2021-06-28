@@ -17,24 +17,24 @@
     "dist": "cross-env NODE_ENV=prod MODE=dist node build/build.js"
   },
   "dependencies": {
-    "vue-json-editor": "^1.4.0",
+    "vue-json-editor": "^1.4.3",
     "vue-codemirror": "^4.0.6"
   },
   "devDependencies": {
     "fansion-base": "^1.0.0",
     "fansion-fac": "^1.0.0",
-    "element-ui": "^2.13.1",
+    "element-ui": "^2.15.2",
     "babel-core": "^6.26.3",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.1.0",
     "babel-runtime": "^6.26.0",
-    "babel-loader": "^7.1.5",
+    "babel-loader": "^8.2.2",
     "babel-plugin-istanbul": "^6.0.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
-    "cross-env": "^7.0.2",
+    "cross-env": "^7.0.3",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-friendly-formatter": "^4.0.1",

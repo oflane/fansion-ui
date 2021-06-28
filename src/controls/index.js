@@ -10,6 +10,7 @@ import xquery from './xquery.vue'
 import pagination from './pagination.vue'
 import tags from './tags'
 import cometa from './cometa'
+import slice from './slice'
 
 /**
  * 简单组件集合
@@ -27,7 +28,8 @@ export default {
     xquery,
     pagination,
     tags,
-    simpleTree
+    simpleTree,
+    slice
   },
   /**
    * 简单控件元数据信息

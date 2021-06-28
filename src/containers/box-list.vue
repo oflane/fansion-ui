@@ -4,10 +4,10 @@
     <ul v-else class="clearfix">
       <li :class="cellClass($index)" @click="click($event, item, $index)" @dblclick="dblclick($event, item, $index)" v-for="(item, $index) in model" :key="'item'+$index">
         <slot :data="(item, $index)">
-          <i v-if="!!icon" class="item[icon] || 'el-icon-picture-outline'"></i>
-          <el-image v-if="!!image"
+          <i v-if="hasIcon()" :class="iconClass(item)"></i>
+          <el-image v-if="hasImage()"
             style="width: 100%; height: 100px"
-            :src="item[image]" :preview-src-list="preview(item)"
+            :src="imageSrc(item)" :preview-src-list="preview(item)"
             fit="scale-down">
             <div slot="error" style="height: 100%;">
               <div class="image-slot">
@@ -22,8 +22,11 @@
   </div>
 </template>
 <script>
+import fase from 'fansion-base'
+
+const isNotBlank = fase.util.isNotBlank
 const computeIndex = ({valueProp, model, value, noDefault}) => {
-  if (model == null || model.length === 0){
+  if (model == null || model.length === 0) {
     return -1
   }
   if (valueProp) {
@@ -61,6 +64,10 @@ export default {
     previewImage: String,
     image: String,
     icon: String,
+    staticIcon: {
+      type: Boolean,
+      default: false
+    },
     valueProp: String,
     noDefault: {
       type: Boolean,
@@ -90,10 +97,23 @@ export default {
     }
   },
   methods: {
+    hasIcon () {
+      return !this.hasImage() && isNotBlank(this.icon)
+    },
+    hasImage () {
+      return isNotBlank(this.image)
+    },
     cellClass (index) {
       const cols = this.fixed && parseInt(this.model.length / this.cols) === 0 ? this.model.length : this.cols
       const last = (index + 1) % this.cols === 0 ? ' last' : ''
-      return 'col' + cols + last + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.icon || this.image ? '' : ' only_label')
+      return 'col' + cols + last + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.image ? '' : ' only-label')
+    },
+    iconClass (item) {
+      const c = this.staticIcon ? this.icon : item[this.icon]
+      return c || 'el-icon-picture-outline'
+    },
+    imageSrc (item) {
+      return this.staticIcon ? this.image : item[this.image]
     },
     preview (item) {
       return this.previewImage ? item[this.previewImage] || item[this.image] : item[this.image]
@@ -160,11 +180,13 @@ export default {
       width: 100%;
     }
     &.last{
-      border-right:0px;
+      border-right:0;
     }
-    &.only_label{
+    &.only-label{
       height: 40px;
       line-height: 40px;
+      text-align: left;
+      padding-left: 10px;
     }
     .label{
       cursor: pointer;
