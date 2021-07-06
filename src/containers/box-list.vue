@@ -186,13 +186,14 @@ export default {
       height: 40px;
       line-height: 40px;
       text-align: left;
-      padding-left: 10px;
+      padding: 0 10px;
     }
     .label{
       cursor: pointer;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: block;
       &:hover{
         text-decoration: underline;
         color: #409EFF
