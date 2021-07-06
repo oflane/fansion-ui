@@ -11,6 +11,8 @@ import pagination from './pagination.vue'
 import tags from './tags'
 import cometa from './cometa'
 import slice from './slice'
+import inputEditor from './input-editor'
+import inputJson from './input-json'
 
 /**
  * 简单组件集合
@@ -29,7 +31,9 @@ export default {
     pagination,
     tags,
     simpleTree,
-    slice
+    slice,
+    inputEditor,
+    inputJson
   },
   /**
    * 简单控件元数据信息

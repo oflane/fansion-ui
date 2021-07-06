@@ -140,6 +140,11 @@ export default {
       ':showBtns': 'false'
     }
   },
+  'input-json': {
+    tagName: 'fac-input-json',
+    props: ['ref', 'popperClass', 'placeholder', 'name', 'size', 'vModel', 'showLabel.sync', 'value', 'showLabel',
+      'editorParam', '@change']
+  },
   codemirror: {
     component: codemirror,
     props: ['ref', 'vModel', 'options'],
