@@ -19,18 +19,19 @@
         <li v-if="parent.loading"><i class="el-icon-loading"></i></li>
         <template v-for="(item, $index) in suggestions" v-else>
           <li v-if="!parent.customItem" :key="'li'+$index"
-            :class="{'highlighted': parent.highlightedIndex === index}"
+            :class="{'highlighted': highLightedIndex === $index}"
+              :aria-selected="highlightedIndex === index"
             @click="select(item)"
           >
             {{item.label}}
           </li>
           <component :key="'comp'+$index"
             v-else
-            :class="{'highlighted': parent.highlightedIndex === index}"
+            :class="{'highlighted': highLightedIndex === $index}"
             @click="select(item)"
             :is="parent.customItem"
             :item="item"
-            :index="index">
+            :index="$index">
           </component>
         </template>
       </el-scrollbar>
@@ -56,6 +57,7 @@ export default {
   props: {
     suggestions: Array,
     template: [String, Function],
+    highLightedIndex: Number,
     options: {
       default () {
         return {
@@ -63,6 +65,11 @@ export default {
           gpuAcceleration: false
         }
       }
+    }
+  },
+  watch: {
+    highLightedIndex (v) {
+      console.log(v)
     }
   },
   methods: {

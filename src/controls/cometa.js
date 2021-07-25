@@ -24,6 +24,7 @@ import 'codemirror/keymap/sublime.js'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/clike/clike'
 import 'codemirror/mode/groovy/groovy'
+import 'codemirror/mode/sql/sql'
 import '../styles/style.less'
 
 /**

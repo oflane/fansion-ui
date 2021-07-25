@@ -283,15 +283,15 @@ export default {
       }
     }
     .body{
-      height:65px;
-      margin: 5px 10px;
-      font-size: 11px;
+      height:85px;
+      margin: 10px 10px;
+      font-size: 14px;
       padding-left:5px;
       li{
         padding-bottom: 2px;
       }
       .el-link{
-        font-size: 11px;
+        font-size: 14px;
       }
       .el-icon-close{
         border-radius: 50%;
@@ -308,7 +308,7 @@ export default {
     .footer{
       text-align: center;
       .el-link{
-        font-size: 11px;
+        font-size: 14px;
       }
     }
     .item-more{
@@ -316,24 +316,23 @@ export default {
       right: 10px;
       bottom: 10px;
       .el-link{
-        font-size: 11px;
+        font-size: 14px;
       }
     }
   }
   .popover-body{
     li{
-      padding: 3px;
+      padding: 4px 6px;
     }
     .el-link{
-      font-size: 12px;
+      font-size: 14px;
     }
     .el-icon-close{
       border-radius: 50%;
       cursor: pointer;
       color: #363636;
       float: right;
-      font-size: 12px;
-      margin-top: 4px;
+      margin-top: 1px;
       &:hover{
         color: #fff;
         background-color:#909399;

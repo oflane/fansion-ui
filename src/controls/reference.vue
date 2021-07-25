@@ -25,6 +25,7 @@
       @mouseleave.native="inputHovering = false"
       @keydown.native.tab="handleClickoutside"
       @keydown.enter.stop.native="handleKeyEnter"
+      @keydown.esc.native.prevent="handleClickoutside"
     >
       <span slot="suffix">
         <i class="el-icon-circle-close is-show-close" @click="deleteSelected" v-show="clearIcon"></i>
@@ -35,6 +36,7 @@
       :class="[popperClass ? popperClass : '']"
       ref="suggestions"
       :suggestions="suggestions"
+      :high-lighted-index="highlightedIndex"
     >
     </reference-suggestions>
   </div>
@@ -77,7 +79,7 @@ function trans (vm) {
       res = res[0]
     }
     const r = typeof res === 'string' ? (res.startsWith('{') ? sure(res = JSON.parse(res)) && (res.label || res.value) : res) : res.label || res.value
-    r && vm.$emit('update:showLabel', r)
+    r && 'showLabel' in vm.$options.propsData ? vm.$emit('update:showLabel', r) : (vm.nativeLabel = r)
   }
   const params = {value}
   trans && (typeof trans === 'string' ? gext(furl(trans, params), params, cb) : trans(value, cb))
@@ -252,11 +254,11 @@ export default {
   },
   methods: {
     getData (queryString) {
-      this.loading = true
       queryString = queryString || ''
       if (queryString.length === 0) {
         this.suggestions = []
       } else {
+        this.loading = true
         this.fetchSuggestions(queryString, (suggestions) => {
           this.loading = false
           if (Array.isArray(suggestions)) {
@@ -314,6 +316,7 @@ export default {
           this.select(this.suggestions[0])
         }
       }, 100)
+      this.highlightedIndex = -1
       this.isFocus = false
     },
     select (item) {
@@ -329,14 +332,13 @@ export default {
         this.$emit('input', item.value)
         this.$emit('update:showLabel', item.label)
         this.$emit('change', item)
-      }
-      if (this.readonly) {
-        return
+      } else if (item.label) {
+        this.nativeLabel = item.label
       }
       this.$nextTick(_ => {
         this.suggestions = []
+        this.highlightedIndex = -1
       })
-      this.highlight(-1)
     },
     highlight (index) {
       if (!this.suggestionVisible || this.loading) { return }
