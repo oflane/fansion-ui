@@ -1,5 +1,5 @@
 /**
- * 参照的对话框容器
+ * 引用的对话框容器
  * author Paul.Yang E-mail:yaboocn@qq.com
  * version 1.0 2017-8-16
  */
@@ -11,7 +11,7 @@ import fase from 'fansion-base'
 const toProps = fase.render.toProps
 
 /**
- * 默认的参照容器
+ * 默认的引用容器
  * @author Paul.Yang E-mail:yaboocn@qq.com
  * @version 1.0 2010/19/18
  */

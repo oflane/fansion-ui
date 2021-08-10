@@ -87,7 +87,7 @@ function trans (vm) {
 
 /**
  * 初始化业务引用回调
- * @param vm 参照组件
+ * @param vm 引用组件
  * @param ref 业务引用对象
  */
 function intRefCb (vm, ref) {

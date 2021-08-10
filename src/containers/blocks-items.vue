@@ -297,7 +297,7 @@ export default {
         border-radius: 50%;
         cursor: pointer;
         color: #363636;
-        margin-top: 4px;
+        margin-top: 6px;
         float: right;
         &:hover{
           color: #fff;

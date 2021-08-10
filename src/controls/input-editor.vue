@@ -44,7 +44,7 @@ Vue.prototype.$closeDialogEditor = function (data) {
 /**
  * 打开对话框编辑组件
  * @param dialogEditor 对话框编辑组件
- * @param options 参照打开选项
+ * @param options 引用打开选项
  */
 Vue.prototype.$openDialogEditor = function (dialogEditor, options) {
   const vm = this

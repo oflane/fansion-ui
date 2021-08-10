@@ -106,7 +106,7 @@ export default {
     cellClass (index) {
       const cols = this.fixed && parseInt(this.model.length / this.cols) === 0 ? this.model.length : this.cols
       const last = (index + 1) % this.cols === 0 ? ' last' : ''
-      return 'col' + cols + last + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.image ? '' : ' only-label')
+      return 'col' + cols + last + (this.currentIndex === index && !this.selectDisable ? ' selected' : '') + (this.hasImage() ? '' : (this.hasIcon() ? ' icon-label' : ' only-label'))
     },
     iconClass (item) {
       const c = this.staticIcon ? this.icon : item[this.icon]
@@ -188,12 +188,27 @@ export default {
       text-align: left;
       padding: 0 10px;
     }
+    &.icon-label{
+      height: 40px;
+      line-height: 40px;
+      text-align: left;
+      padding: 0 10px;
+      i{
+        float: left;
+        margin-top: 13px;
+      }
+      .label{
+        padding: 0 4px;
+        margin-left: 16px;
+      }
+    }
     .label{
       cursor: pointer;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       display: block;
+      padding: 0;
       &:hover{
         text-decoration: underline;
         color: #409EFF

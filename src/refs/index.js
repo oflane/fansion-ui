@@ -11,12 +11,12 @@ import Vue from 'vue'
  */
 const {gson, furl} = fase.rest
 /**
- * 默认参照容器
+ * 默认引用容器
  * @type {string}
  */
 const DAFAULT_CONTAINER = 'default'
 /**
- * 参照注册信息
+ * 引用注册信息
  * @type {{}}
  */
 const refs = {}
@@ -26,41 +26,41 @@ const refs = {}
  */
 const containers = {}
 /**
- * 加载参照的url
+ * 加载引用的url
  * @type {null}
  */
 let loadUrl = null
 /**
- * 设置默认参照容器
+ * 设置默认引用容器
  * @type {{name, props, data, created, methods}}
  */
 containers[DAFAULT_CONTAINER] = defautContainer
 
 /**
- * 根据参照编码获取参数信息
- * @param code 参照编码
+ * 根据引用编码获取参数信息
+ * @param code 引用编码
  * @returns {*}
  */
 const ref = code => this.refs[code]
 
 /**
- * 加载参照数据
- * @param data 参照加载url或者参照数据
+ * 加载引用数据
+ * @param data 引用加载url或者引用数据
  * @param cb 回调方法
  * @return {*}
  */
 const load = fase.builder.loader(refs, 'code', fase.dialog.buildDialogMeta)
 
 /**
- * 注册参照数据
+ * 注册引用数据
  * @param data 注册数据
  * @param target 注册目标数据
  * @return {*}
  */
 const add = fase.builder.register(refs, 'code', fase.dialog.buildDialogMeta)
 /**
- * 根据参照编码获取参数信息
- * @param code 参照编码
+ * 根据引用编码获取参数信息
+ * @param code 引用编码
  * @param cb 回调方法
  * @returns {*}
  */
@@ -82,7 +82,7 @@ const get = (code, cb) => {
 }
 
 /**
- * 根据路径取得参照容器
+ * 根据路径取得引用容器
  * @param path 容器路径
  * @returns {*} 容器组件
  */
@@ -96,20 +96,20 @@ const getContainer = (path) => path ? containers[path] || containers[DAFAULT_CON
 const addContainer = fase.builder.register(containers, 'path')
 
 /**
- * 设置默认的参照容器
- * @param container 默认的参照容器
+ * 设置默认的引用容器
+ * @param container 默认的引用容器
  * @return {{}}
  */
 const setDefaultContainer = container => (containers[DAFAULT_CONTAINER] = container)
 
 /**
- * 取得默认的参照容器
+ * 取得默认的引用容器
  * @return {*}
  */
 const getDefaultContainer = () => containers[DAFAULT_CONTAINER]
 
 /**
- * 关闭参照全局方法
+ * 关闭引用全局方法
  * @param data 返回数据
  */
 Vue.prototype.$closeReference = function (data) {
@@ -118,10 +118,10 @@ Vue.prototype.$closeReference = function (data) {
   this.$dialogs.closeCurrent(data)
 }
 /**
- * 打开参照对话框
+ * 打开引用对话框
  * @param vm vue对象
  * @param conf 对象化框配置对象
- * @param options 参照打开选项
+ * @param options 引用打开选项
  */
 const openReference = (vm, conf, options) => {
   if (!conf.dialog && (conf.component && !conf.component.dialog)) {
@@ -134,9 +134,9 @@ const openReference = (vm, conf, options) => {
   vm.$dialogs.show(d)
 }
 /**
- * 打开参照组件
- * @param ref 参照组件(参照编码或者参照组件)
- * @param options 参照打开选项
+ * 打开引用组件
+ * @param ref 引用组件(引用编码或者引用组件)
+ * @param options 引用打开选项
  */
 Vue.prototype.$openReference = function (ref, options) {
   const vm = this
@@ -151,7 +151,7 @@ Vue.prototype.$openReference = function (ref, options) {
 }
 
 /**
- * 参照加载器，主要负责编码到参照界面的转换
+ * 引用加载器，主要负责编码到引用界面的转换
  * @author Paul.Yang E-mail:yaboocn@qq.com
  * @version 1.0 2010/19/18
  */
@@ -161,28 +161,28 @@ export default {
    */
   defautContainer,
   /**
-   * 参照容器集合
+   * 引用容器集合
    */
   containers,
   /**
-   * 参照集合
+   * 引用集合
    */
   refs,
   /**
-   * 根据编码加载单个参照信息的url
+   * 根据编码加载单个引用信息的url
    */
   loadUrl,
 
   /**
-   * 根据参照编码获取参数信息
-   * @param code 参照编码
+   * 根据引用编码获取参数信息
+   * @param code 引用编码
    * @returns {*}
    */
   ref,
 
   /**
-   * 加载参照数据
-   * @param data 参照加载url或者参照数据
+   * 加载引用数据
+   * @param data 引用加载url或者引用数据
    * @param cb 回调方法
    * @return {*}
    */
@@ -192,14 +192,14 @@ export default {
    */
   add,
   /**
-   * 根据参照编码获取参数信息
-   * @param code 参照编码
+   * 根据引用编码获取参数信息
+   * @param code 引用编码
    * @returns {*}
    */
   get,
 
   /**
-   * 根据路径取得参照容器
+   * 根据路径取得引用容器
    * @param path 容器路径
    * @returns {*} 容器组件
    */
@@ -213,14 +213,14 @@ export default {
   addContainer,
 
   /**
-   * 设置默认的参照容器
-   * @param container 默认的参照容器
+   * 设置默认的引用容器
+   * @param container 默认的引用容器
    * @return {{}}
    */
   setDefaultContainer,
 
   /**
-   * 取得默认的参照容器
+   * 取得默认的引用容器
    * @return {*}
    */
   getDefaultContainer,
