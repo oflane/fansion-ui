@@ -54,6 +54,9 @@ const Elm = fase.mixins.elm
 const {gson, furl, gext} = fase.rest
 const {sure, isNotEmpty, isFunction} = fase.util
 
+function hasLabel (vm) {
+  return 'showLabel' in vm.$options.propsData
+}
 /**
  * 翻译方法
  * @param vm 业务引用值
@@ -64,25 +67,26 @@ function trans (vm) {
     return
   }
   const trans = vm.trans
-  const cb = (res) => {
+  const cb = (res, val) => {
     if (!res) {
-      return
+      res = val
     }
     // 处理回调结果的集中情况
     if (isFunction(res)) {
       res = res()
     }
     if (Array.isArray(res)) {
-      if (res.length === 0) {
-        return
+      if (res.length > 0) {
+        res = res[0]
+      } else {
+        res = val
       }
-      res = res[0]
     }
     const r = typeof res === 'string' ? (res.startsWith('{') ? sure(res = JSON.parse(res)) && (res.label || res.value) : res) : res.label || res.value
-    r && 'showLabel' in vm.$options.propsData ? vm.$emit('update:showLabel', r) : (vm.nativeLabel = r)
+    r && hasLabel(vm) ? vm.$emit('update:showLabel', r) : (vm.nativeLabel = r)
   }
   const params = {value}
-  trans && (typeof trans === 'string' ? gext(furl(trans, params), params, cb) : trans(value, cb))
+  trans && (typeof trans === 'string' ? gext(furl(trans, params), params, (res) => cb(res, value)) : trans(value, cb))
 }
 
 /**
@@ -95,7 +99,7 @@ function intRefCb (vm, ref) {
   // 数据源
   ref && (vm.staticData = ref.ds || ref.component.ds)
   const trans = vm.translate || ref ? (ref.translate || ref.component.translate) : null
-  vm.trans = trans || ((val, cb) => vm.transByData(val, (res) => Array.isArray(res) && res.length > 0 && cb(res[0])))
+  vm.trans = trans || ((val, cb) => vm.transByData(val, (res) => Array.isArray(res) && res.length > 0 && cb(res[0], val)))
 }
 
 /**
@@ -112,7 +116,7 @@ function initRef (vm, cb) {
     vm.ref = r
     intRefCb(vm, r)
     cb && cb(vm)
-  }) : sure(intRefCb(vm, ref)) && (cb && cb(vm))
+  }) : (intRefCb(vm, ref)) && (cb && cb(vm))
 }
 /**
  * 对话框选择组件
@@ -181,7 +185,9 @@ export default {
     const suggestTarget = vm.suggest
 
     const nativeLabel = this.showLabel
+    const currentLabel = this.showLabel
     return {
+      currentLabel,
       nativeLabel,
       inputHovering: false,
       ref,
@@ -207,12 +213,12 @@ export default {
         isNotEmpty(this.showLabel)
     },
     listenerTrans () {
-      const {value, showLabel} = this
-      if (value && !showLabel && this.trans) {
-        console.log(`value:${value},label:${showLabel}`)
+      const {value, currentLabel} = this
+      if (value && !currentLabel && this.trans) {
+        console.log(`value:${value},label:${currentLabel}`)
         trans(this)
       }
-      return {value, showLabel}
+      return {value, currentLabel}
     }
   },
   watch: {
@@ -237,6 +243,7 @@ export default {
       if (this.nativeLabel !== v) {
         this.nativeLabel = v
       }
+      this.currentLabel = v
     },
     nativeLabel (v) {
       this.handleChangeLabel(v)
@@ -263,6 +270,8 @@ export default {
           this.loading = false
           if (Array.isArray(suggestions)) {
             this.suggestions = suggestions
+          } else if (Array.isArray(suggestions.content)) {
+            this.suggestions = suggestions.content
           } else {
             console.error('autocomplete suggestions must be an array')
           }
@@ -279,7 +288,7 @@ export default {
     },
     handleChangeLabel (label) {
       const vm = this
-      if (label === this.showLabel) {
+      if (label === this.currentLabel) {
         return
       }
       setTimeout(() => {
@@ -300,7 +309,7 @@ export default {
     handleKeyEnter () {
       if (this.suggestionVisible && this.highlightedIndex >= 0 && this.highlightedIndex < this.suggestions.length) {
         this.select(this.suggestions[this.highlightedIndex])
-      } else if (this.showLabel && (this.suggestions.length === 1 && this.suggestions[0].label === this.showLabel)) {
+      } else if (this.currentLabel && (this.suggestions.length === 1 && this.suggestions[0].label === this.currentLabel)) {
         this.select(this.suggestions[0])
       } else {
         this.select({})
@@ -312,7 +321,7 @@ export default {
       }
       const vm = this
       setTimeout(() => {
-        if (!vm.showLabel && this.suggestions.length === 1 && vm.suggestions[0].label === vm.showLabel) {
+        if (!vm.nativeLabel && this.suggestions.length === 1 && vm.suggestions[0].label === vm.nativeLabel) {
           this.select(this.suggestions[0])
         }
       }, 100)
@@ -328,9 +337,13 @@ export default {
             this.model[f] = item[f]
           }
         })
-
+        this.currentLabel = item.label
         this.$emit('input', item.value)
-        this.$emit('update:showLabel', item.label)
+        if (hasLabel(this)) {
+          this.$emit('update:showLabel', item.label)
+        } else {
+          this.nativeLabel = item.label
+        }
         this.$emit('change', item)
       } else if (item.label) {
         this.nativeLabel = item.label
@@ -397,12 +410,12 @@ export default {
       if (inputString && vm.staticData) {
         if (isFunction(vm.staticData)) {
           const rs = vm.staticData(inputString, cb, vm.refParam)
-          Array.isArray(rs) && rs.length > 0 && cb(rs.filter((item) => (item.value && item.value.toLowerCase().indexOf(inputString.toLowerCase()) >= 0)))
+          Array.isArray(rs) && rs.length > 0 && cb(rs.filter((item) => (item.value && item.value.toLowerCase().indexOf(inputString.toLowerCase()) >= 0)), inputString)
         } else {
-          cb(vm.staticData.filter((item) => (item.value && item.value.toLowerCase().indexOf(inputString.toLowerCase()) >= 0)))
+          cb(vm.staticData.filter((item) => (item.value && item.value.toLowerCase().indexOf(inputString.toLowerCase()) >= 0)), inputString)
         }
       } else {
-        cb.call(vm, [])
+        cb.call(vm, inputString)
       }
     },
     handleIconClick () {

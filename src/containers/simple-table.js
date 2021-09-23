@@ -97,7 +97,7 @@ export default {
       conf.columns = [{selection: true}, ...conf.columns]
     }
     const options = Object.assign({}, defaultTable, conf)
-    const tableProps = toProps(options, ['type', 'columns', 'model', 'pos', 'loader', 'selection'])
+    const tableProps = toProps(options, ['type', 'columns', 'model', 'pos', 'slot', 'loader', 'selection'])
     const components = {
       tableSort
     }
