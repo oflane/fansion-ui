@@ -9,7 +9,7 @@
       v-for="item in options"
       :key="item[itemValue]"
       :label="item[itemLabel]"
-      :value="item[itemValue]">
+      :value="item[itemValue]" :disabled="item.disabled">
     </el-option>
   </el-select>
 </template>
