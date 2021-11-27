@@ -40,6 +40,10 @@ export default {
     model: [Object, Boolean],
     page: Object,
     fac: Object,
+    autoHide: {
+      type: Boolean,
+      defaultValue: false
+    },
     pageSize: Number
   },
   data () {
@@ -73,7 +77,7 @@ export default {
       }
     },
     complete (v) {
-      if (v) {
+      if (v && this.autoHide) {
         const vm = this
         setTimeout(_ => (vm.show = false), 2000)
       }
