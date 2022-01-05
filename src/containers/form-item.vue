@@ -10,7 +10,7 @@ import fase from 'fansion-base'
 /**
  * 获取工具方法
  */
-const {toRender, callHook} = fase.render
+const {toRender, callHook, rerender} = fase.render
 const compile = fac.comps.compile
 
 export default {
@@ -24,14 +24,14 @@ export default {
   },
   data: function () {
     return {
+      refresh: 0,
       validation: null
     }
   },
   watch: {
     conf: {
       handler () {
-        this.$mount()
-        callHook(this, 'mounted')
+        rerender(this)
       },
       deep: true
     }
