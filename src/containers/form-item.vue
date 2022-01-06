@@ -24,7 +24,6 @@ export default {
   },
   data: function () {
     return {
-      refresh: 0,
       validation: null
     }
   },
