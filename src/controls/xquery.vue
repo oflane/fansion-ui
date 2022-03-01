@@ -4,7 +4,7 @@
  --version 1.0 2017-8-29
  -->
 <template>
-  <div class="xquery" v-show="visible">
+  <div class="xquery" :visible.sync="visible">
     <fac-form :conf="conf" :page="page" :model="advance"/>
     <div class="query-button"><el-button type="primary" @click="handleSearch">查询</el-button><el-button @click="handleClear">清空</el-button></div>
   </div>
@@ -35,13 +35,14 @@ export default {
     if (this.loader) {
       this.loader.addPlugin(this)
     }
+    const advance = {}
+    const refs = this.conf.ref || this.conf.name
     this.conf.items.forEach(v => {
-      v.query = this
-      v.events ? v.events['@keyup.enter.native'] = 'conf.query.handleSearch()' : v.events = {'@keyup.enter.native': 'conf.query.handleSearch()'}
+      v.events ? v.events['@keyup.enter.native'] = `page.$refs.${refs}.handleSearch()` : v.events = {'@keyup.enter.native': `page.$refs.${refs}.handleSearch()`}
     })
     return {
       visible: undefined,
-      advance: {}
+      advance
     }
   },
   components: {
@@ -63,14 +64,14 @@ export default {
       this.advance = {}
     },
     setVisible (v) {
-      this.visible = v
       let c = this.$parent.$el
-      if (this.visible) {
+      if (v) {
         c.style.display = c.bakdis
       } else {
         c.bakdis = c.style.display
         c.style.display = 'none'
       }
+      this.visible = v
     },
     getParameters () {
       let condition = {}

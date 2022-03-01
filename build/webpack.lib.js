@@ -1,24 +1,47 @@
 /*
  * Copyright(c) Oflane Software 2017. All Rights Reserved.
  */
-var path = require('path')
-var webpack = require('webpack')
-var ProgressBarPlugin = require('progress-bar-webpack-plugin')
-var nodeExternals = require('webpack-node-externals')
+const path = require('path')
+const webpack = require('webpack')
+const mode = process.env.NODE_ENV
+const options = require('./options').getOptions(mode)
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const nodeExternals = require('webpack-node-externals')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+
+console.log(options.modules)
+
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
+function externals () {
+  const exts = {
+    vue: 'Vue',
+    'element-ui': 'ELEMENT',
+    'vue-router': 'VueRouter'
+  }
+  options.modules.forEach(function(e){
+    exts[e] = e
+  })
+  return exts
+}
+const moduleName = process.env.npm_package_name
+const entry = {}
+entry[moduleName] = './src/index.js'
 module.exports = {
   mode: 'production',
-  entry: {app: './src/index.js'},
+  entry,
   output: {
     path: path.resolve(process.cwd(), './lib'),
-    publicPath: '/fansion-ui/lib/',
-    filename: 'fansion-ui.js',
-    chunkFilename: '[id].js',
+    publicPath: 'web/'+moduleName+'/',
+    filename: moduleName+'.js',
+    chunkFilename: moduleName + '.[id].js',
     libraryTarget: 'umd',
-    library: 'fansion-ui',
+    library: moduleName,
     umdNamedDefine: true
   },
   resolve: {
@@ -31,16 +54,31 @@ module.exports = {
     modules: ['node_modules']
   },
   externals: [
-    {
-      vue: 'vue',
-      'vue-router': 'vue-router',
-      'element-ui': 'element-ui',
-      'fansion-base': 'fansion-base',
-      'fansion-fac': 'fansion-fac'
-    }, nodeExternals()
+    externals(), nodeExternals()
   ],
+  devtool: 'source-map',
   optimization: {
-    minimize: false
+    minimize: true,
+    minimizer: [
+      // js mini
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true // set to true if you want JS source maps
+      }),
+      // css mini
+      new OptimizeCSSPlugin({
+        cssProcessorOptions: {
+          map: {
+            // 不生成内联映射,这样配置就会生成一个source-map文件
+            inline: false,
+            // 向css文件添加source-map路径注释
+            // 如果没有此项压缩后的css会去除source-map路径注释
+            annotation: true
+          }
+        }
+      })
+    ]
   },
   module: {
     rules: [
@@ -63,15 +101,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader', 'postcss-loader']
+        loaders: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
       },
       {
         test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
+        loaders: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
       {
         test: /\.less$/,
-        loaders: ['style-loader', 'css-loader', 'less-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
       },
       {
         test: /\.html$/,
@@ -106,6 +144,17 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new ProgressBarPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[name].[contenthash:12].css'  // use contenthash *
+    }),
+    // copy custom static assets
+    new CopyWebpackPlugin([
+      {
+        from: resolve(options.assertPath+"/**"),
+        ignore:[]
+      }
+    ]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     })

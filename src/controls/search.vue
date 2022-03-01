@@ -105,6 +105,8 @@
         this.quickValue = ''
         this.handleSearch()
       },
+      loadReset () {
+      },
       getParameters () {
         const condition = {}
         const qitems = this.conf.items

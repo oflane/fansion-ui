@@ -17,7 +17,7 @@
           </ul>
         </slot>
         <slot name="popover">
-          <el-popover class="item-more" placement="left" trigger="click"  v-if="block.children && block.children.length > foldCount">
+          <el-popover class="item-more" placement="left" trigger="click"  v-if="block[children] && block[children].length > foldCount">
             <ul class="popover-body">
               <li v-for="item in block[children]" :key="item.id"><el-link @click="itemClick(item, block, $event)">{{item[itemLabel]}}</el-link><i class="el-icon-close" @click="itemClose(item, block, $event)" v-if="isItemClose(block)"></i></li>
             </ul>

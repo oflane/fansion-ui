@@ -166,13 +166,12 @@ export default {
     },
     refTo: [String, Object],
     refParam: Object,
+    model: Object,
     readFields: {
-      type: [String, Array],
-      default: _ => []
+      type: [String, Array]
     },
     writeFields: {
-      type: [String, Array],
-      default: _ => []
+      type: [String, Array]
     },
     clearable: {
       type: Boolean,
@@ -213,12 +212,12 @@ export default {
         isNotEmpty(this.showLabel)
     },
     listenerTrans () {
-      const {value, currentLabel} = this
-      if (value && !currentLabel && this.trans) {
-        console.log(`value:${value},label:${currentLabel}`)
+      const {value} = this
+      if (value && this.trans) {
+        console.log(`value:${value}`)
         trans(this)
       }
-      return {value, currentLabel}
+      return {value}
     }
   },
   watch: {
@@ -329,28 +328,31 @@ export default {
       this.isFocus = false
     },
     select (item) {
-      if (item && this.value !== item.value) {
-        this.writeFields.forEach((f, i) => {
-          if (i >= this.readFields.length) {
-            this.model[f] = null
+      const vm = this
+      if (item && vm.value !== item.value) {
+        vm.currentLabel = item.label
+        vm.$emit('input', item.value)
+        if (hasLabel(vm)) {
+          vm.$emit('update:showLabel', item.label)
+        } else {
+          vm.nativeLabel = item.label
+        }
+        vm.$emit('change', item)
+        const wf = vm.writeFields ? (Array.isArray(vm.writeFields) ? vm.writeFields : vm.writeFields.split(",")) : []
+        const rf = vm.writeFields ? (Array.isArray(vm.readFields) ? vm.readFields : vm.readFields.split(",")) : []
+        wf.forEach((f, i) => {
+          if (i >= rf.length) {
+            vm.model[f] = null
           } else {
-            this.model[f] = item[f]
+            vm.model[f] = item[rf[i]]
           }
         })
-        this.currentLabel = item.label
-        this.$emit('input', item.value)
-        if (hasLabel(this)) {
-          this.$emit('update:showLabel', item.label)
-        } else {
-          this.nativeLabel = item.label
-        }
-        this.$emit('change', item)
       } else if (item.label) {
-        this.nativeLabel = item.label
+        vm.nativeLabel = item.label
       }
-      this.$nextTick(_ => {
-        this.suggestions = []
-        this.highlightedIndex = -1
+      vm.$nextTick(_ => {
+        vm.suggestions = []
+        vm.highlightedIndex = -1
       })
     },
     highlight (index) {
