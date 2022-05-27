@@ -37,6 +37,10 @@ export default {
     model: Object,
     page: Object,
     fac: Object,
+    current: {
+      type: Number,
+      defaultValue: 1
+    },
     pageSize: Number,
     pageSizes: Array,
     layout: String
@@ -52,7 +56,7 @@ export default {
       ps,
       pss,
       ly,
-      currentPage: 1
+      currentPage: this.current
     }
   },
   watch: {

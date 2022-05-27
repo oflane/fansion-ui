@@ -153,6 +153,9 @@ export default {
     color: #666;
     border-right: 1px solid #eee;
     border-bottom: 1px solid #eee;
+    margin-right: -1px;
+    margin-bottom: -1px;
+    padding:2px;
     display: list-item;
     cursor: pointer;
     &.col8 {
@@ -186,13 +189,13 @@ export default {
       height: 40px;
       line-height: 40px;
       text-align: left;
-      padding: 0 10px;
+      padding: 10px 10px;
     }
     &.icon-label{
       height: 40px;
       line-height: 40px;
       text-align: left;
-      padding: 0 10px;
+      padding: 10px 10px;
       i{
         float: left;
         margin-top: 13px;
@@ -204,6 +207,7 @@ export default {
     }
     .label{
       cursor: pointer;
+      line-height: normal;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

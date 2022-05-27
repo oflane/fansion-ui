@@ -339,7 +339,7 @@ export default {
         }
         vm.$emit('change', item)
         const wf = vm.writeFields ? (Array.isArray(vm.writeFields) ? vm.writeFields : vm.writeFields.split(",")) : []
-        const rf = vm.writeFields ? (Array.isArray(vm.readFields) ? vm.readFields : vm.readFields.split(",")) : []
+        const rf = vm.readFields ? (Array.isArray(vm.readFields) ? vm.readFields : vm.readFields.split(",")) : []
         wf.forEach((f, i) => {
           if (i >= rf.length) {
             vm.model[f] = null
@@ -472,18 +472,18 @@ export default {
       this.suggestions = []
     }
   },
-  created: function () {
-    if (!this.readFields) {
-      this.readFields = []
-    } else if (typeof this.readFields === 'string') {
-      this.readFields = this.readFields.split(',')
-    }
-    if (!this.writeFields) {
-      this.writeFields = []
-    } else if (typeof this.writeFields === 'string') {
-      this.writeFields = this.writeFields.split(',')
-    }
-  }
+  // created: function () {
+  //   if (!this.readFields) {
+  //     this.readFields = []
+  //   } else if (typeof this.readFields === 'string') {
+  //     this.readFields = this.readFields.split(',')
+  //   }
+  //   if (!this.writeFields) {
+  //     this.writeFields = []
+  //   } else if (typeof this.writeFields === 'string') {
+  //     this.writeFields = this.writeFields.split(',')
+  //   }
+  // }
 }
 </script>
 <style lang="less" scoped>

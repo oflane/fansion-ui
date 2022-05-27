@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     handleCommand (cmd) {
-      const f = this.page[cmd] || new Function(cmd)
+      const f = (cmd in this.page) ? this.page[cmd] : new Function(cmd)
       if (f) {
         f.call(this.page)
       } else {

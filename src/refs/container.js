@@ -45,7 +45,10 @@ export default {
     if (this.text) {
       refContent += this.text
     }
-    const dprops = toProps(this.dialogProps)
+    const dprops = toProps(Object.assign( {
+      'min-width': '1000px',
+        width: '60%'
+    }, this.dialogProps))
     const refresh = '<button @click="onRefresh"><i class="el-icon-refresh"></i></button>'
     const search = '<fac-search ref="search" @search="onSearch" size="small" />'
     $options.template = `<el-dialog ${dprops} :visible.sync="visible">
