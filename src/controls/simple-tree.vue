@@ -19,22 +19,22 @@ export default {
     lazy: Boolean,
     label: {
       type: String,
-      defaultValue: 'label'
+      default: 'label'
     },
     icon: String,
     search: String,
     rootName: String,
     children: {
       type: String,
-      defaultValue: 'children'
+      default: 'children'
     },
     isLeaf: {
       type: String,
-      defaultValue: 'leaf'
+      default: 'leaf'
     },
     keyword: {
       type: String,
-      defaultValue: 'keyword'
+      default: 'keyword'
     }
   },
   data () {

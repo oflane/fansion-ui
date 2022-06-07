@@ -42,7 +42,7 @@ export default {
     fac: Object,
     autoHide: {
       type: Boolean,
-      defaultValue: false
+      default: false
     },
     pageSize: Number
   },

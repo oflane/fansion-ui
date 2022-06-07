@@ -4,7 +4,7 @@
     <ul v-else class="clearfix">
       <li :class="cellClass($index)" @click="click($event, item, $index)" @dblclick="dblclick($event, item, $index)" v-for="(item, $index) in model" :key="'item'+$index">
         <slot :data="(item, $index)">
-          <i v-if="hasIcon()" :class="iconClass(item)"></i>
+          <icon :url="iconClass(item)" v-if="hasIcon()"/>
           <el-image v-if="hasImage()"
             style="width: 100%; height: 100px"
             :src="imageSrc(item)" :preview-src-list="preview(item)"
@@ -23,7 +23,7 @@
 </template>
 <script>
 import fase from 'fansion-base'
-
+import icon from '../controls/icon'
 const isNotBlank = fase.util.isNotBlank
 const computeIndex = ({valueProp, model, value, noDefault}) => {
   if (model == null || model.length === 0) {
@@ -74,6 +74,9 @@ export default {
       default: true
     },
     fixed: Boolean
+  },
+  components: {
+    icon
   },
   data () {
     const currentIndex = computeIndex(this)
@@ -140,12 +143,15 @@ export default {
 <style scoped lang="less">
 .fac-box-list{
   ul {
+    overflow: hidden;
     font-size: 14px;
     color: #5e6d82;
     line-height: 2em;
     list-style: none;
     padding: 0;
     border: 1px solid #eaeefb;
+    border-radius: 4px;
+    box-sizing: initial;
   }
   li {
     float: left;
@@ -155,17 +161,18 @@ export default {
     border-bottom: 1px solid #eee;
     margin-right: -1px;
     margin-bottom: -1px;
-    padding:2px;
+    padding: 0;
     display: list-item;
     cursor: pointer;
+    box-sizing: initial;
     &.col8 {
       width: 12.5%;
     }
     &.col7 {
-      width: 14.2%;
+      width: 14.28%;
     }
     &.col6 {
-      width: 16.6%;
+      width: 16.66%;
     }
     &.col5 {
       width: 20%;
@@ -189,20 +196,30 @@ export default {
       height: 40px;
       line-height: 40px;
       text-align: left;
-      padding: 10px 10px;
+      .label{
+        margin-top: 5px;
+      }
     }
     &.icon-label{
       height: 40px;
       line-height: 40px;
       text-align: left;
-      padding: 10px 10px;
       i{
         float: left;
-        margin-top: 13px;
+        margin-left: 10px;
+        margin-top: 14px;
+      }
+      img{
+        height: 20px;
+        width: 20px;
+        float: left;
+        margin-top: 10px;
+        margin-left: 10px;
       }
       .label{
-        padding: 0 4px;
-        margin-left: 16px;
+        padding: 0 6px;
+        margin-top: 11px;
+        margin-left: 26px;
       }
     }
     .label{
@@ -212,7 +229,7 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       display: block;
-      padding: 0;
+      padding: 6px;
       &:hover{
         text-decoration: underline;
         color: #409EFF
@@ -235,11 +252,12 @@ export default {
     align-items: center;
     width: 100%;
     height: 100%;
-    background: #f5f7fa;
+    background: #fff;
     color: #909399;
   }
   .el-image{
     display: block;
+    padding: 1px;
   }
 }
 

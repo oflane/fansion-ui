@@ -88,7 +88,7 @@ export default {
      */
     addLabel: {
       type: [String, Function],
-      defaultValue: '添加条目'
+      default: '添加条目'
     },
     /**
      * 添加图标
@@ -297,7 +297,7 @@ export default {
         border-radius: 50%;
         cursor: pointer;
         color: #363636;
-        margin-top: 6px;
+        margin-top: 7px;
         float: right;
         &:hover{
           color: #fff;

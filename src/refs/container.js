@@ -127,11 +127,11 @@ ${refContent}
       ref.search(kw)
     },
     /**
-     * 搜索操作
+     * 重置
      * @param kw
      */
     reset () {
-      const s = this.$refs.search
+      const s = this.$refs.content
       s && s.reset()
     },
     /**

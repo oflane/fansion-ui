@@ -13,6 +13,7 @@ import cometa from './cometa'
 import slice from './slice'
 import inputEditor from './input-editor'
 import inputJson from './input-json'
+import icon from './icon'
 
 /**
  * 简单组件集合
@@ -33,7 +34,8 @@ export default {
     simpleTree,
     slice,
     inputEditor,
-    inputJson
+    inputJson,
+    icon
   },
   /**
    * 简单控件元数据信息

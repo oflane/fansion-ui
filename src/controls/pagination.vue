@@ -9,7 +9,7 @@
     @current-change="currentChange"
     :current-page.sync="currentPage"
     :page-sizes="pss"
-    :page-size="ps"
+    :page-size.sync="ps"
     :layout="ly"
     background
     :total="model.totalElements">
@@ -39,7 +39,7 @@ export default {
     fac: Object,
     current: {
       type: Number,
-      defaultValue: 1
+      default: 1
     },
     pageSize: Number,
     pageSizes: Array,
@@ -48,9 +48,9 @@ export default {
   data () {
     const c = this.conf || {}
     const ps = c.pageSize || this.pageSize || 20
-    const pss = [20, 50, 100, 400]
+    const pss = this.pageSizes || [20, 50, 100, 400]
     const ly = c.layout || this.layout || 'total, sizes, prev, pager, next, jumper'
-    this.loader.addPlugin(this)
+    this.loader && this.loader.addPlugin && this.loader.addPlugin(this)
 
     return {
       ps,
