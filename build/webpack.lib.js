@@ -5,6 +5,7 @@ const path = require('path')
 const webpack = require('webpack')
 const mode = process.env.NODE_ENV
 const options = require('./options').getOptions(mode)
+const {modules} = require('./modules')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -13,7 +14,6 @@ const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-console.log(options.modules)
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -24,7 +24,7 @@ function externals () {
     'element-ui': 'element-ui',
     'vue-router': 'vue-router'
   }
-  options.modules.forEach(function(e){
+  modules.forEach(function(e){
     exts[e] = e
   })
   return exts

@@ -1,0 +1,18 @@
+[
+
+  {
+    "title": "组件测试",
+    "cols": [
+      {
+        "name": "列表组件",
+        "img": "static/images/index/basic_setting.png",
+        "url": "/test/fac-list"
+      },
+      {
+        "name": "列表组件",
+        "img": "static/images/index/basic_setting.png",
+        "url": "/test/simple"
+      }
+    ]
+  }
+]

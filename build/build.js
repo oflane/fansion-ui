@@ -5,17 +5,16 @@
 require('./check-versions')()
 
 process.env.NODE_ENV = 'production'
-var path = require('path')
-var target = process.env.MODE
-var ora = require('ora')
-var rm = require('rimraf')
-var chalk = require('chalk')
-var webpack = require('webpack')
-var webpackConfig = require('./webpack.' + target)
+const path = require('path')
+const ora = require('ora')
+const rm = require('rimraf')
+const chalk = require('chalk')
+const webpack = require('webpack')
+const webpackConfig = require('./webpack.lib')
 
-var spinner = ora('building all lib for production...')
+const spinner = ora('building all lib for production...')
 spinner.start()
-rm(path.join(__dirname, '..', target), err => {
+rm(path.join(__dirname, '../lib'), err => {
   if (err) throw err
   webpack(webpackConfig, function (err, stats) {
     spinner.stop()
@@ -30,3 +29,4 @@ rm(path.join(__dirname, '..', target), err => {
     console.log(chalk.cyan('  Build complete.\n'))
   })
 })
+

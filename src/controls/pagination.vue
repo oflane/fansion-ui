@@ -74,6 +74,7 @@ export default {
   },
   methods: {
     sizeChange () {
+      this.currentPage = 1
       if (this.loader) {
         this.loader.load()
       }
