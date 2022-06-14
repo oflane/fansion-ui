@@ -1,13 +1,12 @@
 <template>
   <ul class="fac-list">
     <slot name="header"/>
-    <li class="empty" v-if="!data|| data.length===0">
+    <li class="empty" v-if="!model|| model.length===0">
       <div class="empty-block" ><span class="no-data" >暂无数据</span></div>
     </li>
-    <draggable :list="data" ghost-class="ghost" draggable=".list-item" handle=".node-drag" @start="dragging = true"
-               @end="dragging = false"  v-if="data&&data.length>1">
-      <li v-for="(item, index) in data" :key="item.id||item[labelField]" class="list-item" >
-        <el-checkbox v-if="showCheckbox" v-model="item[checkedField]" :disabled="!!item.disabled"/>
+    <draggable :list="model" ghost-class="ghost" draggable=".list-item" handle=".node-drag" @start="dragstart" :move="dragover"
+               @end="dragenter"  v-if="model && model.length > 0">
+      <li v-for="(item, index) in model" :key="item.id||item[labelField]" class="list-item" >
         <slot :data="(item, index)">
           <span>{{item[labelField]}}</span>
         </slot>
@@ -21,19 +20,7 @@
 </template>
 <script >
 import draggable from 'vuedraggable'
-/**
- * 排序方法
- * @param field 排序字段
- * @returns {number} 比较结果
- */
-const sortFunc = (field) => (a, b) => {
-  const aa = a[field]
-  const bb = b[field]
-  if (aa === bb) {
-    return 0
-  }
-  return aa && bb ? (a > b ? 1 : -1) : !aa && !bb ? 0 : (!aa ? -1 : 1)
-}
+
 export default {
   name: 'FacList',
   props: {
@@ -44,19 +31,7 @@ export default {
     label: {
       default: 'label'
     },
-    checked: {
-      type: String,
-      default: 'checked'
-    },
     sortable: {
-      type: Boolean,
-      default: false
-    },
-    sort: {
-      type: String,
-      default: 'sorting'
-    },
-    showCheckbox: {
       type: Boolean,
       default: false
     }
@@ -67,43 +42,26 @@ export default {
   data () {
     const c = this.conf || {}
     const labelField = c.label || this.label
-    const checkedField = c.checked || this.checked
     const sortFlag = typeof c.sortable === 'boolean' ? c.sortable : this.sortable
-    const sortField = c.sort || this.sort
-    const sorter = sortFlag && sortField ? sortFunc(sortField) : null
-    const data = this.sortFlag && sortField && this.model ? this.model.sort(sorter) : this.model || []
     return {
       labelField,
-      checkedField,
-      sortFlag,
-      sortField,
-      sorter,
-      data,
-      dragIndex: '',
-      enterIndex: '',
-      dragging: false
+      sortFlag
     }
   },
   computed: {
     dragable () {
-      return this.sortFlag && Array.isArray(this.data) && this.data.length > 1
+      return this.sortFlag && Array.isArray(this.model) && this.model.length > 1
     }
   },
   methods: {
-    dragstart (index) {
-      this.dragIndex = index
+    dragstart (e) {
+      this.$emit('dragstart', e)
     },
-    dragenter (e, index) {
-      e.preventDefault()
-      if (this.dragIndex !== index) {
-        const moving = this.data[this.dragIndex]
-        this.data.splice(this.dragIndex, 1)
-        this.data.splice(index, 0, moving)
-        this.dragIndex = index
-      }
+    dragenter (e) {
+      this.$emit('dragend', e)
     },
-    dragover (e, index) {
-      e.preventDefault()
+    dragover (e) {
+      this.$emit('dragover', e)
     }
   }
 }
