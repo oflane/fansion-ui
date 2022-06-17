@@ -10,91 +10,91 @@
   </div>
 </template>
 <script>
-import form from '../containers/fac-form.vue'
-import fase from 'fansion-base'
-/**
- * 引入数据加载类
- * @type {DataLoader}
- */
-const DataLoader = fase.DataLoader
+  import form from '../containers/fac-form.vue'
+  import fase from 'fansion-base'
+  /**
+   * 引入数据加载类
+   * @type {DataLoader}
+   */
+  const DataLoader = fase.DataLoader
 
-/**
- * 高级查询组件
- * @author Paul.Yang E-mail:yaboocn@qq.com
- * @version 1.0 2018-1-22
- */
-export default {
-  name: 'FacXquery',
-  props: {
-    conf: Object,
-    loader: DataLoader,
-    page: Object,
-    fac: Object
-  },
-  data () {
-    if (this.loader) {
-      this.loader.addPlugin(this)
-    }
-    const advance = {}
-    const refs = this.conf.ref || this.conf.name
-    this.conf.items.forEach(v => {
-      v.events ? v.events['@keyup.enter.native'] = `page.$refs.${refs}.handleSearch()` : v.events = {'@keyup.enter.native': `page.$refs.${refs}.handleSearch()`}
-    })
-    return {
-      visible: undefined,
-      advance
-    }
-  },
-  components: {
-    facForm: form
-  },
-  mounted () {
-    if (this.visible === undefined) {
-      this.visible = true
-    }
-  },
-  methods: {
-    handleSearch () {
+  /**
+   * 高级查询组件
+   * @author Paul.Yang E-mail:yaboocn@qq.com
+   * @version 1.0 2018-1-22
+   */
+  export default {
+    name: 'FacXquery',
+    props: {
+      conf: Object,
+      loader: DataLoader,
+      page: Object,
+      fac: Object
+    },
+    data () {
       if (this.loader) {
-        this.loader.load(true)
+        this.loader.addPlugin(this)
       }
-      this.$emit('search', this)
-    },
-    handleClear () {
-      this.advance = {}
-    },
-    setVisible (v) {
-      let c = this.$parent.$el
-      if (v) {
-        c.style.display = c.bakdis
-      } else {
-        c.bakdis = c.style.display
-        c.style.display = 'none'
+      const advance = {}
+      const refs = this.conf.ref || this.conf.name
+      this.conf.items.forEach(v => {
+        v.events ? v.events['@keyup.enter.native'] = `page.$refs.${refs}.handleSearch()` : v.events = {'@keyup.enter.native': `page.$refs.${refs}.handleSearch()`}
+      })
+      return {
+        visible: undefined,
+        advance
       }
-      this.visible = v
     },
-    getParameters () {
-      let condition = {}
-      if (!this.visible) {
+    components: {
+      facForm: form
+    },
+    mounted () {
+      if (this.visible === undefined) {
+        this.visible = true
+      }
+    },
+    methods: {
+      handleSearch () {
+        if (this.loader) {
+          this.loader.load(true)
+        }
+        this.$emit('search', this)
+      },
+      handleClear () {
+        this.advance = {}
+      },
+      setVisible (v) {
+        let c = this.$parent.$el
+        if (v) {
+          c.style.display = c.bakdis
+        } else {
+          c.bakdis = c.style.display
+          c.style.display = 'none'
+        }
+        this.visible = v
+      },
+      getParameters () {
+        let condition = {}
+        if (!this.visible) {
+          return condition
+        }
+        let advance = this.advance
+        let citems = this.conf.items.map(item => {
+          let field = item.field
+          let value = advance[field]
+          if (value) {
+            let op = item.op
+            return {field, op, value}
+          }
+          return false
+        }).filter(v => v !== false)
+        if (citems.length > 0) {
+          condition['__xquery'] = JSON.stringify(citems)
+        }
         return condition
       }
-      let advance = this.advance
-      let citems = this.conf.items.map(item => {
-        let field = item.field
-        let value = advance[field]
-        if (value) {
-          let op = item.op
-          return {field, op, value}
-        }
-        return false
-      }).filter(v => v !== false)
-      if (citems.length > 0) {
-        condition['__xquery'] = JSON.stringify(citems)
-      }
-      return condition
     }
   }
-}
 </script>
 <style lang="less">
   .xquery{

@@ -20,6 +20,12 @@
         realUrl,
         isImage
       }
+    },
+    watch: {
+      url (v) {
+        this.realUrl = v || this.defaultUrl
+        this.isImage = this.realUrl.startsWith("http")
+      }
     }
   }
 </script>

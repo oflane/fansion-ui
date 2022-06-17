@@ -19,52 +19,52 @@
   </ul>
 </template>
 <script >
-import draggable from 'vuedraggable'
+  import draggable from 'vuedraggable'
 
-export default {
-  name: 'FacList',
-  props: {
-    page: Object,
-    fac: Object,
-    model: Array,
-    conf: Object,
-    label: {
-      default: 'label'
+  export default {
+    name: 'FacList',
+    props: {
+      page: Object,
+      fac: Object,
+      model: Array,
+      conf: Object,
+      label: {
+        default: 'label'
+      },
+      sortable: {
+        type: Boolean,
+        default: false
+      }
     },
-    sortable: {
-      type: Boolean,
-      default: false
-    }
-  },
-  components: {
-    draggable
-  },
-  data () {
-    const c = this.conf || {}
-    const labelField = c.label || this.label
-    const sortFlag = typeof c.sortable === 'boolean' ? c.sortable : this.sortable
-    return {
-      labelField,
-      sortFlag
-    }
-  },
-  computed: {
-    dragable () {
-      return this.sortFlag && Array.isArray(this.model) && this.model.length > 1
-    }
-  },
-  methods: {
-    dragstart (e) {
-      this.$emit('dragstart', e)
+    components: {
+      draggable
     },
-    dragenter (e) {
-      this.$emit('dragend', e)
+    data () {
+      const c = this.conf || {}
+      const labelField = c.label || this.label
+      const sortFlag = typeof c.sortable === 'boolean' ? c.sortable : this.sortable
+      return {
+        labelField,
+        sortFlag
+      }
     },
-    dragover (e) {
-      this.$emit('dragover', e)
+    computed: {
+      dragable () {
+        return this.sortFlag && Array.isArray(this.model) && this.model.length > 1
+      }
+    },
+    methods: {
+      dragstart (e) {
+        this.$emit('dragstart', e)
+      },
+      dragenter (e) {
+        this.$emit('dragend', e)
+      },
+      dragover (e) {
+        this.$emit('dragover', e)
+      }
     }
   }
-}
 </script>
 <style lang="less">
   .fac-list{
@@ -77,13 +77,13 @@ export default {
     //.fac-list-drag-move {
     //  transition: transform .5s;
     //}
-    .list-item:nth-last-child(n + 2) {
-      border-bottom: 1px solid #d9d9d9;
-    }
-    li.list-item {
+    li {
       display: flex;
       padding: 10px 15px;
       align-items: center;
+      &:nth-last-child(n + 2) {
+        border-bottom: 1px solid #d9d9d9;
+      }
       .node-drag{
         margin-left: auto;
         font-size: 20px;

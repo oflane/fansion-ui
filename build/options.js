@@ -15,7 +15,7 @@ module.exports.convertJsFolder = function(path) {
 }
 
 module.exports.serverConfig = {
-  port: 9999,
+  port: 9998,
   autoOpenBrowser: false
 }
 module.exports.mock = {

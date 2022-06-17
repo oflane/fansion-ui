@@ -5,22 +5,23 @@
  -->
 <template>
   <div style="width: 80%;margin: auto;">
-  <fac-list :model="list" sortable/>
+    <fac-transfer :data="list" :selected="selected"/>
     <rawDisplayer class="col-3" :value="list" title="List" />
   </div>
 </template>
 <script>
-  import facList from '../containers/fac-list'
+  import facTransfer from '../containers/fac-transfer'
   import rawDisplayer from './raw-displayer'
   export default {
-    name: 'test-fac-list',
+    name: 'TestFacTransfer',
     props: {},
     components: {
-      facList,
+      facTransfer,
       rawDisplayer
     },
     data () {
       return {
+        selected: [],
         list: [
           {value: 1, label: '列表1' },
           {value: 2, label: '列表2' },

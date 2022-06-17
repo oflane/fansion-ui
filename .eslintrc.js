@@ -14,11 +14,8 @@ module.exports = {
   },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
   extends:  [
-
     "standard",
-
     "plugin:vue/essential"
-
   ],
   // required to lint *.vue files
   plugins: [
@@ -37,7 +34,7 @@ module.exports = {
     'generator-star-spacing': 0,
     //"indent": ["error", 2, {"SwitchCase": 1}],
     "vue/script-indent": ["error", 2, {  // script标签缩进设置
-      "baseIndent": 0,
+      "baseIndent": 1,
       "switchCase": 0,
       "ignores": []
     }],

@@ -21,8 +21,8 @@
   </div>
 </template>
 <script>
-/* eslint-disable no-new-func */
-export default {
+  /* eslint-disable no-new-func */
+  export default {
   name: 'FacButtonBar',
   props: {
     conf: [Object, Array],

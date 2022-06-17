@@ -14,71 +14,71 @@
   </el-select>
 </template>
 <script>
-import fase from 'fansion-base'
+  import fase from 'fansion-base'
 
-/**
- * 引入工具方法
- */
-const isNotEmpty = fase.util.isNotEmpty
-const {gson, furl} = fase.rest
+  /**
+   * 引入工具方法
+   */
+  const isNotEmpty = fase.util.isNotEmpty
+  const {gson, furl} = fase.rest
 
-/**
- * 下拉选择组件
- * @author Paul.Yang E-mail:yaboocn@qq.com
- * @version 1.0 2018-1-22
- */
-export default {
-  name: 'FacCombo',
-  props: {
-    options: Array,
-    opCode: String,
-    opUrl: String,
-    placeholder: String,
-    itemValue: {
-      type: String,
-      default: 'value'
-    },
-    itemLabel: {
-      type: String,
-      default: 'label'
-    },
-    value: [String, Number, Boolean, Object],
-    size: String,
-    disabled: Boolean,
-    clearable: Boolean,
-    filterable: Boolean,
-    multiple: Boolean,
-    multipleLimit: {
-      type: Number,
-      default: 0
-    }
-  },
-  data () {
-    const vm = this
-    if (!Array.isArray(this.options)) {
-      let url
-      if (isNotEmpty(this.opUrl)) {
-        url = this.opUrl
-      } else if (isNotEmpty(this.opCode)) {
-        //  根据预置的枚举url加载选项
-        url = furl(window.$fansionUrls['enum-load'], {code: this.optionCode})
+  /**
+   * 下拉选择组件
+   * @author Paul.Yang E-mail:yaboocn@qq.com
+   * @version 1.0 2018-1-22
+   */
+  export default {
+    name: 'FacCombo',
+    props: {
+      options: Array,
+      opCode: String,
+      opUrl: String,
+      placeholder: String,
+      itemValue: {
+        type: String,
+        default: 'value'
+      },
+      itemLabel: {
+        type: String,
+        default: 'label'
+      },
+      value: [String, Number, Boolean, Object],
+      size: String,
+      disabled: Boolean,
+      clearable: Boolean,
+      filterable: Boolean,
+      multiple: Boolean,
+      multipleLimit: {
+        type: Number,
+        default: 0
       }
-      url && gson(url).then((res) => {
-        if (Array.isArray(res) && res.length > 0) {
-          vm.options = res
-        }
-      })
-    }
-    return {
-    }
-  },
-  methods: {
-    handleChange (val) {
-      this.$emit('input', val)
     },
-    onSelectChange (val) {
-      this.$emit('change', val)
+    data () {
+      const vm = this
+      if (!Array.isArray(this.options)) {
+        let url
+        if (isNotEmpty(this.opUrl)) {
+          url = this.opUrl
+        } else if (isNotEmpty(this.opCode)) {
+          //  根据预置的枚举url加载选项
+          url = furl(window.$fansionUrls['enum-load'], {code: this.optionCode})
+        }
+        url && gson(url).then((res) => {
+          if (Array.isArray(res) && res.length > 0) {
+            vm.options = res
+          }
+        })
+      }
+      return {
+      }
+    },
+    methods: {
+      handleChange (val) {
+        this.$emit('input', val)
+      },
+      onSelectChange (val) {
+        this.$emit('change', val)
+      }
     }
   }
-}
 </script>

@@ -5,13 +5,18 @@
     "cols": [
       {
         "name": "列表组件",
-        "img": "static/images/index/basic_setting.png",
+        "img": "fa fa-list",
         "url": "/test/fac-list"
       },
       {
-        "name": "列表组件",
-        "img": "static/images/index/basic_setting.png",
-        "url": "/test/simple"
+        "name": "穿梭组件",
+        "icon": "fa fa-transfer",
+        "url": "/test/fac-transfer"
+      },
+      {
+        "name": "穿梭组件",
+        "icon": "fa fa-transfer",
+        "url": "/test/el-transfer"
       }
     ]
   }

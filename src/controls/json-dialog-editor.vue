@@ -10,28 +10,28 @@
 </template>
 
 <script>
-import vueJsonEditor from 'vue-json-editor'
+  import vueJsonEditor from 'vue-json-editor'
 
-export default {
-  name: 'JsonDialogEditor',
-  dialog: true,
-  props: {
-    value: String
-  },
-  components: {
-    jsonEditor: vueJsonEditor
-  },
-  methods: {
-    onOk () {
-      const value = this.value
-      this.$closeDialogEditor({value, label: value})
+  export default {
+    name: 'JsonDialogEditor',
+    dialog: true,
+    props: {
+      value: String
     },
-    onCancel () {
-      this.$closeDialogEditor()
+    components: {
+      jsonEditor: vueJsonEditor
     },
-    onClear () {
-      this.$closeDialogEditor({})
+    methods: {
+      onOk () {
+        const value = this.value
+        this.$closeDialogEditor({value, label: value})
+      },
+      onCancel () {
+        this.$closeDialogEditor()
+      },
+      onClear () {
+        this.$closeDialogEditor({})
+      }
     }
   }
-}
 </script>

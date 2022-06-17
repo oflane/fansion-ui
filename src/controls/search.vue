@@ -42,8 +42,10 @@
       loader: DataLoader,
       page: Object,
       fac: Object,
+      css: String,
       advance: String,
       disabled: Boolean,
+      value: String,
       free: Boolean
     },
     data () {
@@ -52,7 +54,8 @@
       if (this.loader) {
         this.loader.addPlugin(this)
       }
-      const xclass = c.xclass ? 'xsearch ' + c.xclass : 'xsearch'
+      let xclass = c.xclass ? 'xsearch ' + c.xclass : 'xsearch'
+      this.css && (xclass += ' ' + this.css)
       const advCtrl = c.advance || this.advance
       let isFree = true
       if (c.free === false) {
@@ -60,16 +63,20 @@
       } else if (c.free !== true && this.free === false) {
         isFree = false
       }
+      const quickValue = this.value
       return {
+        quickValue,
         xclass,
         props,
         advCtrl,
         isFree,
         advanceText: '高级<i class="fa fa-chevron-down"></i>',
-        quickValue: '',
         hasAdvance: false,
         advanceMode: false
       }
+    },
+    watch: {
+
     },
     mounted () {
       if (this.advCtrl) {
@@ -90,6 +97,7 @@
           this.loader.load(true)
         }
         this.$emit('search', this.quickValue, this)
+        this.$emit('input', this.quickValue, this)
       },
       changeMode () {
         this.advanceMode = !this.advanceMode
@@ -102,7 +110,8 @@
         return this.quickValue
       },
       reset () {
-        this.quickValue = ''
+        this.quickValue = null
+        this.$emit('input', this.quickValue, this)
         this.handleSearch()
       },
       loadReset () {

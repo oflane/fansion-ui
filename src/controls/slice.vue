@@ -19,101 +19,101 @@
   </transition>
 </template>
 <script>
-import fase from 'fansion-base'
+  import fase from 'fansion-base'
 
-/**
- * 引入数据加载类
- * @type {DataLoader}
- */
-const DataLoader = fase.DataLoader
+  /**
+   * 引入数据加载类
+   * @type {DataLoader}
+   */
+  const DataLoader = fase.DataLoader
 
-/**
- * 数据分片组件
- * @author Paul.Yang E-mail:yaboocn@qq.com
- * @version 1.0 2018-1-22
- */
-export default {
-  name: 'Slice',
-  props: {
-    conf: Object,
-    loader: DataLoader,
-    model: [Object, Boolean],
-    page: Object,
-    fac: Object,
-    autoHide: {
-      type: Boolean,
-      default: false
+  /**
+   * 数据分片组件
+   * @author Paul.Yang E-mail:yaboocn@qq.com
+   * @version 1.0 2018-1-22
+   */
+  export default {
+    name: 'Slice',
+    props: {
+      conf: Object,
+      loader: DataLoader,
+      model: [Object, Boolean],
+      page: Object,
+      fac: Object,
+      autoHide: {
+        type: Boolean,
+        default: false
+      },
+      pageSize: Number
     },
-    pageSize: Number
-  },
-  data () {
-    const c = this.conf || {}
-    const ps = c.pageSize || this.pageSize || 20
-    this.loader.addPlugin(this)
-    const last = this.model && typeof this.model === 'object' ? this.model.last : !!this.model
-    return {
-      last,
-      ps,
-      currentPage: 1,
-      show: true
-    }
-  },
-  computed: {
-    complete () {
-      return !this.loading && this.last
-    }
-  },
-  watch: {
-    conf (val) {
-      if (val.pageSize) {
-        this.ps = val.pageSize
+    data () {
+      const c = this.conf || {}
+      const ps = c.pageSize || this.pageSize || 20
+      this.loader.addPlugin(this)
+      const last = this.model && typeof this.model === 'object' ? this.model.last : !!this.model
+      return {
+        last,
+        ps,
+        currentPage: 1,
+        show: true
       }
     },
-    model (val) {
-      this.last = val && typeof val === 'object' ? val.last : !!val
-      if (this.loading) {
-        this.loading = undefined
-        delete this.loading
+    computed: {
+      complete () {
+        return !this.loading && this.last
       }
     },
-    complete (v) {
-      if (v && this.autoHide) {
-        const vm = this
-        setTimeout(_ => (vm.show = false), 2000)
+    watch: {
+      conf (val) {
+        if (val.pageSize) {
+          this.ps = val.pageSize
+        }
+      },
+      model (val) {
+        this.last = val && typeof val === 'object' ? val.last : !!val
+        if (this.loading) {
+          this.loading = undefined
+          delete this.loading
+        }
+      },
+      complete (v) {
+        if (v && this.autoHide) {
+          const vm = this
+          setTimeout(_ => (vm.show = false), 2000)
+        }
       }
-    }
-  },
-  methods: {
-    sizeChange () {
-      if (this.loader) {
-        this.loader.load()
-      }
-      this.$emit('size-change', this, ...arguments)
     },
-    currentChange () {
-      this.currentPage = this.currentPage + 1
-      if (this.loader) {
+    methods: {
+      sizeChange () {
+        if (this.loader) {
+          this.loader.load()
+        }
+        this.$emit('size-change', this, ...arguments)
+      },
+      currentChange () {
+        this.currentPage = this.currentPage + 1
+        if (this.loader) {
+          this.loading = true
+          this.loader.load()
+        }
+        this.$emit('current-change', this, ...arguments)
+      },
+      getParameters () {
+        return {_pageNo: this.currentPage, _pageSize: this.ps}
+      },
+      refreshData (data) {
+        this.last = data.last
+        if (this.loading) {
+          this.loading = undefined
+          delete this.loading
+        }
+      },
+      reset () {
         this.loading = true
-        this.loader.load()
+        this.currentPage = 1
       }
-      this.$emit('current-change', this, ...arguments)
-    },
-    getParameters () {
-      return {_pageNo: this.currentPage, _pageSize: this.ps}
-    },
-    refreshData (data) {
-      this.last = data.last
-      if (this.loading) {
-        this.loading = undefined
-        delete this.loading
-      }
-    },
-    reset () {
-      this.loading = true
-      this.currentPage = 1
     }
   }
-}
 </script>
 <style lang="less" scoped>
 .slice-block-control{

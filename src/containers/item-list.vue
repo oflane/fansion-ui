@@ -20,7 +20,7 @@
 </template>
 
 <script>
-export default {
+  export default {
   name: 'FacItemList',
   props: {
     page: Object,

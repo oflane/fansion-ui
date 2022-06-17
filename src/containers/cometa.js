@@ -22,6 +22,10 @@ export default {
     tagName: 'fac-table',
     props: ['ref', 'page', 'fac', 'conf', 'model', 'loader', 'selection']
   },
+  'fac-list': {
+    tagName: 'fac-list',
+    props: ['ref', 'page', 'fac', 'model', 'label', 'sortable']
+  },
   'card-list': {
     tagName: 'fac-card-list',
     props: ['ref', 'page', 'fac', 'model', 'conf', 'css', 'comps', 'before', 'end']
@@ -42,5 +46,9 @@ export default {
     component: simpleTable.component,
     props: ['type', 'columns', 'model', 'slot', 'loader', 'selection']
   },
-  'fac-tabs': tabs
+  'fac-tabs': tabs,
+  'fac-transfer': {
+    tagName: 'fac-transfer',
+    props: ['ref', 'fac', 'data', 'selected', 'filterable', 'props']
+  },
 }

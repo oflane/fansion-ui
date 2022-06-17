@@ -39,68 +39,68 @@
   </transition>
 </template>
 <script>
-import Popper from 'element-ui/lib/utils/vue-popper'
-/**
- * 对话框选择组件输入提示部分
- * @author Paul.Yang E-mail:yaboocn@qq.com
- * @version 1.0 2018-1-22
- */
-export default {
-  mixins: [Popper],
-  componentName: 'ReferenceSuggestions',
-  data () {
-    return {
-      parent: this.$parent,
-      dropdownWidth: ''
-    }
-  },
-  props: {
-    suggestions: Array,
-    template: [String, Function],
-    highLightedIndex: Number,
-    options: {
-      default () {
-        return {
-          forceAbsolute: true,
-          gpuAcceleration: false
-        }
-      }
-    }
-  },
-  watch: {
-    highLightedIndex (v) {
-      console.log(v)
-    }
-  },
-  methods: {
-    format: function (item) {
-      if (!this.template) {
-        return item.label
-      } else if (typeof this.template === 'string') {
-        /* eslint-disable no-eval */
-        return eval(this.template)
-      } else {
-        return this.template(item)
+  import Popper from 'element-ui/lib/utils/vue-popper'
+  /**
+   * 对话框选择组件输入提示部分
+   * @author Paul.Yang E-mail:yaboocn@qq.com
+   * @version 1.0 2018-1-22
+   */
+  export default {
+    mixins: [Popper],
+    componentName: 'ReferenceSuggestions',
+    data () {
+      return {
+        parent: this.$parent,
+        dropdownWidth: ''
       }
     },
-    select (item) {
-      this.$parent.$emit('item-click', item)
+    props: {
+      suggestions: Array,
+      template: [String, Function],
+      highLightedIndex: Number,
+      options: {
+        default () {
+          return {
+            forceAbsolute: true,
+            gpuAcceleration: false
+          }
+        }
+      }
+    },
+    watch: {
+      highLightedIndex (v) {
+        console.log(v)
+      }
+    },
+    methods: {
+      format: function (item) {
+        if (!this.template) {
+          return item.label
+        } else if (typeof this.template === 'string') {
+          /* eslint-disable no-eval */
+          return eval(this.template)
+        } else {
+          return this.template(item)
+        }
+      },
+      select (item) {
+        this.$parent.$emit('item-click', item)
+      }
+    },
+    updated () {
+      this.$nextTick(() => {
+        this.updatePopper()
+      })
+    },
+    mounted () {
+      this.popperElm = this.$el
+      this.referenceElm = this.$parent.$refs.input.$refs.input
+    },
+    created () {
+      this.$on('visible', (val, inputWidth) => {
+        this.dropdownWidth = inputWidth + 'px'
+        this.showPopper = val
+      })
     }
-  },
-  updated () {
-    this.$nextTick(() => {
-      this.updatePopper()
-    })
-  },
-  mounted () {
-    this.popperElm = this.$el
-    this.referenceElm = this.$parent.$refs.input.$refs.input
-  },
-  created () {
-    this.$on('visible', (val, inputWidth) => {
-      this.dropdownWidth = inputWidth + 'px'
-      this.showPopper = val
-    })
   }
-}
 </script>
