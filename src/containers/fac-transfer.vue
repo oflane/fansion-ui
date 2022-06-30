@@ -1,5 +1,5 @@
 <template>
-  <div class="fac-transfer clearfix">
+  <div class="fac-transfer clearfix" v-bind="$attrs">
     <div class="fac-transfer-left">
       <div class="fac-transfer-header clearfix">
         <el-link @click="handleAllChecked" type="primary">全选</el-link><search css="pull-right" size="small" v-model="query" v-if="filterable"/>
@@ -7,7 +7,7 @@
       <div class="fac-transfer-body">
         <el-checkbox-group v-model="checked" v-show="!hasNoMatch && data.length > 0" class="fac-transfer-list">
           <el-checkbox class="fac-transfer-item" :key="item[keyProp]" v-for="item in filteredData" :label="item[keyProp]">
-            <slot :data="{item}">
+            <slot :item="item">
               {{item[labelProp]}}
             </slot>
           </el-checkbox>
@@ -24,7 +24,7 @@
         <div class="fac-transfer-list">
           <div class="fac-transfer-item" :key="item[keyProp]" v-for="(item, $index) in selected">
             <label class="fac-transfer-item-label">
-              <slot :data="{item}">
+              <slot :item="item">
                 {{item[labelProp]}}
               </slot>
             </label>
@@ -97,14 +97,14 @@
         const selected = this.selected
         if (val.length > oldVal.length) {
           val.forEach(v => {
-            if (oldVal.findIndex(ov => ov === v) < 0) {
+            if (oldVal.findIndex(ov => ov === v) < 0 && selected.findIndex(item => item[keyProp] === v) < 0) {
               const it = data.find(item => item[keyProp] === v)
               selected.push(it)
             }
           })
         } else {
           oldVal.forEach(v => {
-            if (val.findIndex(ov => ov === v) < 0) {
+            if (val.findIndex(ov => ov === v) < 0 && data.findIndex(item => item[keyProp] === v) >= 0) {
               const idx = selected.findIndex(item => item[keyProp] === v)
               selected.splice(idx, 1)
             }
