@@ -1,7 +1,10 @@
 <template>
 <el-tree v-on="$listeners" :data="model" v-bind="[$props, $attrs]" :load="loadNode" ref="tree" :filter-node-method="filterNode" :highlight-current=true>
-  <slot slot-scope="{ node, data }" v-if="icon === null"/>
-  <span class="custom-tree-node" slot-scope="{ node, data }"  v-if="icon !== null"><i :class="icon"/><span>{{ data[label] }}</span></span>
+  <template v-slot="{ node, data }">
+    <slot v-bind="{node, data}">
+      <span class="custom-tree-node"><i :class="icon"/><span>{{ data[label] }}</span></span>
+    </slot>
+  </template>
 </el-tree>
 </template>
 

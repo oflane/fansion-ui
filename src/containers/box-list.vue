@@ -3,7 +3,7 @@
     <div class="empty-block" v-if="!model|| model.length===0"><span class="no-data" >暂无数据</span></div>
     <ul v-else class="clearfix">
       <li :class="cellClass($index)" @click="click($event, item, $index)" @dblclick="dblclick($event, item, $index)" v-for="(item, $index) in model" :key="'item'+$index">
-        <slot :data="(item, $index)">
+        <slot v-bind="{item, $index}">
           <icon :url="iconClass(item)" v-if="hasIcon()"/>
           <el-image v-if="hasImage()"
             style="width: 100%; height: 100px"

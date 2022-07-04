@@ -7,10 +7,10 @@
     <draggable :list="model" ghost-class="ghost" draggable=".list-item" handle=".node-drag" @start="dragstart" :move="dragover"
                @end="dragenter"  v-if="model && model.length > 0">
       <li v-for="(item, index) in model" :key="item.id||item[labelField]" class="list-item" >
-        <slot :data="(item, index)">
+        <slot v-bind="{item, index}">
           <span>{{item[labelField]}}</span>
         </slot>
-        <span class="node-drag" v-if="dragable">
+        <span class="node-drag" v-if="dragable">&nbsp;
           <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="DragOutlined"><path d="M8.25 6.5a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Zm0 7.25a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Zm1.75 5.5a1.75 1.75 0 1 1-3.5 0 1.75 1.75 0 0 1 3.5 0ZM14.753 6.5a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5ZM16.5 12a1.75 1.75 0 1 1-3.5 0 1.75 1.75 0 0 1 3.5 0Zm-1.747 9a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Z" fill="currentColor"></path></svg>
         </span>
       </li>
@@ -55,12 +55,18 @@
     },
     methods: {
       dragstart (e) {
+        console.log('dragstart')
+        console.log(e)
         this.$emit('dragstart', e)
       },
       dragenter (e) {
+        console.log('dragend')
+        console.log(e)
         this.$emit('dragend', e)
       },
       dragover (e) {
+        console.log('dragover')
+        console.log(e)
         this.$emit('dragover', e)
       }
     }
